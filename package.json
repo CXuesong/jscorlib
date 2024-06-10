@@ -6,11 +6,19 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "tsc -p src",
-    "build:prod": "tsc -p src --clean"
+    "build": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build",
+    "build:prod": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build:prod",
+    "lint": "yarn workspaces foreach --all --verbose --parallel run lint"
   },
   "workspaces": [
-    "./packages/*"
+    "./packages/*",
+    "./packages/@jscorlib/*",
+    "./packages/@jscorlib-repo/*"
   ],
-  "packageManager": "yarn@4.2.2"
+  "packageManager": "yarn@4.2.2",
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "ts-node": "^11.0.0-beta.1",
+    "typescript": "^5.4.5"
+  }
 }

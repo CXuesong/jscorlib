@@ -2,16 +2,29 @@
   "name": "jscorlib",
   "version": "0.0.1",
   "description": "a set of JS helpers making .NET developers feel more at home.",
-  "main": "index.js",
   "repository": "https://github.com/CXuesong/jscorlib.git",
   "author": "CXuesong",
   "license": "MIT",
+  "type": "module",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
   "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "pwsh -File ./scripts/build.ps1",
-    "build:prod": "pwsh -File ./scripts/build.ps1 -Clean"
+    "build:prod": "pwsh -File ./scripts/build.ps1 -Clean",
+    "lint": "eslint src"
   },
   "devDependencies": {
+    "@jscorlib-repo/linters": "workspace:^",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   }

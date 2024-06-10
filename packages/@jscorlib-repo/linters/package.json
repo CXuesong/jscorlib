@@ -1,0 +1,27 @@
+{
+  "name": "@jscorlib-repo/linters",
+  "version": "0.0.1",
+  "description": "linters & linter rules",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "module": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "types": "./src/index.d.js"
+    }
+  },
+  "bin": {
+    "eslint": "./bin/eslint.js"
+  },
+  "dependencies": {
+    "@stylistic/eslint-plugin": "^2.1.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.4.0",
+    "typescript-eslint": "^v8.0.0-alpha.30"
+  }
+}
