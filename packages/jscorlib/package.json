@@ -1,0 +1,18 @@
+{
+  "name": "jscorlib",
+  "version": "0.0.1",
+  "description": "a set of JS helpers making .NET developers feel more at home.",
+  "main": "index.js",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "sideEffects": false,
+  "scripts": {
+    "build": "pwsh -File ./scripts/build.ps1",
+    "build:prod": "pwsh -File ./scripts/build.ps1 -Clean"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}

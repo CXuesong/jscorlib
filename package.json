@@ -1,0 +1,16 @@
+{
+  "name": "jscorlib-repo",
+  "version": "0.0.1",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p src",
+    "build:prod": "tsc -p src --clean"
+  },
+  "workspaces": [
+    "./packages/*"
+  ],
+  "packageManager": "yarn@4.2.2"
+}
