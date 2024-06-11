@@ -1,6 +1,6 @@
 {
   "name": "jscorlib",
-  "version": "0.0.1",
+  "version": "0.0.0-int.1",
   "description": "a set of JS helpers making .NET developers feel more at home.",
   "repository": "https://github.com/CXuesong/jscorlib.git",
   "author": "CXuesong",
