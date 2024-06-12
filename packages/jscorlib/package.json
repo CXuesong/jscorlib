@@ -21,7 +21,8 @@
   "scripts": {
     "build": "pwsh -File ./scripts/build.ps1",
     "build:prod": "pwsh -File ./scripts/build.ps1 -Clean",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "vitest"
   },
   "devDependencies": {
     "@jscorlib-repo/linters": "workspace:^",

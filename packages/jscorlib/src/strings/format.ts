@@ -12,7 +12,7 @@ import { ArgumentNullError, FormatError } from "../errors/index";
 export function format(expression: string, ...args: unknown[]): string {
   if (expression == null) throw new ArgumentNullError({ paramName: "expression", paramIndex: 0 });
   return expression.replaceAll(/(\{(?<TI>[0-9])+(:(?<TS>[^}]*))?\})|(?<LB>\{\{)|(?<RB>\}\})/ug, (...a) => {
-    const groups = a[args.length - 1] as Record<"TI" | "TS" | "LB" | "RB", string>;
+    const groups = a[a.length - 1] as Record<"TI" | "TS" | "LB" | "RB", string>;
     if (groups.TI != null) {
       const index = Number.parseInt(groups.TI);
       if (Number.isNaN(index) || index < 0)
