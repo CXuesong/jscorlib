@@ -17,9 +17,10 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "../lib"
+    "outDir": "../lib",
+    "importHelpers": true,
   },
   "include": [
-    "*.ts",
+    "**/*.ts",
   ],
 }

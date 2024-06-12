@@ -28,6 +28,7 @@ export default tseslint.config(
       }],
       "@stylistic/semi": "error",
       "@stylistic/comma-dangle": ["error", "always-multiline"],
+      "@stylistic/eol-last": ["error", "always"],
     },
   },
 );
