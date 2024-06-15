@@ -22,7 +22,8 @@
     "build": "pwsh -File ./scripts/build.ps1",
     "build:prod": "pwsh -File ./scripts/build.ps1 -Clean",
     "lint": "eslint src",
-    "test": "vitest"
+    "test": "vitest",
+    "benchmark": "vitest bench"
   },
   "devDependencies": {
     "@jscorlib-repo/linters": "workspace:^",

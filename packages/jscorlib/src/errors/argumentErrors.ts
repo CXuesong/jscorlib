@@ -47,6 +47,9 @@ export class ArgumentRangeError extends RangeError implements ArgumentError {
     this.paramIndex = options?.paramIndex;
     this.paramName = options?.paramName;
   }
+  public static create(paramIndex: number | undefined, paramName?: string, message?: string): ArgumentRangeError {
+    return new ArgumentRangeError(message, { paramIndex, paramName });
+  }
 }
 
 export interface ArgumentTypeErrorOptions extends ArgumentErrorOptions {
