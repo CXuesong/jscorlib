@@ -15,6 +15,25 @@ export default tseslint.config(
         tsconfigRootDir: JscorlibLinters.repoRootDir,
       },
     },
+    rules: {
+      "@typescript-eslint/array-type": ["error", {
+        default: "array-simple",
+        readonly: "array-simple",
+      }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "args": "all",
+          "argsIgnorePattern": "^_",
+          "caughtErrors": "all",
+          "caughtErrorsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+          // https://github.com/tc39/proposal-discard-binding
+          "varsIgnorePattern": "^_void",
+          "ignoreRestSiblings": true,
+        },
+      ],
+    },
   },
   {
     plugins: {
