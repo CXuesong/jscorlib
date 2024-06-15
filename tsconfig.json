@@ -3,7 +3,8 @@
     "composite": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "strict": true
+    "strict": true,
+    "noEmit": true,
   },
   "ts-node": {
     // https://github.com/TypeStrong/ts-node/issues/1007#issue-598417180

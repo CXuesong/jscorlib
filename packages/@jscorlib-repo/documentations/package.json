@@ -1,0 +1,20 @@
+{
+  "name": "@jscorlib-repo/documentations",
+  "version": "0.0.1",
+  "description": "documentation generation",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "pwsh -File ./scripts/build.ps1",
+    "build:prod": "pwsh -File ./scripts/build.ps1 -Prod"
+  },
+  "module": "./src/index.js",
+  "devDependencies": {
+    "typedoc": "^0.26.0-beta.3",
+    "typedoc-plugin-mdn-links": "^3.1.29",
+    "typescript": "^5.4.5"
+  }
+}

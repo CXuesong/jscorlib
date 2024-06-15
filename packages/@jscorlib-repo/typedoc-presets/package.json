@@ -1,0 +1,19 @@
+{
+  "name": "@jscorlib-repo/typedoc-presets",
+  "version": "0.0.1",
+  "description": "Provides shared configuraton for tsdoc.",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "module": "./src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js"
+    }
+  },
+  "devDependencies": {
+    "typedoc": "^0.26.0-beta.3"
+  }
+}

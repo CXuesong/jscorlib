@@ -1,7 +1,19 @@
+// We can only list them one-by-one for now
 // https://stackoverflow.com/questions/69654873/
-const _primitiveType = typeof (0 as unknown);
 
-export type PrimitiveType = typeof _primitiveType;
+/**
+ * Represents all the possible return values of JS `typeof` operator.
+ */
+export type PrimitiveType =
+  | "string"
+  | "number"
+  | "bigint"
+  | "boolean"
+  | "symbol"
+  | "undefined"
+  | "object"
+  | "function"
+  ;
 
 /** Represents a partial {@link Function} object that holds a prototype. */
 export interface PrototypeHolder {
