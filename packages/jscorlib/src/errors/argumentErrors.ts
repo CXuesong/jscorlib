@@ -24,7 +24,7 @@ function buildArgumentErrorMessage(stem: string, options?: ArgumentErrorOptions)
  * The error that is thrown when one of the arguments provided to a method is not valid.
  */
 export class ArgumentError extends RangeError {
-  public name = "ArgumentError";
+  public override name = "ArgumentError";
   /** name of the parameter that causes this exception. */
   public readonly paramName?: string;
   /** 0-based index of the parameter that causes this exception. */
@@ -45,7 +45,7 @@ export class ArgumentError extends RangeError {
  * @remarks By convention of jscorlib, we recommend not distinguishing between `null` and `undefined`.
  */
 export class ArgumentNullError extends ArgumentError {
-  public name = "ArgumentNullError";
+  public override name = "ArgumentNullError";
   public constructor(options?: ArgumentErrorOptions);
   public constructor(message?: string, options?: ArgumentErrorOptions);
   public constructor(arg1?: string | ArgumentErrorOptions, options?: ArgumentErrorOptions) {

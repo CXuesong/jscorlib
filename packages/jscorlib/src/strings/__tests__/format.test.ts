@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { FormatError } from "../../errors";
 import * as _Strings from "../format";
-import * as Errors from "../../errors";
 
 describe("format", () => {
   it("simple args", () => {
@@ -19,8 +19,8 @@ describe("format", () => {
   });
 
   it("error cases", () => {
-    expect(() => _Strings.format("{0}")).toThrow(Errors.FormatError);
-    expect(() => _Strings.format("{1}", "a")).toThrow(Errors.FormatError);
+    expect(() => _Strings.format("{0}")).toThrow(FormatError);
+    expect(() => _Strings.format("{1}", "a")).toThrow(FormatError);
     // TODO detect this case and throw Error after `format` rewrite
     // expect(() => _Strings.format("{-1}", "a")).toThrow(Errors.FormatError);
     expect(_Strings.format("{-1}", "a")).toBe("{-1}");
