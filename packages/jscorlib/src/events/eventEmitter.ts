@@ -1,4 +1,4 @@
-import { ArgumentNullError } from "../errors";
+import { checkArgumentType } from "../errors";
 import { SynchronizationContext } from "../synchronization";
 
 /**
@@ -19,7 +19,8 @@ export class EventEmitter<TArg = void> {
    * the event is being fired.
    */
   public subscribe(handler: EventHandler<TArg>): Disposable {
-    if (!handler) throw new ArgumentNullError({ paramIndex: 0, paramName: "handler" });
+    checkArgumentType(0, "handler", handler, "function");
+
     let unsubscribed = false;
     this._handlers.push(handler);
     return {

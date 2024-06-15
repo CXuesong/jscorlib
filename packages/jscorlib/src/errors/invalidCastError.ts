@@ -5,7 +5,7 @@ export interface InvalidCastErrorOptions extends ErrorOptions {
   targetType?: TypeId;
 }
 
-function buildInvalidCastErrorMessage(options?: InvalidCastErrorOptions): string {
+export function buildInvalidCastErrorMessage(options?: InvalidCastErrorOptions): string {
   const { valueType, targetType } = options ?? {};
   if (valueType && targetType)
     return `Cannot cast value of type ${typeIdToString(valueType)} into type ${typeIdToString(targetType)}.`;

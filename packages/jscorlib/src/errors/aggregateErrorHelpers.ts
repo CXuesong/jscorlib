@@ -1,3 +1,4 @@
+import { checkArgumentType } from "./argumentErrors";
 import { InvalidCastError } from "./invalidCastError";
 
 /**
@@ -7,6 +8,8 @@ import { InvalidCastError } from "./invalidCastError";
  * @returns 
  */
 export function flattenAggregateError(error: AggregateError): AggregateError {
+  checkArgumentType(0, "error", error, AggregateError);
+
   if (!(error instanceof AggregateError)) throw InvalidCastError.fromValue(error, AggregateError);
   const flattened: unknown[] = [];
   const pending: unknown[] = [error];

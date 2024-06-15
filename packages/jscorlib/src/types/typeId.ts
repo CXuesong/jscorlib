@@ -10,6 +10,9 @@ export interface PrototypeHolder {
   displayName?: string;
   prototype: unknown;
   [Symbol.hasInstance]: unknown;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (...args: any[]): any;
 }
 
 /**
@@ -41,9 +44,8 @@ export function getTypeId(value: unknown): TypeId {
     if (!value) return "object";
     const prototype = Object.getPrototypeOf(value) as unknown;
     // cannot infer information from prototype.
-    if (!prototype || typeof prototype !== "object") return "object";
-    if (typeof prototype.constructor !== "function") return "object";
-    return prototype.constructor;
+    if (typeof prototype?.constructor !== "function") return "object";
+    return prototype.constructor as (...args: unknown[]) => unknown;
   }
   return typeOf;
 }
@@ -52,4 +54,22 @@ export function typeIdToString(typeId: TypeId): string {
   if (typeId === "object") return "[object]";
   if (typeof typeId === "string") return typeId;
   return `[${typeId.displayName ?? typeId.name ?? String(typeId)}]`;
+}
+
+export function isAssignableToTypeId(value: unknown, typeId: TypeId): boolean {
+  if (value === null) return typeId === "object";
+  if (value === undefined) return typeId === "undefined";
+  if (value === true || value === false) return typeId === "boolean";
+  const valueTypeOf = typeof value;
+  // Primitive type name match
+  if (valueTypeOf === typeId) return true;
+  // Object prototype chain check (instanceof)
+  if (valueTypeOf === "object") {
+    if (typeof typeId === "function") {
+      return value instanceof typeId;
+    }
+    return false;
+  }
+  // No match
+  return false;
 }

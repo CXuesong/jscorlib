@@ -1,4 +1,4 @@
-import { ArgumentNullError, FormatError } from "../errors/index";
+import { FormatError, checkArgumentType } from "../errors/index";
 
 /**
  * Replaces the format item in a specified string with the string representation of a corresponding object in a specified array.
@@ -10,7 +10,8 @@ import { ArgumentNullError, FormatError } from "../errors/index";
  * @todo Re-implement by parsing into expression and throw error for invalid cases.
  */
 export function format(expression: string, ...args: unknown[]): string {
-  if (expression == null) throw new ArgumentNullError({ paramName: "expression", paramIndex: 0 });
+  checkArgumentType(0, "expression", expression, "string");
+
   return expression.replaceAll(/(\{(?<TI>[0-9])+(:(?<TS>[^}]*))?\})|(?<LB>\{\{)|(?<RB>\}\})/ug, (...a) => {
     const groups = a[a.length - 1] as Record<"TI" | "TS" | "LB" | "RB", string>;
     if (groups.TI != null) {
