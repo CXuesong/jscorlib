@@ -309,6 +309,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@jscorlib-repo/test-helpers@workspace:^, @jscorlib-repo/test-helpers@workspace:packages/@jscorlib-repo/test-helpers":
+  version: 0.0.0-use.local
+  resolution: "@jscorlib-repo/test-helpers@workspace:packages/@jscorlib-repo/test-helpers"
+  dependencies:
+    tslib: "npm:^2.6.3"
+    vitest: "npm:^1.6.0"
+  bin:
+    vitest: ./bin/vitest.js
+  languageName: unknown
+  linkType: soft
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -1890,8 +1901,8 @@ __metadata:
   resolution: "jscorlib@workspace:packages/jscorlib"
   dependencies:
     "@jscorlib-repo/linters": "workspace:^"
+    "@jscorlib-repo/test-helpers": "workspace:^"
     typescript: "npm:^5.4.5"
-    vitest: "npm:^1.6.0"
   languageName: unknown
   linkType: soft
 
@@ -2838,6 +2849,13 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
   checksum: 10/c879e0eec61dac25e1024527123a2cd105a4f85ee4e16f8c38f56aa1c901aa138aa36ff7dff270b0aaa1711cf63b5da6742bee6c5735044f3f9d22536f2b983b
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.6.3":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 10/52109bb681f8133a2e58142f11a50e05476de4f075ca906d13b596ae5f7f12d30c482feb0bff167ae01cfc84c5803e575a307d47938999246f5a49d174fc558c
   languageName: node
   linkType: hard
 

@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@jscorlib-repo/linters": "workspace:^",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "@jscorlib-repo/test-helpers": "workspace:^",
+    "typescript": "^5.4.5"
   }
 }
