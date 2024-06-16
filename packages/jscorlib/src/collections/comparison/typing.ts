@@ -6,4 +6,5 @@
  * * 0 if x is equal to y,
  * * or a value greater than zero if x is greater than y.
  */
-export type ComparerFunction<T = unknown> = (x: T, y: T) => number;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ComparerFunction<T = any> = (x: T, y: T) => number;

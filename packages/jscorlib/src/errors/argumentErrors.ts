@@ -1,4 +1,4 @@
-import { TypeId, getTypeId, isAssignableToTypeId, typeIdToString } from "../types/typeId";
+import { PrototypeHolder, TypeId, getTypeId, isAssignableToTypeId, typeIdToString } from "../types/typeId";
 
 export interface ArgumentErrorOptions extends ErrorOptions {
   /** name of the parameter that causes this exception. */
@@ -92,7 +92,7 @@ export class ArgumentTypeError extends TypeError implements ArgumentError {
   }
 }
 
-export function buildArgumentNullErrorMessage(options?: ArgumentTypeErrorOptions): string {
+function buildArgumentNullErrorMessage(options?: ArgumentTypeErrorOptions): string {
   const argumentExpr = tryBuildArgumentIdentifier(options?.paramIndex, options?.paramName);
   const nullExpr = options?.valueType === "object" ? "null" : "undefined";
   const argumentSuffix = argumentExpr == null ? "" : ` Parameter: ${argumentExpr}.`;
@@ -114,6 +114,10 @@ export class ArgumentNullError extends ArgumentTypeError {
   }
 }
 
+export function checkArgumentType<TType extends PrototypeHolder>(
+  paramIndex: number, paramName: string, value: unknown, allowedType: TType
+): asserts value is InstanceType<TType>;
+export function checkArgumentType(paramIndex: number, paramName: string, value: unknown, ...allowedTypes: TypeId[]): void;
 export function checkArgumentType(paramIndex: number, paramName: string, value: unknown, ...allowedTypes: TypeId[]): void {
   if (value == null) {
     throw new ArgumentNullError(undefined, {

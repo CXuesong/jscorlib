@@ -18,7 +18,20 @@ export interface PrimitiveTypeMap {
  */
 export type PrimitiveType = keyof PrimitiveTypeMap;
 
-/** Represents a partial {@link Function} object that holds a prototype. */
+/**
+ * Represents a partial constructor {@link Function} object that holds a prototype.
+ * This also represents the type of corresponding class instances.
+ * 
+ * @example
+ * You can just assign a class definition to this type
+ * ```ts
+ * const type1: PrototypeHolder = Date;
+ * const type2: PrototypeHolder = Blob;
+ * 
+ * class MyClass {}
+ * const type3: PrototypeHolder = MyClass;
+ * ```
+ */
 export interface PrototypeHolder {
   name?: string;
   /** React components */
@@ -27,7 +40,7 @@ export interface PrototypeHolder {
   [Symbol.hasInstance]: unknown;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (...args: any[]): any;
+  new (...args: any[]): any;
 }
 
 /**
@@ -60,7 +73,7 @@ export function getTypeId(value: unknown): TypeId {
     const prototype = Object.getPrototypeOf(value) as unknown;
     // cannot infer information from prototype.
     if (typeof prototype?.constructor !== "function") return "object";
-    return prototype.constructor as (...args: unknown[]) => unknown;
+    return prototype.constructor as PrototypeHolder;
   }
   return typeOf;
 }
