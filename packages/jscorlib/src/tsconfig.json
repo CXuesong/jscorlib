@@ -18,6 +18,7 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
+    "stripInternal": true,
     "outDir": "../lib",
     "importHelpers": true,
   },

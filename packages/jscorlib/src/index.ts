@@ -2,6 +2,7 @@ export * as Arrays from "./arrays";
 export * as Collections from "./collections";
 export * as Errors from "./errors";
 export * as Events from "./events";
+export * as Globalization from "./globalization";
 export * as Promises from "./promises";
 export * as Strings from "./strings";
 export * as Synchronization from "./synchronization";

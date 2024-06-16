@@ -33,6 +33,20 @@ export default tseslint.config(
           "ignoreRestSiblings": true,
         },
       ],
+      "@typescript-eslint/explicit-member-accessibility": "error",
+      "@typescript-eslint/prefer-nullish-coalescing": [
+        "error", {
+          ignorePrimitives: {
+            string: true,
+          },
+        },
+      ],
+      "@typescript-eslint/no-inferrable-types": [
+        "error", {
+          ignoreParameters: true,
+          ignoreProperties: true,
+        },
+      ],
     },
   },
   {
