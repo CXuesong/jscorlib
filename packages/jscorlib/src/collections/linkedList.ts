@@ -120,7 +120,7 @@ export class LinkedList<T> implements Iterable<T> {
     this._length++;
   }
   // Removal
-  public remove(value: T): boolean {
+  public delete(value: T): boolean {
     const node = this.find(value);
     if (!node) return false;
     this._remove(node);
