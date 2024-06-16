@@ -6,7 +6,7 @@ import { FormatError, checkArgumentType } from "../errors/index";
  * @param args An object array that contains zero or more objects to format.
  * @returns A copy of format in which the format items have been replaced by the string representation of the corresponding objects in args.
  * 
- * @see https://learn.microsoft.com/en-us/dotnet/api/system.string.format?view=net-8.0#system-string-format(system-string-system-object())
+ * @see https://learn.microsoft.com/en-us/dotnet/api/system.string.format
  * @todo Re-implement by parsing into expression and throw error for invalid cases.
  */
 export function format(expression: string, ...args: unknown[]): string {

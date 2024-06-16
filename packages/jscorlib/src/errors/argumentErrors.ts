@@ -109,6 +109,9 @@ export class ArgumentNullError extends ArgumentTypeError {
   public constructor(message?: string, options?: ArgumentTypeErrorOptions) {
     super(message ?? buildArgumentNullErrorMessage(options), options);
   }
+  public static create(paramIndex: number | undefined, paramName?: string, message?: string): ArgumentRangeError {
+    return new ArgumentNullError(message, { paramIndex, paramName });
+  }
 }
 
 export function checkArgumentType(paramIndex: number, paramName: string, value: unknown, ...allowedTypes: TypeId[]): void {

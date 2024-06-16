@@ -28,7 +28,7 @@ export function indexOf<TArray extends readonly any[]>(
   startIndex?: number,
   count?: number
 ): number;
-export function indexOf<TArray extends readonly any[]>(array: TArray, value: unknown, startIndex?: number, count?: number): number {
+export function indexOf(array: readonly unknown[], value: unknown, startIndex?: number, count?: number): number {
   /* eslint-enable @typescript-eslint/no-explicit-any */
   const { length } = array;
   if (startIndex != null && (startIndex < 0 || startIndex > length)) {
@@ -48,7 +48,7 @@ export function indexOf<TArray extends readonly any[]>(array: TArray, value: unk
   // 2nd chance of going back to built-in impl
   if (value !== undefined && toIndex === length) return array.indexOf(value, startIndex);
 
-  // OK. Now. Home-made version, with 5x ~ 30x perf penalty.
+  // OK. Now. Home-made version, with 5x ~ 130x perf penalty.
   for (let i = startIndex; i < toIndex; i++) {
     if (array[i] === value) return i;
   }

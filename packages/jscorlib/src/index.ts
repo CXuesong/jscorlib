@@ -1,4 +1,5 @@
 export * as Arrays from "./arrays";
+export * as Collections from "./collections";
 export * as Errors from "./errors";
 export * as Events from "./events";
 export * as Promises from "./promises";
