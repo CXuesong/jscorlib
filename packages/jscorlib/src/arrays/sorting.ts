@@ -3,9 +3,45 @@ import { fail } from "../diagnostics";
 import { InvalidOperationError } from "../errors";
 import { ClassTypeId, PrimitiveTypeId, baseClassOf, getTypeId, typeIdToString } from "../types";
 
+/**
+ * Sorts the specified array in-place.
+ * 
+ * @param array the array to get sorted.
+ * @param comparer an optional callback used to compare the elements.
+ *        `undefined` elements will be passed in to it nevertheless.
+ * 
+ * @todo Implement this function without `Array.sort` -- it is too tricky and might be slow.
+ */
 export function sort<T>(array: T[], comparer?: ComparerFunction<T>): void {
   if (array.length < 2) return;
-  array.sort(comparer ?? defaultArrayComparer);
+  comparer ??= defaultArrayComparer;
+  array.sort(comparer);
+
+  // There is a block of undefined elements at the end of array.
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#description
+  if (array[array.length - 1] === undefined) {
+    if (array[0] === undefined) return;
+    // TODO binary search
+    // Locate the block of undefined elements
+    const startPos = (() => {
+      for (let i = array.length - 1; i >= 0; i--) {
+        if (array[i] !== undefined) return i + 1;
+      }
+      fail();
+      return array.length - 1;
+    })();
+    const itemCount = array.length - startPos;
+    const undefinedBlock = array.splice(startPos, itemCount);
+    // Determine insertion point
+    if (comparer(undefined!, array[0]) < 0) {
+      array.unshift(...undefinedBlock);
+      return;
+    }
+    if (comparer(undefined!, array[startPos - 1]) > 0) {
+      return;
+    }
+    fail("Will insert undefined element block in the middle of the Array. Not implemented.");
+  }
 }
 
 const typeIdOrderMap: Partial<Record<PrimitiveTypeId, number>> = {
