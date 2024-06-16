@@ -1,4 +1,4 @@
-import { PrototypeHolder, TypeId, getTypeId, isAssignableToTypeId, typeIdToString } from "../types/typeId";
+import { TypeFromTypeId, TypeId, getTypeId, isAssignableToTypeId, typeIdToString } from "../types/typeId";
 
 export interface ArgumentErrorOptions extends ErrorOptions {
   /** name of the parameter that causes this exception. */
@@ -114,9 +114,9 @@ export class ArgumentNullError extends ArgumentTypeError {
   }
 }
 
-export function checkArgumentType<TType extends PrototypeHolder>(
-  paramIndex: number, paramName: string, value: unknown, allowedType: TType
-): asserts value is InstanceType<TType>;
+export function checkArgumentType<TTypeIds extends TypeId[]>(
+  paramIndex: number, paramName: string, value: unknown, ...allowedType: TTypeIds
+): asserts value is TypeFromTypeId<TTypeIds[number]>;
 export function checkArgumentType(paramIndex: number, paramName: string, value: unknown, ...allowedTypes: TypeId[]): void;
 export function checkArgumentType(paramIndex: number, paramName: string, value: unknown, ...allowedTypes: TypeId[]): void {
   if (value == null) {
