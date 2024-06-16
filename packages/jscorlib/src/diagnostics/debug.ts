@@ -15,7 +15,7 @@
  * 
  * Thus, please note that this function may or may not stop the caller's code execution.
  */
-export function fail(message: string): void {
+export function fail(message?: string): void {
   if (process.env.NODE_ENV === "production") return;
 
   const err = new DebugFailure(message);
