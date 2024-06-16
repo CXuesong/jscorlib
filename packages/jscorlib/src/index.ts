@@ -1,5 +1,6 @@
 export * as Arrays from "./arrays";
 export * as Collections from "./collections";
+export * as Containers from "./containers";
 export * as Errors from "./errors";
 export * as Events from "./events";
 export * as Globalization from "./globalization";
