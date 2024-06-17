@@ -1,4 +1,6 @@
 {
+  // Base config; also for VSCode
+  // https://github.com/Microsoft/vscode/issues/12463
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",

@@ -8,6 +8,16 @@ export class LinkedList<T> implements Iterable<T> {
   private _head?: LinkedListNode<T>;
   private _tail?: LinkedListNode<T>;
   private _length: number = 0;
+  public static of<T>(...items: T[]): LinkedList<T> {
+    const inst = new LinkedList<T>();
+    for (const i of items) inst.addLast(i);
+    return inst;
+  }
+  public static from<T>(iterable: Iterable<T>): LinkedList<T> {
+    const inst = new LinkedList<T>();
+    for (const i of iterable) inst.addLast(i);
+    return inst;
+  }
   // Insertion
   public addFirst(value: T): LinkedListNode<T> {
     const node = new LinkedListNode(value);
@@ -84,17 +94,20 @@ export class LinkedList<T> implements Iterable<T> {
     this._length = 1;
   }
   private _insertBefore(beforeNode: LinkedListNode<T>, node: LinkedListNode<T>): void {
+    const prev = beforeNode.prev;
     node[NodeStorageSymbol] = {
-      prev: beforeNode.prev,
+      prev,
       next: beforeNode,
       list: this,
     };
 
-    if (!beforeNode.prev) {
+    if (!prev) {
       assert(this._head === beforeNode);
       this._head = node;
     } else {
       assert(this._head !== beforeNode);
+      assert(prev[NodeStorageSymbol]);
+      prev[NodeStorageSymbol].next = node;
     }
 
     assert(beforeNode[NodeStorageSymbol]);
@@ -102,17 +115,20 @@ export class LinkedList<T> implements Iterable<T> {
     this._length++;
   }
   private _insertAfter(afterNode: LinkedListNode<T>, node: LinkedListNode<T>): void {
+    const next = afterNode.next;
     node[NodeStorageSymbol] = {
       prev: afterNode,
-      next: afterNode.next,
+      next,
       list: this,
     };
 
-    if (!afterNode.next) {
+    if (!next) {
       assert(this._tail === afterNode);
       this._tail = node;
     } else {
       assert(this._tail !== afterNode);
+      assert(next[NodeStorageSymbol]);
+      next[NodeStorageSymbol].prev = node;
     }
 
     assert(afterNode[NodeStorageSymbol]);
@@ -175,7 +191,7 @@ export class LinkedList<T> implements Iterable<T> {
     }
     node[NodeStorageSymbol] = undefined;
     this._length--;
-    assert(this.length >= 0);
+    assert(this._length >= 0);
   }
   // Querying
   public get firstNode(): LinkedListNode<T> | undefined {
@@ -185,7 +201,7 @@ export class LinkedList<T> implements Iterable<T> {
     return this._tail;
   }
   public get length(): number {
-    return this.length;
+    return this._length;
   }
   public find(value: T): LinkedListNode<T> | undefined {
     let current = this._head;
