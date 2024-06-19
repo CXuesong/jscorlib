@@ -1,4 +1,5 @@
 import { bench, describe } from "vitest";
+import { range } from "../iterators";
 import * as _Collections from "../linkedList";
 
 describe("add last", () => {
@@ -24,15 +25,14 @@ describe("add first", () => {
 });
 
 describe("interleaved insertion", () => {
-  const sequenceCount = 10_000;
-  const baseSequence: readonly number[] = new Array<number>(sequenceCount).fill(-1);
+  const sequenceCount = 5_000;
   let arr: number[] = undefined!;
   let list: _Collections.LinkedList<number> = undefined!;
-  bench("baseline: Array.unshift", () => {
+  bench("baseline: Array.splice", () => {
     for (let i = 0; i < sequenceCount; i++) arr.splice(i * 2 + 1, 0, i);
   }, {
     setup: () => {
-      arr = [...baseSequence];
+      arr = [...range(0, sequenceCount)];
     },
     teardown: () => {
       arr = undefined!;
@@ -46,7 +46,40 @@ describe("interleaved insertion", () => {
     }
   }, {
     setup: () => {
-      list = _Collections.LinkedList.from(baseSequence);
+      list = _Collections.LinkedList.from(range(0, sequenceCount));
+    },
+    teardown: () => {
+      list = undefined!;
+    },
+  });
+});
+
+describe.skip("interleaved removal (broken right now)", () => {
+  const sequenceCount = 10_000;
+  let arr: number[] = undefined!;
+  let list: _Collections.LinkedList<number> = undefined!;
+  bench("baseline: Array.splice", () => {
+    for (let i = 0; i < arr.length; i++)
+      arr.splice(i, 1);
+  }, {
+    setup: () => {
+      arr = [...range(0, sequenceCount)];
+    },
+    teardown: () => {
+      arr = undefined!;
+    },
+  });
+  bench("LinkedList.remove", () => {
+    let currentNode = list.firstNode;
+    while (currentNode) {
+      const { next } = currentNode;
+      list.removeNode(currentNode);
+      // Skip one node, and remove the next one
+      currentNode = next?.next;
+    }
+  }, {
+    setup: () => {
+      list = _Collections.LinkedList.from(range(0, sequenceCount));
     },
     teardown: () => {
       list = undefined!;
