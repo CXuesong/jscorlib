@@ -1,7 +1,7 @@
 import { Lazy } from "../../containers";
 import { ArgumentNullError, InvalidOperationError, checkArgumentType } from "../../errors";
 import { ClassTypeId, PrimitiveTypeId, TypeFromTypeId, TypeId, typeIdToString } from "../../types";
-import { compareStringInvariant } from "./strings";
+import { compareStringInvariant } from "./strings.intl";
 import { ComparerFunction } from "./typing";
 
 const lazyPrimitiveTypeComparerMap = new Lazy<{ [t in PrimitiveTypeId]?: ComparerFunction<TypeFromTypeId<t>> }>(() => ({
