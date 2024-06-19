@@ -7,7 +7,7 @@ import { SafeInteger } from "./typing";
  * 
  * @returns the truncated number, guaranteed to be within the range of
  * [{@link !Number.MIN_SAFE_INTEGER}, {@link !Number.MAX_SAFE_INTEGER}]
- * @throws ArgumentRangeError specified `value` cannot be represented by a safe integer.
+ * @throws {@link ArgumentRangeError} specified `value` cannot be represented by a safe integer.
  * @see {@link !Number.isSafeInteger}
  */
 export function asSafeInteger(value: SafeInteger): SafeInteger {
