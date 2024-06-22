@@ -17,8 +17,8 @@
   ],
   "packageManager": "yarn@4.2.2",
   "devDependencies": {
-    "@types/node": "^20.14.2",
+    "@types/node": "^20.14.8",
     "ts-node": "^11.0.0-beta.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   }
 }
