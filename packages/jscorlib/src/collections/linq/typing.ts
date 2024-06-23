@@ -14,3 +14,5 @@ export type SequenceElementPredicate<T> = (item: T, index: number) => unknown;
  * otherwise, the item does not meet the criteria.
  */
 export type SequenceElementTypeAssertionPredicate<T, TReturn extends T> = (item: T, index: number) => item is TReturn;
+
+export type SequenceElementSelector<T, TResult> = (item: T, index: number) => TResult;

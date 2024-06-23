@@ -15,7 +15,8 @@ function tryGetCountDirect<T>(iterable: Iterable<T>): number | undefined {
 
 export function Linq$count<T>(this: LinqWrapper<T>): number {
   const unwrapped = this.unwrap();
-  let count = tryGetCountDirect(unwrapped);
+  // This function might get overridden (see Linq$select)
+  let count = this.tryGetCountDirect();
   if (count != null) return count;
   // Slow route
   count = 0;
