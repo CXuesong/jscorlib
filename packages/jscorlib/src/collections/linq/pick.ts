@@ -82,7 +82,7 @@ function getFirst<T>(iterable: Iterable<T>, predicate?: SequenceElementPredicate
   return getElementAt(iterable, 0);
 }
 
-export function getLast<T>(iterable: Iterable<T>, predicate?: SequenceElementPredicate<T>): T | typeof NoMatch {
+function getLast<T>(iterable: Iterable<T>, predicate?: SequenceElementPredicate<T>): T | typeof NoMatch {
   if (predicate) {
     if (isArrayLikeStrict(iterable)) {
       const length = iterable.length;

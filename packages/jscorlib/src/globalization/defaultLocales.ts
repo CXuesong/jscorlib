@@ -10,7 +10,7 @@ let defaultLocale: BuiltInLocale | undefined;
 /**
  * Retrieves the current default locale of the environment.
  * 
- * @reamrks
+ * @remarks
  * Before [tc39/ecma402#68](https://github.com/tc39/ecma402/issues/68) gets resolved,
  * there is no official approach to retrieve user's "current locale" per se. Thus this
  * implementation is currently using the default {@link Intl.Collator} locale
