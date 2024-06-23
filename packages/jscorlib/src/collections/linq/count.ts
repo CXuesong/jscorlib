@@ -1,3 +1,4 @@
+import { isArrayLikeStrict } from "./iteratorUtils";
 import type { LinqWrapper } from "./linqWrapper";
 
 declare module "./linqWrapper" {
@@ -8,15 +9,8 @@ declare module "./linqWrapper" {
 }
 
 function tryGetCountDirect<T>(iterable: Iterable<T>): number | undefined {
-  // TODO Not sure why TS thinks unwrapped turns to never.
-  if (typeof iterable === "string") return (iterable as string).length;
-  if (Array.isArray(iterable)) return iterable.length;
-  if (ArrayBuffer.isView(iterable) && "length" in iterable) {
-    const length = (iterable as Int32Array).length;
-    if (typeof length === "number") return length;
-  }
-  if (iterable instanceof Map) return iterable.size;
-  if (iterable instanceof Set) return iterable.size;
+  if (isArrayLikeStrict(iterable)) return iterable.length;
+  if (iterable instanceof Map || iterable instanceof Set) return iterable.size;
 }
 
 export function Linq$count<T>(this: LinqWrapper<T>): number {

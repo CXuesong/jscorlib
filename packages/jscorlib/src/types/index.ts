@@ -1,2 +1,3 @@
-export * from "./typeId";
 export * from "./prototypes";
+export * from "./typedArray";
+export * from "./typeId";
