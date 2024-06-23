@@ -1,4 +1,5 @@
 import { ArgumentRangeError, InvalidOperationError } from "../../errors";
+import { LinqWrapperImpl } from "./linqWrapper.internal";
 
 export interface LinqWrapperBase<T> extends Iterable<T> {
   /**
@@ -35,7 +36,7 @@ export function asLinq<T>(sequence: Iterable<T>): LinqWrapper<T> {
   if (sequence instanceof LinqWrapperImpl) return sequence as unknown as LinqWrapper<T>;
   let wrapper = wrapperCache.get(sequence) as LinqWrapper<T>;
   if (!wrapper) {
-    wrapper = new LinqWrapperImpl(sequence) as unknown as LinqWrapper<T>;
+    wrapper = LinqWrapperImpl.create(sequence);
     wrapperCache.set(sequence, wrapper);
   }
   return wrapper;
@@ -65,21 +66,5 @@ export function registerLinqModule<T>(module: LinqExtensionMethodModule<LinqWrap
     if (typeof key === "string" && key.startsWith("Linq$")) {
       registerLinqMethod(key.substring(5), module[key as `Linq$${string}`]);
     }
-  }
-}
-
-// TODO global shared instanceof support with Symbol.for
-class LinqWrapperImpl<T> implements LinqWrapperBase<T> {
-  public constructor(private readonly _iterable: Iterable<T>) {
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public [Symbol.iterator](): Iterator<T, any, undefined> {
-    return this._iterable[Symbol.iterator]();
-  }
-  public asLinq(): LinqWrapper<T> {
-    return this as unknown as LinqWrapper<T>;
-  }
-  public unwrap(): Iterable<T> {
-    return this._iterable;
   }
 }

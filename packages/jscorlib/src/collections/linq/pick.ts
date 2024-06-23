@@ -2,9 +2,9 @@ import { BidirectionalIndex } from "../../arrays";
 import { assert } from "../../diagnostics";
 import { ArgumentRangeError, InvalidOperationError } from "../../errors";
 import { asSafeInteger } from "../../numbers/asSafeInteger";
-import { isArrayLikeStrict } from "./iteratorUtils";
 import type { LinqWrapper } from "./linqWrapper";
 import { SequenceElementPredicate } from "./typing";
+import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> extends LinqWrapperBase<T> {

@@ -1,5 +1,5 @@
-import { isArrayLikeStrict } from "./iteratorUtils";
 import type { LinqWrapper } from "./linqWrapper";
+import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> extends LinqWrapperBase<T> {
