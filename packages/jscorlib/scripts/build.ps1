@@ -13,5 +13,5 @@ if ($Clean) {
     Remove-Item ./lib -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-tsc --project ./src
+tsc --project ./src/tsconfig.build.json
 if ($LASTEXITCODE) { exit $LASTEXITCODE }
