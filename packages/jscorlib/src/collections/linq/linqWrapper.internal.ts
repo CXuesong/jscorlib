@@ -1,22 +1,33 @@
 import type { LinqWrapper, LinqWrapperBase } from "./linqWrapper";
 
 // TODO global shared instanceof support with Symbol.for
-/** @internal */
-export class LinqWrapperImpl<T> implements LinqWrapperBase<T> {
-  private constructor(private readonly _iterable: Iterable<T>) {
-  }
-  public static create<T>(iterable: Iterable<T>): LinqWrapper<T> {
-    // Coerce the type
-    return new LinqWrapperImpl(iterable) as unknown as LinqWrapper<T>;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public [Symbol.iterator](): Iterator<T, any, undefined> {
-    return this._iterable[Symbol.iterator]();
-  }
+export abstract class AbstractLinqWrapper<T> implements LinqWrapperBase<T> {
+  public abstract [Symbol.iterator](): Iterator<T>;
   public asLinq(): LinqWrapper<T> {
     return this as unknown as LinqWrapper<T>;
   }
   public unwrap(): Iterable<T> {
+    return this;
+  }
+}
+
+export class IterableLinqWrapper<T> extends AbstractLinqWrapper<T> {
+  public constructor(private readonly _iterable: Iterable<T>) {
+    super();
+  }
+  public [Symbol.iterator](): Iterator<T> {
+    return this._iterable[Symbol.iterator]();
+  }
+  public override unwrap(): Iterable<T> {
     return this._iterable;
+  }
+}
+
+export class IterableFactoryLinqWrapper<T> extends AbstractLinqWrapper<T> {
+  public constructor(private readonly _iteratorFactory: () => Iterable<T>) {
+    super();
+  }
+  public *[Symbol.iterator](): Iterator<T> {
+    yield* this._iteratorFactory();
   }
 }

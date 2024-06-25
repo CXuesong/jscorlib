@@ -1,5 +1,5 @@
 import { ArgumentRangeError, InvalidOperationError } from "../../errors";
-import { LinqWrapperImpl } from "./linqWrapper.internal";
+import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 
 export interface LinqWrapperBase<T> extends Iterable<T> {
   /**
@@ -33,10 +33,10 @@ export interface LinqWrapper<T> extends LinqWrapperBase<T> {
 const wrapperCache = new WeakMap<Iterable<unknown>, LinqWrapper<unknown>>();
 
 export function asLinq<T>(sequence: Iterable<T>): LinqWrapper<T> {
-  if (sequence instanceof LinqWrapperImpl) return sequence as unknown as LinqWrapper<T>;
+  if (sequence instanceof AbstractLinqWrapper) return sequence as unknown as LinqWrapper<T>;
   let wrapper = wrapperCache.get(sequence) as LinqWrapper<T>;
   if (!wrapper) {
-    wrapper = LinqWrapperImpl.create(sequence);
+    wrapper = new IterableLinqWrapper(sequence).asLinq();
     wrapperCache.set(sequence, wrapper);
   }
   return wrapper;
@@ -55,7 +55,7 @@ export interface LinqExtensionMethodModule<TThis = unknown> {
 }
 
 export function registerLinqMethod<T>(name: string, methodImpl: ExtensionMethod<LinqWrapper<T>>): void {
-  const prototype = LinqWrapperImpl.prototype as unknown as Record<string, unknown>;
+  const prototype = AbstractLinqWrapper.prototype as unknown as Record<string, unknown>;
   if (name.startsWith("_") || name.startsWith("$")) throw ArgumentRangeError.create(0, "name", `LINQ method name cannot start with "_" or "$".`);
   if (name in prototype) throw new InvalidOperationError(`LINQ method "${name}" has already been registered.`);
   prototype[name] = methodImpl;
