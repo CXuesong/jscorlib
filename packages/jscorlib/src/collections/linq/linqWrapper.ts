@@ -33,13 +33,13 @@ export interface LinqWrapper<T> extends LinqWrapperBase<T> {
 const wrapperCache = new WeakMap<Iterable<unknown>, LinqWrapper<unknown>>();
 
 export function asLinq<T>(sequence: Iterable<T>): LinqWrapper<T> {
-  if (sequence instanceof AbstractLinqWrapper) return sequence as unknown as LinqWrapper<T>;
-  let wrapper = wrapperCache.get(sequence) as LinqWrapper<T>;
+  if (sequence instanceof AbstractLinqWrapper) return sequence.asLinq() as LinqWrapper<T>;
+  let wrapper = wrapperCache.get(sequence);
   if (!wrapper) {
     wrapper = new IterableLinqWrapper(sequence).asLinq();
     wrapperCache.set(sequence, wrapper);
   }
-  return wrapper;
+  return wrapper as LinqWrapper<T>;
 }
 
 /**

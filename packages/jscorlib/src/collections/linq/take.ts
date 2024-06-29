@@ -1,8 +1,9 @@
 import { assert } from "../../diagnostics";
 import { ArgumentRangeError } from "../../errors";
 import { asSafeInteger, SafeInteger } from "../../numbers";
-import type { LinqWrapper } from "./linqWrapper";
-import { AbstractLinqWrapper } from "./linqWrapper.internal";
+import { asLinq, type LinqWrapper } from "./linqWrapper";
+import { AbstractLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
+import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { SequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
 declare module "./linqWrapper" {
@@ -14,33 +15,24 @@ declare module "./linqWrapper" {
   }
 }
 
-const SkipTakeIteratorInfoSymbol = Symbol("SkipTakeIteratorInfo");
-
-interface SkipTakeIteratorInfo<T> {
-  readonly iterable: Iterable<T>;
-  readonly skip: number;
-  // >= 0: take x items; undefined: take all items.
-  readonly take: number | undefined;
-}
-
 export function Linq$skip<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrapper<T> {
   count = asSafeInteger(count);
   if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
   if (count === 0) return this;
   if (this instanceof SkipTakeLinqWrapper) {
-    const thisInfo = this[SkipTakeIteratorInfoSymbol];
-    if (thisInfo.take == null) {
+    const state = this.__state;
+    if (state.take == null) {
       return new SkipTakeLinqWrapper<T>({
-        ...thisInfo,
-        skip: thisInfo.skip + count,
+        ...state,
+        skip: state.skip + count,
       }).asLinq();
     }
     // has take limitation
-    if (thisInfo.take > count) {
+    if (state.take > count) {
       return new SkipTakeLinqWrapper<T>({
-        ...thisInfo,
-        skip: thisInfo.skip + count,
-        take: thisInfo.take - count,
+        ...state,
+        skip: state.skip + count,
+        take: state.take - count,
       }).asLinq();
     }
     // skipped too far
@@ -58,10 +50,10 @@ export function Linq$take<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrap
   if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
   if (count === 0) return EmptyLinqWrapper.instance.asLinq();
   if (this instanceof SkipTakeLinqWrapper) {
-    const thisInfo = this[SkipTakeIteratorInfoSymbol];
+    const state = this.__state;
     return new SkipTakeLinqWrapper<T>({
-      ...thisInfo,
-      take: thisInfo.take == null ? count : Math.min(thisInfo.take, count),
+      ...state,
+      take: state.take == null ? count : Math.min(state.take, count),
     }).asLinq();
   }
   return new SkipTakeLinqWrapper({
@@ -71,38 +63,47 @@ export function Linq$take<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrap
   }).asLinq();
 }
 
-class SkipTakeLinqWrapper<T> extends AbstractLinqWrapper<T> {
-  public [SkipTakeIteratorInfoSymbol]: SkipTakeIteratorInfo<T>;
-  public constructor(info: SkipTakeIteratorInfo<T>) {
-    super();
-    this[SkipTakeIteratorInfoSymbol] = info;
-  }
+interface SkipTakeIteratorInfo<T> {
+  readonly iterable: Iterable<T>;
+  readonly skip: number;
+  // >= 0: take x items; undefined: take all items.
+  readonly take: number | undefined;
+}
+
+class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIteratorInfo<T>> implements BuiltInLinqTraits {
   public override *[Symbol.iterator](): Iterator<T> {
     // e.g. skip = 1, take = 2
     // 0 1 2 3 4 5
     //   x x
-    const info = this[SkipTakeIteratorInfoSymbol];
-    assert(info.skip >= 0);
-    assert(info.take == null || info.take >= 0);
+    const state = this.__state;
+    assert(state.skip >= 0);
+    assert(state.take == null || state.take >= 0);
     let index = 0;
-    if (info.take == null) {
-      for (const e of info.iterable) {
-        if (index < info.skip) continue;
-        yield e;
+    if (state.take == null) {
+      for (const e of state.iterable) {
+        if (index >= state.skip) yield e;
         index++;
       }
     } else {
-      for (const e of info.iterable) {
-        if (index < info.skip) continue;
-        if (index >= info.skip + info.take) return;
-        yield e;
+      for (const e of state.iterable) {
+        if (index >= state.skip + state.take) return;
+        if (index >= state.skip) yield e;
         index++;
       }
     }
   }
+  public override[TryGetCountDirectSymbol](): number | undefined {
+    let count = asLinq(this.__state.iterable).tryGetCountDirect();
+    if (count == null) return undefined;
+    count -= this.__state.skip;
+    // All the items have been skipped.
+    if (count < 0) return 0;
+    if (this.__state.take != null) count = Math.min(count, this.__state.take);
+    return count;
+  }
 }
 
-class EmptyLinqWrapper extends AbstractLinqWrapper<never> {
+class EmptyLinqWrapper extends AbstractLinqWrapper<never> implements BuiltInLinqTraits {
   private static _instance: EmptyLinqWrapper | undefined;
   public constructor() {
     super();
@@ -112,5 +113,8 @@ class EmptyLinqWrapper extends AbstractLinqWrapper<never> {
   }
   public override *[Symbol.iterator](): Iterator<never> {
     // Nothing to enumerate
+  }
+  public override[TryGetCountDirectSymbol](): number | undefined {
+    return 0;
   }
 }
