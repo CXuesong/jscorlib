@@ -2,6 +2,7 @@ import { describe, expect, it, vitest } from "vitest";
 import * as Count from "../count";
 import { asLinq, registerLinqModule } from "../linqWrapper";
 import * as Select from "../select";
+import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "../traits";
 
 registerLinqModule(Select);
 registerLinqModule(Count);
@@ -20,9 +21,9 @@ describe("select", () => {
     const linq = asLinq(arr).select(x => x + "test");
     expect(linq.tryGetCountDirect()).toBe(6);
 
-    // Linq$count should be calling this.tryGetCountDirect instead of prototype.tryGetCountDirect
-    vitest.spyOn(linq, "tryGetCountDirect").mockReturnValue(-100);
-    expect(linq.count()).toBe(-100);
+    // Linq$count should be calling [[TryGetCountDirectSymbol]] first
+    vitest.spyOn(linq as BuiltInLinqTraits, TryGetCountDirectSymbol).mockReturnValue(123);
+    expect(linq.count()).toBe(123);
   });
   it("selectMany", () => {
     const arr1 = [1, 2, 3];

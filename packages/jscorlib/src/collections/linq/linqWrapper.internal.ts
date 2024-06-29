@@ -31,3 +31,9 @@ export class IterableFactoryLinqWrapper<T> extends AbstractLinqWrapper<T> {
     yield* this._iteratorFactory();
   }
 }
+
+export abstract class IntermediateLinqWrapper<T, TState> extends AbstractLinqWrapper<T> {
+  public constructor(public readonly __state: TState) {
+    super();
+  }
+}

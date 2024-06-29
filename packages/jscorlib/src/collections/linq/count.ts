@@ -1,4 +1,6 @@
+import { assert } from "../../diagnostics";
 import type { LinqWrapper } from "./linqWrapper";
+import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
@@ -9,14 +11,21 @@ declare module "./linqWrapper" {
 }
 
 function tryGetCountDirect<T>(iterable: Iterable<T>): number | undefined {
+  const traits = iterable as BuiltInLinqTraits;
+  if (typeof traits[TryGetCountDirectSymbol] === "function") {
+    const count = traits[TryGetCountDirectSymbol]();
+    if (count != null) {
+      assert(count >= 0);
+      return count;
+    }
+  }
   if (isArrayLikeStrict(iterable)) return iterable.length;
   if (iterable instanceof Map || iterable instanceof Set) return iterable.size;
 }
 
 export function Linq$count<T>(this: LinqWrapper<T>): number {
   const unwrapped = this.unwrap();
-  // This function might get overridden (see Linq$select)
-  let count = this.tryGetCountDirect();
+  let count = tryGetCountDirect(unwrapped);
   if (count != null) return count;
   // Slow route
   count = 0;
