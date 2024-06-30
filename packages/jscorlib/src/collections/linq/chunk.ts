@@ -5,18 +5,21 @@ import { IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
-    buffer(count: SafeInteger): LinqWrapper<readonly T[]>;
+    /**
+     * Splits the elements of a sequence into chunks of `count` at most size.
+     */
+    chunk(count: SafeInteger): LinqWrapper<readonly T[]>;
   }
 }
 
-export function Linq$buffer<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrapper<readonly T[]> {
+export function Linq$chunk<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrapper<readonly T[]> {
   count = asSafeInteger(count);
   if (count <= 0) throw ArgumentRangeError.create(0, "count", "Expect value to be positive.");
   const unwrapped = this.unwrap();
-  return new IterableFactoryLinqWrapper(() => bufferIterable(unwrapped, count)).asLinq();
+  return new IterableFactoryLinqWrapper(() => chunkIterable(unwrapped, count)).asLinq();
 }
 
-function* bufferIterable<T>(iterable: Iterable<T>, count: number): Iterable<readonly T[]> {
+function* chunkIterable<T>(iterable: Iterable<T>, count: number): Iterable<readonly T[]> {
   let currentBatch: T[] = [];
   for (const e of iterable) {
     currentBatch.push(e);

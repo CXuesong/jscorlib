@@ -4,7 +4,7 @@
  * 
  * @module
  */
-export * as Buffer from "./buffer";
+export * as Chunk from "./chunk";
 export * as Collect from "./collect";
 export * as Count from "./count";
 export * as ForEach from "./forEach";
