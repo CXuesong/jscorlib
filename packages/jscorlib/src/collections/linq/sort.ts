@@ -7,7 +7,9 @@ import { SequenceElementSimpleSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
+    order<TKey>(comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
     orderBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
+    orderDescending<TKey>(comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
     orderByDescending<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
   }
 }
@@ -26,6 +28,14 @@ export function Linq$orderBy<T, TKey>(this: LinqWrapper<T>, keySelector: Sequenc
 
 export function Linq$orderByDescending<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
   return resetOrderClause(this, { selector: keySelector, comparer, descending: true });
+}
+
+export function Linq$order<T, TKey>(this: LinqWrapper<T>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
+  return resetOrderClause(this, { comparer, descending: false });
+}
+
+export function Linq$orderDescending<T, TKey>(this: LinqWrapper<T>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
+  return resetOrderClause(this, { comparer, descending: true });
 }
 
 function resetOrderClause<T, TKey>(wrapper: LinqWrapper<T>, clause: OrderClause<T, TKey>): OrderedLinqWrapper<T> {
