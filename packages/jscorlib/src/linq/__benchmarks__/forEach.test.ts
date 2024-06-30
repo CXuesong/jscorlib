@@ -1,7 +1,7 @@
 import { bench, describe } from "vitest";
 import * as ForEach from "../forEach";
 import { asLinq, registerLinqModule } from "../linqWrapper";
-import { range } from "../../iterators";
+import { range } from "../../collections/iterators";
 
 registerLinqModule(ForEach);
 

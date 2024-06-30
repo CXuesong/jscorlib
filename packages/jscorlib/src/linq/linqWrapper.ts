@@ -1,4 +1,4 @@
-import { ArgumentRangeError, InvalidOperationError } from "../../errors";
+import { ArgumentRangeError, InvalidOperationError } from "../errors";
 import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 
 /**

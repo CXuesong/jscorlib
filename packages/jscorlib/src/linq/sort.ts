@@ -1,5 +1,5 @@
-import { defaultArrayComparer, sort } from "../../arrays";
-import { ComparerFunction } from "../comparison";
+import { defaultArrayComparer, sort } from "../arrays";
+import { ComparerFunction } from "../collections/comparison";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";

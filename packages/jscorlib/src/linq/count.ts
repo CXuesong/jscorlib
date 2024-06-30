@@ -1,4 +1,4 @@
-import { assert } from "../../diagnostics";
+import { assert } from "../diagnostics";
 import type { LinqWrapper } from "./linqWrapper";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { isArrayLikeStrict } from "./utils.internal";

@@ -1,6 +1,6 @@
-import { assert } from "../../diagnostics";
-import { ArgumentRangeError } from "../../errors";
-import { asSafeInteger, SafeInteger } from "../../numbers";
+import { assert } from "../diagnostics";
+import { ArgumentRangeError } from "../errors";
+import { asSafeInteger, SafeInteger } from "../numbers";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { AbstractLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";

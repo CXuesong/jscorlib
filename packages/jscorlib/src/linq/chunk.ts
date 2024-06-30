@@ -1,5 +1,5 @@
-import { ArgumentRangeError } from "../../errors";
-import { asSafeInteger, SafeInteger } from "../../numbers";
+import { ArgumentRangeError } from "../errors";
+import { asSafeInteger, SafeInteger } from "../numbers";
 import { LinqWrapper } from "./linqWrapper";
 import { IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 
