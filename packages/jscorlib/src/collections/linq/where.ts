@@ -1,5 +1,5 @@
 import type { LinqWrapper } from "./linqWrapper";
-import { AbstractLinqWrapper } from "./linqWrapper.internal";
+import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
 declare module "./linqWrapper" {
@@ -9,21 +9,14 @@ declare module "./linqWrapper" {
   }
 }
 
-const WhereIteratorInfoSymbol = Symbol("WhereIteratorInfo");
-
-interface WhereIteratorInfo<T> {
-  readonly iterable: Iterable<T>;
-  predicates: ReadonlyArray<SequenceElementPredicate<T>>;
-}
-
 export function Linq$where<T>(this: LinqWrapper<T>, predicate: SequenceElementPredicate<T>): LinqWrapper<T> {
   // n.b. Even if `this` is empty upon the time of invocation of this function,
   // `this` may have items when iterator gets enumerated later.
   if (this instanceof WhereLinqWrapper) {
-    const thisInfo = this[WhereIteratorInfoSymbol];
+    const state = this.__state;
     return new WhereLinqWrapper<T>({
-      ...thisInfo,
-      predicates: [...thisInfo.predicates, predicate],
+      ...state,
+      predicates: [...state.predicates, predicate],
     }).asLinq();
   }
   return new WhereLinqWrapper({
@@ -32,14 +25,14 @@ export function Linq$where<T>(this: LinqWrapper<T>, predicate: SequenceElementPr
   }).asLinq();
 }
 
-class WhereLinqWrapper<T> extends AbstractLinqWrapper<T> {
-  public [WhereIteratorInfoSymbol]: WhereIteratorInfo<T>;
-  public constructor(info: WhereIteratorInfo<T>) {
-    super();
-    this[WhereIteratorInfoSymbol] = info;
-  }
+interface WhereIteratorInfo<T> {
+  readonly iterable: Iterable<T>;
+  predicates: ReadonlyArray<SequenceElementPredicate<T>>;
+}
+
+class WhereLinqWrapper<T> extends IntermediateLinqWrapper<T, WhereIteratorInfo<T>> {
   public override *[Symbol.iterator](): Iterator<T> {
-    const { iterable, predicates } = this[WhereIteratorInfoSymbol];
+    const { iterable, predicates } = this.__state;
     const indices = new Array<number>(predicates.length).fill(0);
     ELEMENT: for (const e of iterable) {
       for (let j = 0; j < predicates.length; j++) {

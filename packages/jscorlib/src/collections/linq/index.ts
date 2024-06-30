@@ -11,6 +11,7 @@ export * as ForEach from "./forEach";
 export * from "./linqWrapper";
 export * as Pick from "./pick";
 export * as Select from "./select";
+export * as Sort from "./sort";
 export * from "./traits";
 export * from "./typing";
 export * as Where from "./where";

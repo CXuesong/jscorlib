@@ -18,3 +18,5 @@ export type SequenceElementTypeAssertionPredicate<T, TReturn extends T> = (item:
 export type SequenceElementSelector<T, TResult> = (item: T, index: number) => TResult;
 
 export type SequenceElementCallback<T> = (item: T, index: number) => void;
+
+export type SequenceElementSimpleSelector<T, TResult> = (item: T) => TResult;

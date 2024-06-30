@@ -5,6 +5,7 @@ import { ClassTypeId, PrimitiveTypeId, baseClassOf, getTypeId, typeIdToString } 
 
 /**
  * Sorts the specified array in-place.
+ * This function intends to implement stable sort.
  * 
  * @param array the array to get sorted.
  * @param comparer an optional callback used to compare the elements.
