@@ -4,7 +4,7 @@ import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { SequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
-  export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+  export interface LinqWrapper<T> {
     select<TResult>(selector: SequenceElementSelector<T, TResult>): LinqWrapper<TResult>;
     selectMany<TResult>(selector: SequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult>;
   }

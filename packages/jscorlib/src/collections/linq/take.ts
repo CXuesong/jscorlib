@@ -7,7 +7,7 @@ import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { SequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
 declare module "./linqWrapper" {
-  export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+  export interface LinqWrapper<T> {
     skip(count: SafeInteger): LinqWrapper<T>;
     take(count: SafeInteger): LinqWrapper<T>;
     takeWhile(predicate: SequenceElementPredicate<T>): LinqWrapper<T>;

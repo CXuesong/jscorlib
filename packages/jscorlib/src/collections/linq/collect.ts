@@ -2,7 +2,7 @@ import type { LinqWrapper } from "./linqWrapper";
 import { SequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
-  export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+  export interface LinqWrapper<T> {
     toArray(): T[];
     toMap<TKey>(keySelector: SequenceElementSelector<T, TKey>): Map<TKey, T>;
     toMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>, valueSelector: SequenceElementSelector<T, TValue>): Map<TKey, TValue>;

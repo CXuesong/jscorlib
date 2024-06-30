@@ -4,7 +4,7 @@ import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
-  export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+  export interface LinqWrapper<T> {
     count(): number;
     tryGetCountDirect(): number | undefined;
   }

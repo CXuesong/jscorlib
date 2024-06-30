@@ -7,7 +7,7 @@ import { SequenceElementPredicate } from "./typing";
 import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
-  export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+  export interface LinqWrapper<T> {
     first(): T;
     first(predicate?: SequenceElementPredicate<T>): T;
     last(): T;

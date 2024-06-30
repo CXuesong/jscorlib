@@ -3,7 +3,7 @@ import { AbstractLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
 declare module "./linqWrapper" {
-  export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+  export interface LinqWrapper<T> {
     where<TReturn extends T>(predicate: SequenceElementTypeAssertionPredicate<T, TReturn>): LinqWrapper<TReturn>;
     where(predicate: SequenceElementPredicate<T>): LinqWrapper<T>;
   }
