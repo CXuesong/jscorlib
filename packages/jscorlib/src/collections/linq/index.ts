@@ -7,6 +7,7 @@
 export * as Buffer from "./buffer";
 export * as Collect from "./collect";
 export * as Count from "./count";
+export * as ForEach from "./forEach";
 export * from "./linqWrapper";
 export * as Pick from "./pick";
 export * as Select from "./select";
