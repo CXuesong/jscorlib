@@ -1,6 +1,12 @@
 import { ArgumentRangeError, InvalidOperationError } from "../../errors";
 import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 
+/**
+ * Provides basic methods in addition to {@link !Iterable} in order to
+ * support LINQ extension methods.
+ * 
+ * @template T type of the sequence item.
+ */
 export interface LinqWrapperBase<T> extends Iterable<T> {
   /**
    * Returns the current object as {@link LinqWrapper}.
@@ -20,14 +26,25 @@ export interface LinqWrapperBase<T> extends Iterable<T> {
    * @remarks This is the reverse operation of {@link asLinq}. LINQ extension function
    * implementations can use this method to retrieve the underlying data object.
    * 
+   * By convention, multiple invocations to this function should return _the same_ value.
+   * Failing to meeting this requirement may result unexpected re-iteration behavior.
+   * 
    * As LINQ functions consumer, usually you won't need to call this function directly.
    */
   unwrap(): Iterable<T>;
 }
 
-// Extension point
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface LinqWrapper<T> extends LinqWrapperBase<T> {
+/**
+ * Represents an extension point to expose the additional LINQ methods (extension methods)
+ * via TypeScript interface augmentation.
+ * 
+ * @template T type of the sequence item.
+ * 
+ * @remarks To import the built-in or custom LINQ methods, you need to import
+ * the corresponding module and call either {@link registerLinqModule} (recommended)
+ * or {@link registerLinqMethod}.
+ */
+export interface LinqWrapper<T> extends LinqWrapperBase<T>, Iterable<T> {
 }
 
 const wrapperCache = new WeakMap<Iterable<unknown>, LinqWrapper<unknown>>();
