@@ -4,6 +4,8 @@ import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
+  // https://github.com/typescript-eslint/typescript-eslint/issues/3353
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export interface LinqWrapper<T> {
     count(): number;
     tryGetCountDirect(): number | undefined;
