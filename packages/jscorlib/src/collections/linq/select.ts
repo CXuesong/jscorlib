@@ -1,4 +1,4 @@
-import { asLinq, type LinqWrapper } from "./linqWrapper";
+import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { SequenceElementSelector } from "./typing";
