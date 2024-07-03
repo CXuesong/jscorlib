@@ -1,8 +1,9 @@
 // @ts-check
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
-import stylistic from "@stylistic/eslint-plugin";
 import * as JscorlibLinters from "@jscorlib-repo/linters";
+import stylistic from "@stylistic/eslint-plugin";
+import tseslint from "typescript-eslint";
+// import jsdoc from "eslint-plugin-jsdoc";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -62,6 +63,14 @@ export default tseslint.config(
       "@stylistic/semi": "error",
       "@stylistic/comma-dangle": ["error", "always-multiline"],
       "@stylistic/eol-last": ["error", "always"],
+    },
+  },
+  {
+    rules: {
+      "jsdoc/no-undefined-types": ["warn", {
+        markVariablesAsUsed: true,
+        disableReporting: true,
+      }],
     },
   },
 );
