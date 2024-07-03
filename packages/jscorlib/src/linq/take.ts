@@ -70,7 +70,7 @@ interface SkipTakeIteratorInfo<T> {
   readonly take: number | undefined;
 }
 
-class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIteratorInfo<T>> implements BuiltInLinqTraits {
+class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIteratorInfo<T>> implements BuiltInLinqTraits<T> {
   public override *[Symbol.iterator](): Iterator<T> {
     // e.g. skip = 1, take = 2
     // 0 1 2 3 4 5
@@ -103,7 +103,7 @@ class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIterator
   }
 }
 
-class EmptyLinqWrapper extends AbstractLinqWrapper<never> implements BuiltInLinqTraits {
+class EmptyLinqWrapper extends AbstractLinqWrapper<never> implements BuiltInLinqTraits<never> {
   private static _instance: EmptyLinqWrapper | undefined;
   public constructor() {
     super();

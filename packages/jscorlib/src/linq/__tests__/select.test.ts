@@ -22,7 +22,7 @@ describe("select", () => {
     expect(linq.tryGetCountDirect()).toBe(6);
 
     // Linq$count should be calling [[TryGetCountDirectSymbol]] first
-    vitest.spyOn(linq as BuiltInLinqTraits, TryGetCountDirectSymbol).mockReturnValue(123);
+    vitest.spyOn(linq as BuiltInLinqTraits<string>, TryGetCountDirectSymbol).mockReturnValue(123);
     expect(linq.count()).toBe(123);
   });
   it("selectMany", () => {

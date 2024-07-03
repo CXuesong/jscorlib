@@ -18,15 +18,17 @@ export interface LinqWrapperBase<T> extends Iterable<T> {
    */
   asLinq(): LinqWrapper<T>;
   /**
-   * Infrastructure. Unwraps and returns the underlying {@link !Iterable} object.
+   * Infrastructure. Unwraps and returns the underlying {@link !Iterable} object,
+   * if available.
    * 
-   * @returns the underlying {@link !Iterable} object. If there is no other specific
-   * underlying data, this method may return `this`.
+   * @returns the underlying {@link !Iterable} object that will give _exactly the same_
+   * iteration sequence as current LINQ wrapper. If there is no applicable underlying iterator,
+   * this method may return `this`.
    * 
    * @remarks This is the reverse operation of {@link asLinq}. LINQ extension function
    * implementations can use this method to retrieve the underlying data object.
    * 
-   * By convention, multiple invocations to this function should return _the same_ value.
+   * By convention, multiple invocations to this function should return _the same_ reference.
    * Failing to meeting this requirement may result unexpected re-iteration behavior.
    * 
    * As LINQ functions consumer, usually you won't need to call this function directly.

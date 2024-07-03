@@ -2,8 +2,9 @@ import { defaultArrayComparer, sort } from "../arrays";
 import { ComparerFunction } from "../collections/comparison";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
-import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
+import { BuiltInLinqTraits, TryGetCountDirectSymbol, TryUnwrapUnorderedSymbol } from "./traits";
 import { SequenceElementSimpleSelector } from "./typing";
+import { unwrapUnorderedLinqWrapper } from "./utils.internal";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
@@ -42,14 +43,14 @@ function resetOrderClause<T, TKey>(wrapper: LinqWrapper<T>, clause: OrderClause<
   const unwrapped = wrapper instanceof OrderedLinqWrapperImpl
     // Discard old sorting
     ? wrapper.__state.iterable
-    : wrapper.unwrap();
+    : unwrapUnorderedLinqWrapper(wrapper);
   return new OrderedLinqWrapperImpl({
     iterable: unwrapped as Iterable<T>,
     orderClauses: [clause],
   }).asLinq();
 }
 
-function Linq$appendOrderClause<T, TKey>(wrapper: OrderedLinqWrapperImpl<T>, clause: OrderClause<T, TKey>): OrderedLinqWrapper<T> {
+function appendOrderClause<T, TKey>(wrapper: OrderedLinqWrapperImpl<T>, clause: OrderClause<T, TKey>): OrderedLinqWrapper<T> {
   const state = wrapper.__state;
   return new OrderedLinqWrapperImpl<T>({
     ...state,
@@ -71,18 +72,21 @@ interface OrderedIteratorInfo<T> {
 
 class OrderedLinqWrapperImpl<T>
   extends IntermediateLinqWrapper<T, OrderedIteratorInfo<T>>
-  implements OrderedLinqWrapperBase<T>, BuiltInLinqTraits {
+  implements OrderedLinqWrapperBase<T>, BuiltInLinqTraits<T> {
   public override asLinq(): OrderedLinqWrapper<T> {
     return this as unknown as OrderedLinqWrapper<T>;
   }
   public thenBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
-    return Linq$appendOrderClause(this, { selector: keySelector, comparer, descending: false });
+    return appendOrderClause(this, { selector: keySelector, comparer, descending: false });
   }
   public thenByDescending<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
-    return Linq$appendOrderClause(this, { selector: keySelector, comparer, descending: true });
+    return appendOrderClause(this, { selector: keySelector, comparer, descending: true });
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
     return asLinq(this.__state.iterable).tryGetCountDirect();
+  }
+  public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
+    return this.__state.iterable;
   }
   public override *[Symbol.iterator](): Iterator<T> {
     const { iterable, orderClauses } = this.__state;

@@ -69,7 +69,7 @@ interface SelectManyStackItem {
 
 class SelectLinqWrapper<T, TResult>
   extends IntermediateLinqWrapper<TResult, SelectIteratorState<T>>
-  implements BuiltInLinqTraits {
+  implements BuiltInLinqTraits<TResult> {
   public override *[Symbol.iterator](): Iterator<TResult> {
     const { iterable, selectors } = this.__state;
     const indices = new Array<number>(selectors.length).fill(0);
