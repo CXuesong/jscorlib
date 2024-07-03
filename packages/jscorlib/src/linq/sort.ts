@@ -95,21 +95,15 @@ class OrderedLinqWrapperImpl<T>
     /* eslint-disable @typescript-eslint/prefer-for-of */
     for (let i = 0; i < orderClauses.length; i++) {
       // stable sort but reverse the order of clauses
-      const { selector, comparer, descending } = orderClauses[orderClauses.length - i - 1];
+      const { selector, comparer = defaultArrayComparer, descending } = orderClauses[orderClauses.length - i - 1];
       const signFactor = descending ? -1 : 1;
       if (selector) {
         // fill keys
         for (let i = 0; i < buffer.length; i++) buffer[i][1] = selector(buffer[i][0]);
-        if (comparer)
-          sort(buffer, (x, y) => signFactor * comparer(x[1], y[1]));
-        else
-          sort(buffer, (x, y) => signFactor * defaultArrayComparer(x[1], y[1]));
+        sort(buffer, (x, y) => signFactor * comparer(x[1], y[1]));
       } else {
         // compare by elements
-        if (comparer)
-          sort(buffer, (x, y) => signFactor * comparer(x[0], y[0]));
-        else
-          sort(buffer, (x, y) => signFactor * defaultArrayComparer(x[0], y[0]));
+        sort(buffer, (x, y) => signFactor * comparer(x[0], y[0]));
       }
     }
     for (let i = 0; i < buffer.length; i++) yield buffer[i][0];

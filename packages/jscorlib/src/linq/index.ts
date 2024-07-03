@@ -4,6 +4,7 @@
  * 
  * @module
  */
+export * as Aggregate from "./aggregate";
 export * as Chunk from "./chunk";
 export * as Collect from "./collect";
 export * as Count from "./count";
