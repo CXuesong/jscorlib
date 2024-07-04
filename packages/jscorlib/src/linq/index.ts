@@ -11,6 +11,7 @@ export * as Count from "./count";
 export * as Distinct from "./distinct";
 export * as ForEach from "./forEach";
 export * from "./linqWrapper";
+export * as MinMax from "./minmax";
 export * as Pick from "./pick";
 export * as Select from "./select";
 export * as Sort from "./sort";

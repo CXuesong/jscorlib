@@ -10,7 +10,9 @@ export interface BuiltInLinqTraits<T> {
    * Retrieves the input iterator, if the current LINQ wrapper is only re-ordering
    * the items without changing their values (e.g., sorting).
    * 
-   * This function also implies {@link LinqWrapper.unwrap}.
+   * @remarks While this function also implies {@link LinqWrapper.unwrap},
+   * implementation _should not_ return `this`, as it can cause caller
+   * to enter infinite loop.
    */
   [TryUnwrapUnorderedSymbol]?(): Iterable<T> | undefined;
 }

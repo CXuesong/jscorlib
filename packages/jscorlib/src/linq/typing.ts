@@ -15,8 +15,16 @@ export type SequenceElementPredicate<T> = (item: T, index: number) => unknown;
  */
 export type SequenceElementTypeAssertionPredicate<T, TReturn extends T> = (item: T, index: number) => item is TReturn;
 
+/**
+ * Represents a callback that projects (or maps) the ordered element in a sequence
+ * one by one into another sequence of the same length.
+ */
 export type SequenceElementSelector<T, TResult> = (item: T, index: number) => TResult;
 
 export type SequenceElementCallback<T> = (item: T, index: number) => void;
 
+/**
+ * Represents a callback that projects (or maps) the unordered element in a sequence
+ * one by one into another sequence of the same length.
+ */
 export type SequenceElementSimpleSelector<T, TResult> = (item: T) => TResult;

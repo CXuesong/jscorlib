@@ -1,4 +1,4 @@
-import { ComparerFunction, compareStringInvariant, getComparer } from "../collections/comparison";
+import { ComparerFunction, compareStringInvariant, getComparer, registerComparer } from "../collections/comparison";
 import { fail } from "../diagnostics";
 import { InvalidOperationError } from "../errors";
 import { ClassTypeId, PrimitiveTypeId, baseClassOf, getTypeId, typeIdToString } from "../types";
@@ -68,7 +68,7 @@ const typeIdOrderMap: Partial<Record<PrimitiveTypeId, number>> = {
  * * object
  * 
  * Values of the same type are compared with the comparer function retrieved from {@link getComparer}.
- * Attempting to compare other primitive types, or object types that are yet to be registered (with {@link Collections.Comparison~registerComparer})
+ * Attempting to compare other primitive types, or object types that are yet to be registered (with {@link registerComparer})
  * will cause {@link InvalidOperationError}.
  */
 export function defaultArrayComparer(x: unknown, y: unknown): number {
