@@ -13,6 +13,7 @@ export * as ForEach from "./forEach";
 export * from "./linqWrapper";
 export * as MinMax from "./minmax";
 export * as Pick from "./pick";
+export * as Reverse from "./reverse";
 export * as Select from "./select";
 export * as Sort from "./sort";
 export * from "./traits";
