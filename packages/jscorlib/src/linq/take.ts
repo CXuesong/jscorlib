@@ -1,6 +1,7 @@
 import { assert } from "../diagnostics";
 import { ArgumentRangeError } from "../errors";
 import { asSafeInteger, SafeInteger } from "../numbers";
+import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { AbstractLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
@@ -93,7 +94,7 @@ class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIterator
     }
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    let count = asLinq(this.__state.iterable).tryGetCountDirect();
+    let count = Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
     if (count == null) return undefined;
     count -= this.__state.skip;
     // All the items have been skipped.

@@ -29,7 +29,6 @@
     "@jscorlib-repo/linters": "workspace:^",
     "@jscorlib-repo/test-helpers": "workspace:^",
     "@jscorlib-repo/typedoc-presets": "workspace:^",
-    "eslint-plugin-jsdoc": "^48.5.0",
     "typescript": "^5.5.2"
   }
 }

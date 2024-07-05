@@ -1,5 +1,6 @@
 import { defaultArrayComparer, sort } from "../arrays";
 import { ComparerFunction } from "../collections/comparison";
+import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol, TryUnwrapUnorderedSymbol } from "./traits";
@@ -83,7 +84,7 @@ class OrderedLinqWrapperImpl<T>
     return appendOrderClause(this, { selector: keySelector, comparer, descending: true });
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    return asLinq(this.__state.iterable).tryGetCountDirect();
+    return Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
   }
   public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
     return this.__state.iterable;

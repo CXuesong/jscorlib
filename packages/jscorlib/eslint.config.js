@@ -2,8 +2,8 @@
 import eslint from "@eslint/js";
 import * as JscorlibLinters from "@jscorlib-repo/linters";
 import stylistic from "@stylistic/eslint-plugin";
+import jsdoc from "eslint-plugin-jsdoc";
 import tseslint from "typescript-eslint";
-// import jsdoc from "eslint-plugin-jsdoc";
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -66,6 +66,9 @@ export default tseslint.config(
     },
   },
   {
+    plugins: {
+      jsdoc,
+    },
     rules: {
       "jsdoc/no-undefined-types": ["warn", {
         markVariablesAsUsed: true,

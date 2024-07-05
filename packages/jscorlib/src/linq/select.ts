@@ -1,3 +1,4 @@
+import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
@@ -85,6 +86,6 @@ class SelectLinqWrapper<T, TResult>
   public [TryGetCountDirectSymbol](): number | undefined {
     // projection does not change item count.
     // N.b. This does not hold as soon as we introduce selectMany here.
-    return asLinq(this.__state.iterable).tryGetCountDirect();
+    return Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
   }
 }

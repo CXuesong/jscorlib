@@ -327,6 +327,7 @@ __metadata:
     "@stylistic/eslint-plugin": "npm:^2.3.0"
     "@types/eslint__js": "npm:^8.42.3"
     eslint: "npm:^9.6.0"
+    eslint-plugin-jsdoc: "npm:^48.5.0"
     typescript-eslint: "npm:^8.0.0-alpha.37"
   bin:
     eslint: ./bin/eslint.js
@@ -2004,7 +2005,6 @@ __metadata:
     "@jscorlib-repo/linters": "workspace:^"
     "@jscorlib-repo/test-helpers": "workspace:^"
     "@jscorlib-repo/typedoc-presets": "workspace:^"
-    eslint-plugin-jsdoc: "npm:^48.5.0"
     typescript: "npm:^5.5.2"
   languageName: unknown
   linkType: soft

@@ -1,3 +1,4 @@
+import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol, TryUnwrapUnorderedSymbol } from "./traits";
@@ -11,9 +12,8 @@ declare module "./linqWrapper" {
 
 export function Linq$reverse<T>(this: LinqWrapper<T>): LinqWrapper<T> {
   if (this instanceof ReverseLinqWrapper) {
-    const state = this.__state;
     // Reverse + Reverse --> Original
-    return asLinq(this.__state.iterable);
+    return asLinq(this.__state.iterable as Iterable<T>);
   }
 
   return new ReverseLinqWrapper({
@@ -36,7 +36,7 @@ class ReverseLinqWrapper<T>
     }
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    return asLinq(this.__state.iterable).tryGetCountDirect();
+    return Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
   }
   public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
     return this.__state.iterable;
