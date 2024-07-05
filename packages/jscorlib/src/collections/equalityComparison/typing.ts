@@ -16,8 +16,6 @@ export type EqualityComparerFunction<T = any> = (x: T, y: T) => boolean;
 /**
  * Provides methods to compare the equality of two objects.
  * 
- * @deprecated This interface is not supported by the library yet.
- * 
  * @remarks Due to the limitation of current JavaScript API, there is no efficient approach to evaluate
  * hash code for every primitive types (e.g. `string`). This can cause significant performance penalty.
  * 

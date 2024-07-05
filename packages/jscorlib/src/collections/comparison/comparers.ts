@@ -24,6 +24,10 @@ const lazyClassInstanceComparerMap = new Lazy<WeakMap<ClassTypeId, ComparerFunct
 
     const vx = x.getTime();
     const vy = y.getTime();
+    // Invalid date
+    if (Number.isNaN(vx)) return Number.isNaN(vy) ? 0 : -1;
+    if (Number.isNaN(vy)) return 1;
+    // Valid date
     if (vx > vy) return 1;
     if (vx < vy) return -1;
     return 0;
