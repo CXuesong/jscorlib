@@ -19,3 +19,4 @@ export * as Sort from "./sort";
 export * from "./traits";
 export * from "./typing";
 export * as Where from "./where";
+export * as Zip from "./zip";

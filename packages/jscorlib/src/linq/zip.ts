@@ -7,7 +7,10 @@ import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type ZippedSequenceElementSelector<Ts extends any[], TResult> = (...elements: Ts) => TResult;
 
-type TypeArrayToIterableArray<Ts extends any[]> = { [i in keyof Ts]: Iterable<Ts[i]> };
+/**
+ * Infrastructure. Do not use this member in your own code.
+ */
+export type TypeArrayToIterableArray<Ts extends any[]> = { [i in keyof Ts]: Iterable<Ts[i]> };
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
