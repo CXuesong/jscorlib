@@ -1,6 +1,7 @@
-import { assert, getObjectId } from "../../diagnostics";
+import { assert, fail, getObjectId } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
 import { ReferenceType } from "../../types/referenceType";
+import { OrdinalStringEqualityComparer } from "./strings";
 import { EqualityComparer } from "./typing";
 
 export class NumberEqualityComparer implements EqualityComparer<number> {
@@ -80,5 +81,64 @@ export class ReferenceTypeEqualityComparer implements EqualityComparer<Reference
       return hash;
     }
     return getObjectId(value);
+  }
+}
+
+export class AnyValueEqualityComparer implements EqualityComparer<unknown> {
+  public static readonly instance = new AnyValueEqualityComparer();
+  public equals(x: unknown, y: unknown): boolean {
+    if (Object.is(x, y)) return true;
+
+    switch (typeof x) {
+      case "string":
+        if (typeof y !== "string") return false;
+        return OrdinalStringEqualityComparer.instance.equals(x, y);
+      case "number":
+        if (typeof y !== "number") return false;
+        return NumberEqualityComparer.instance.equals(x, y);
+      case "bigint":
+        if (typeof y !== "bigint") return false;
+        return BigIntEqualityComparer.instance.equals(x, y);
+      case "boolean":
+        if (typeof y !== "boolean") return false;
+        return BooleanEqualityComparer.instance.equals(x, y);
+      case "object":
+        if (x instanceof Date) {
+          if (!(y instanceof Date)) return false;
+          return DateEqualityComparer.instance.equals(x, y);
+        }
+        if (!x) return false;   // y is not null (but can be undefined)
+        if (typeof y !== "object") return false;
+        return ReferenceTypeEqualityComparer.instance.equals(x, y!);
+      case "symbol":
+        if (typeof y !== "symbol") return false;
+        return ReferenceTypeEqualityComparer.instance.equals(x, y);
+      case "function":
+        if (typeof y !== "function") return false;
+        return ReferenceTypeEqualityComparer.instance.equals(x, y);
+    }
+    fail("Unexpected value type. Unable to check equality.");
+    return false;
+  }
+  public getHashCode(value: unknown): SafeInteger {
+    if (value == null) return 0;
+    switch (typeof value) {
+      case "string":
+        return OrdinalStringEqualityComparer.instance.getHashCode(value);
+      case "number":
+        return NumberEqualityComparer.instance.getHashCode(value);
+      case "bigint":
+        return BigIntEqualityComparer.instance.getHashCode(value);
+      case "boolean":
+        return BooleanEqualityComparer.instance.getHashCode(value);
+      case "object":
+        if (value instanceof Date) return DateEqualityComparer.instance.getHashCode(value);
+        return ReferenceTypeEqualityComparer.instance.getHashCode(value);
+      case "symbol":
+      case "function":
+        return ReferenceTypeEqualityComparer.instance.getHashCode(value);
+    }
+    fail("Unexpected value type. Unable to generate hash code.");
+    return 0;
   }
 }
