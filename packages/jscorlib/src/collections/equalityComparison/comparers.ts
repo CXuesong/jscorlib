@@ -1,8 +1,10 @@
 import { assert, getObjectId } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
+import { ReferenceType } from "../../types/referenceType";
 import { EqualityComparer } from "./typing";
 
 export class NumberEqualityComparer implements EqualityComparer<number> {
+  public static readonly instance = new NumberEqualityComparer();
   private readonly _floatView = new Float64Array(1);
   private readonly _intView = new Uint32Array(this._floatView.buffer);
   public constructor() {
@@ -21,6 +23,7 @@ export class NumberEqualityComparer implements EqualityComparer<number> {
 }
 
 export class BigIntEqualityComparer implements EqualityComparer<bigint> {
+  public static readonly instance = new BigIntEqualityComparer();
   public equals(x: bigint, y: bigint): boolean {
     return x === y;
   }
@@ -35,6 +38,7 @@ export class BigIntEqualityComparer implements EqualityComparer<bigint> {
 }
 
 export class BooleanEqualityComparer implements EqualityComparer<boolean> {
+  public static readonly instance = new BooleanEqualityComparer();
   public equals(x: boolean, y: boolean): boolean {
     return x === y;
   }
@@ -44,6 +48,7 @@ export class BooleanEqualityComparer implements EqualityComparer<boolean> {
 }
 
 export class DateEqualityComparer implements EqualityComparer<Date> {
+  public static readonly instance = new DateEqualityComparer();
   public equals(x: Date, y: Date): boolean {
     // Handle invalid date (NaN) properly.
     return Object.is(x.getTime(), y.getTime());
@@ -55,13 +60,25 @@ export class DateEqualityComparer implements EqualityComparer<Date> {
   }
 }
 
-export class ObjectEqualityComparer implements EqualityComparer<object> {
-  public equals(x: object, y: object): boolean {
+const globalSymbolHashes = new Map<symbol, SafeInteger>();
+
+export class ReferenceTypeEqualityComparer implements EqualityComparer<ReferenceType> {
+  public static readonly instance = new ReferenceTypeEqualityComparer();
+  public equals(x: ReferenceType, y: ReferenceType): boolean {
     return x === y;
   }
-  public getHashCode(value: object): SafeInteger {
+  public getHashCode(value: ReferenceType): SafeInteger {
     // null
     if (!value) return 0;
+    if (typeof value === "symbol" && Symbol.keyFor(value) != null) {
+      // getObjectId is not applicable to shared symbols.
+      let hash = globalSymbolHashes.get(value);
+      if (hash == null) {
+        hash = globalSymbolHashes.size + 1;
+        globalSymbolHashes.set(value, hash);
+      }
+      return hash;
+    }
     return getObjectId(value);
   }
 }
