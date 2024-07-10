@@ -39,3 +39,11 @@ export interface EqualityComparer<T = any> {
    */
   getHashCode(value: T): SafeInteger;
 }
+
+export const EqualsSymbol = Symbol.for("jscorlib::Collections.EqualityComparison.Equitable.Equals");
+export const GetHashCodeSymbol = Symbol.for("jscorlib::Collections.EqualityComparison.Equitable.GetHashCode");
+
+export interface Equitable {
+  [EqualsSymbol](other: unknown): boolean;
+  [GetHashCodeSymbol](): SafeInteger;
+}

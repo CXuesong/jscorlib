@@ -2,7 +2,7 @@ import { assert, fail, getObjectId } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
 import { ReferenceType } from "../../types/referenceType";
 import { OrdinalStringEqualityComparer } from "./strings";
-import { EqualityComparer } from "./typing";
+import { EqualityComparer, EqualsSymbol, Equitable, GetHashCodeSymbol } from "./typing";
 
 export class NumberEqualityComparer implements EqualityComparer<number> {
   public static readonly instance = new NumberEqualityComparer();
@@ -63,14 +63,16 @@ export class DateEqualityComparer implements EqualityComparer<Date> {
 
 const globalSymbolHashes = new Map<symbol, SafeInteger>();
 
-export class ReferenceTypeEqualityComparer implements EqualityComparer<ReferenceType> {
+export class ReferenceTypeEqualityComparer implements EqualityComparer<ReferenceType | null | undefined> {
   public static readonly instance = new ReferenceTypeEqualityComparer();
-  public equals(x: ReferenceType, y: ReferenceType): boolean {
-    return x === y;
+  public equals(x: ReferenceType | null | undefined, y: ReferenceType | null | undefined): boolean {
+    if (isEquitable(x) && isEquitable(y)) return x[EqualsSymbol](y);
+    return Object.is(x, y);
   }
-  public getHashCode(value: ReferenceType): SafeInteger {
+  public getHashCode(value: ReferenceType | null | undefined): SafeInteger {
     // null
     if (!value) return 0;
+    if (isEquitable(value)) return value[GetHashCodeSymbol]();
     if (typeof value === "symbol" && Symbol.keyFor(value) != null) {
       // getObjectId is not applicable to shared symbols.
       let hash = globalSymbolHashes.get(value);
@@ -109,7 +111,7 @@ export class AnyValueEqualityComparer implements EqualityComparer<unknown> {
         }
         if (!x) return false;   // y is not null (but can be undefined)
         if (typeof y !== "object") return false;
-        return ReferenceTypeEqualityComparer.instance.equals(x, y!);
+        return ReferenceTypeEqualityComparer.instance.equals(x, y);
       case "symbol":
         if (typeof y !== "symbol") return false;
         return ReferenceTypeEqualityComparer.instance.equals(x, y);
@@ -141,4 +143,14 @@ export class AnyValueEqualityComparer implements EqualityComparer<unknown> {
     fail("Unexpected value type. Unable to generate hash code.");
     return 0;
   }
+}
+
+function isEquitable(value: unknown): value is Equitable {
+  if (!value) return false;
+  const e = value as Equitable;
+  assert(
+    (typeof e[EqualsSymbol] === "function") === (typeof e[GetHashCodeSymbol] === "function"),
+    "Detected possibly incorrectly implemented Equitable interface: Both [[EqualsSymbol]] and [[GetHashCodeSymbol]] should be implemented.",
+  );
+  return typeof e[EqualsSymbol] === "function" && typeof e[GetHashCodeSymbol] === "function";
 }
