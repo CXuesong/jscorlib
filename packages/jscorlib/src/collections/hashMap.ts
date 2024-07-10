@@ -5,7 +5,7 @@ import { assert } from "../diagnostics";
 import { SafeInteger } from "../numbers";
 import { AnyValueEqualityComparer, EqualityComparer } from "./equalityComparison";
 
-export class Dictionary<TKey, TValue> implements Map<TKey, TValue> {
+export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
   // For now, we just delegate load factors etc. into the built-in one.
   private _hashMap = new Map<SafeInteger, Array<[TKey, TValue]>>();
   private _size = 0;
@@ -15,6 +15,7 @@ export class Dictionary<TKey, TValue> implements Map<TKey, TValue> {
   }
   public clear(): void {
     this._hashMap.clear();
+    this._size = 0;
   }
   public delete(key: TKey): boolean {
     const keyHash = this.comparer.getHashCode(key);
@@ -119,5 +120,5 @@ export class Dictionary<TKey, TValue> implements Map<TKey, TValue> {
     return this.entries();
   }
 
-  public readonly [Symbol.toStringTag] = "Dictionary";
+  public readonly [Symbol.toStringTag] = "HashMap";
 }

@@ -48,6 +48,8 @@ export default tseslint.config(
           ignoreProperties: true,
         },
       ],
+      // This rule does not handle `unknown` well
+      "@typescript-eslint/restrict-template-expressions": "warn",
     },
   },
   {
