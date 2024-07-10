@@ -39,13 +39,13 @@ export function Linq$toMap<T, TKey, TValue>(
   return map;
 }
 
-export function Linq$toSet<T, TValue>(
+export function Linq$toSet<T, TValue = T>(
   this: LinqWrapper<T>,
   valueSelector?: SequenceElementSelector<T, TValue>,
 ): Set<TValue> {
   const set = new Set<TValue>();
-  let i = 0;
   if (valueSelector) {
+    let i = 0;
     for (const e of this.unwrap()) {
       set.add(valueSelector(e, i));
       i++;
@@ -53,7 +53,6 @@ export function Linq$toSet<T, TValue>(
   } else {
     for (const e of this.unwrap()) {
       set.add(e as unknown as TValue);
-      i++;
     }
   }
   return set;

@@ -1,4 +1,4 @@
-import { LinkedList, LinkedListNode } from "../collections";
+import { LinkedList, LinkedListNode } from "../collections/linkedList";
 import { assert } from "../diagnostics";
 import { ArgumentRangeError } from "../errors";
 

@@ -1,5 +1,6 @@
 export * as Comparison from "./comparison";
-export * from "./hashMap";
 export * as EqualityComparison from "./equalityComparison";
+export * from "./hashMap";
+export * from "./hashSet";
 export * as Iterators from "./iterators";
 export * from "./linkedList";

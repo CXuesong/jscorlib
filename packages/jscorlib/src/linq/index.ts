@@ -7,6 +7,8 @@
 export * as Aggregate from "./aggregate";
 export * as Chunk from "./chunk";
 export * as Collect from "./collect";
+export * as CollectHashMap from "./collectHashMap";
+export * as CollectHashSet from "./collectHashSet";
 export * as Count from "./count";
 export * as Distinct from "./distinct";
 export * as ForEach from "./forEach";
