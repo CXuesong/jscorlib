@@ -38,6 +38,10 @@ export interface EqualityComparer<T = any> {
    * then the value returned by {@link getHashCode} for `x` must equal the value returned for `y`.
    */
   getHashCode(value: T): SafeInteger;
+  /**
+   * Given an aribtrary value, checks whether the value can be compared by the current {@link EqualityComparer}.
+   */
+  isSupported(value: unknown): value is T;
 }
 
 export const EqualsSymbol = Symbol.for("jscorlib::Collections.EqualityComparison.Equatable.Equals");
@@ -45,5 +49,5 @@ export const GetHashCodeSymbol = Symbol.for("jscorlib::Collections.EqualityCompa
 
 export interface Equatable {
   [EqualsSymbol](other: unknown): boolean;
-  [GetHashCodeSymbol](): SafeInteger;
+  [GetHashCodeSymbol]?(): SafeInteger;
 }

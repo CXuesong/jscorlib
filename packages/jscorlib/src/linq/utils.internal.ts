@@ -1,13 +1,11 @@
 import { assert } from "../diagnostics";
-import { isTypedArray } from "../types";
 import { LinqWrapperBase } from "./linqWrapper";
 import { BuiltInLinqTraits, TryUnwrapUnorderedSymbol } from "./traits";
 
-export function isArrayLikeStrict<T>(iterable: Iterable<T>): iterable is Iterable<T> & ArrayLike<T> {
-  return typeof iterable === "string"
-    || Array.isArray(iterable)
-    || isTypedArray(iterable);
-}
+export {
+  /** @deprecated */
+  isArrayLikeStrict,
+} from "../types/internal/utils";
 
 export function unwrapUnorderedLinqWrapper<T>(wrapper: LinqWrapperBase<T>): Iterable<T> {
   let it = wrapper as (BuiltInLinqTraits<T> & Iterable<T>);

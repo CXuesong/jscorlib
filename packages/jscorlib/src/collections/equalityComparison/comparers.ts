@@ -1,6 +1,6 @@
 import { assert, fail, getObjectId } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
-import { ReferenceType } from "../../types/referenceType";
+import { isReferenceType, ReferenceType } from "../../types/referenceType";
 import { OrdinalStringEqualityComparer } from "./strings";
 import { EqualityComparer, EqualsSymbol, Equatable, GetHashCodeSymbol } from "./typing";
 
@@ -10,6 +10,9 @@ export class NumberEqualityComparer implements EqualityComparer<number> {
   private readonly _intView = new Uint32Array(this._floatView.buffer);
   public constructor() {
     assert(this._intView.length == 2);
+  }
+  public isSupported(value: unknown): value is number {
+    return typeof value === "number";
   }
   public equals(x: number, y: number): boolean {
     // Handle NaN properly.
@@ -25,6 +28,9 @@ export class NumberEqualityComparer implements EqualityComparer<number> {
 
 export class BigIntEqualityComparer implements EqualityComparer<bigint> {
   public static readonly instance = new BigIntEqualityComparer();
+  public isSupported(value: unknown): value is bigint {
+    return typeof value === "bigint";
+  }
   public equals(x: bigint, y: bigint): boolean {
     return x === y;
   }
@@ -40,6 +46,9 @@ export class BigIntEqualityComparer implements EqualityComparer<bigint> {
 
 export class BooleanEqualityComparer implements EqualityComparer<boolean> {
   public static readonly instance = new BooleanEqualityComparer();
+  public isSupported(value: unknown): value is boolean {
+    return typeof value === "boolean";
+  }
   public equals(x: boolean, y: boolean): boolean {
     return x === y;
   }
@@ -50,6 +59,9 @@ export class BooleanEqualityComparer implements EqualityComparer<boolean> {
 
 export class DateEqualityComparer implements EqualityComparer<Date> {
   public static readonly instance = new DateEqualityComparer();
+  public isSupported(value: unknown): value is Date {
+    return value instanceof Date;
+  }
   public equals(x: Date, y: Date): boolean {
     // Handle invalid date (NaN) properly.
     return Object.is(x.getTime(), y.getTime());
@@ -65,14 +77,17 @@ const globalSymbolHashes = new Map<symbol, SafeInteger>();
 
 export class ReferenceTypeEqualityComparer implements EqualityComparer<ReferenceType | null | undefined> {
   public static readonly instance = new ReferenceTypeEqualityComparer();
+  public isSupported(value: unknown): value is ReferenceType | null | undefined {
+    return value == null || isReferenceType(value);
+  }
   public equals(x: ReferenceType | null | undefined, y: ReferenceType | null | undefined): boolean {
-    if (isEquatable(x) && isEquatable(y)) return x[EqualsSymbol](y);
+    if (isEquatableWithHashCode(x) && isEquatableWithHashCode(y)) return x[EqualsSymbol](y);
     return Object.is(x, y);
   }
   public getHashCode(value: ReferenceType | null | undefined): SafeInteger {
     // null
     if (!value) return 0;
-    if (isEquatable(value)) return value[GetHashCodeSymbol]();
+    if (isEquatableWithHashCode(value)) return value[GetHashCodeSymbol]();
     if (typeof value === "symbol" && Symbol.keyFor(value) != null) {
       // getObjectId is not applicable to shared symbols.
       let hash = globalSymbolHashes.get(value);
@@ -88,6 +103,10 @@ export class ReferenceTypeEqualityComparer implements EqualityComparer<Reference
 
 export class AnyValueEqualityComparer implements EqualityComparer<unknown> {
   public static readonly instance = new AnyValueEqualityComparer();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public isSupported(value: unknown): value is any {
+    return true;
+  }
   public equals(x: unknown, y: unknown): boolean {
     if (Object.is(x, y)) return true;
 
@@ -145,12 +164,12 @@ export class AnyValueEqualityComparer implements EqualityComparer<unknown> {
   }
 }
 
-function isEquatable(value: unknown): value is Equatable {
+function isEquatableWithHashCode(value: unknown): value is Equatable & { [GetHashCodeSymbol]: object } {
   if (!value) return false;
   const e = value as Equatable;
   assert(
     (typeof e[EqualsSymbol] === "function") === (typeof e[GetHashCodeSymbol] === "function"),
-    "Detected possibly incorrectly implemented Equatable interface: Both [[EqualsSymbol]] and [[GetHashCodeSymbol]] should be implemented.",
+    "Incorrectly implemented Equatable interface for hash code generation: Both [[EqualsSymbol]] and [[GetHashCodeSymbol]] should be implemented.",
   );
   return typeof e[EqualsSymbol] === "function" && typeof e[GetHashCodeSymbol] === "function";
 }

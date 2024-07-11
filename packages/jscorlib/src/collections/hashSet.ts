@@ -3,9 +3,11 @@
 import { assert } from "../diagnostics";
 import { SafeInteger } from "../numbers";
 import { AnyValueEqualityComparer, EqualityComparer } from "./equalityComparison";
+import { referenceTypeEquals } from "./equalityComparison/equals";
+import { SetEqualsSymbol, SetEquatable } from "./sets/typing";
 
-export class HashSet<T> implements Set<T> {
-  private _hashSet = new Map<SafeInteger, T[]>();
+export class HashSet<T> implements Set<T>, SetEquatable {
+  private _buckets = new Map<SafeInteger, T[]>();
   private _size = 0;
   public readonly comparer: EqualityComparer<T>;
   public constructor(comparer?: EqualityComparer<T>) {
@@ -16,7 +18,7 @@ export class HashSet<T> implements Set<T> {
     if (!values) return inst;
     if (values instanceof HashSet && values.comparer === inst.comparer) {
       // clone
-      inst._hashSet = structuredClone((values as HashSet<T>)._hashSet);
+      inst._buckets = structuredClone((values as HashSet<T>)._buckets);
       inst._size = values._size;
       return inst;
     }
@@ -28,10 +30,10 @@ export class HashSet<T> implements Set<T> {
   }
   public add(value: T): this {
     const valueHash = this.comparer.getHashCode(value);
-    let entries = this._hashSet.get(valueHash);
+    let entries = this._buckets.get(valueHash);
     if (!entries) {
       entries = [];
-      this._hashSet.set(valueHash, entries);
+      this._buckets.set(valueHash, entries);
     }
     for (let i = 0; i < entries.length; i++) {
       if (this.comparer.equals(entries[i], value)) {
@@ -44,13 +46,13 @@ export class HashSet<T> implements Set<T> {
   }
 
   public clear(): void {
-    this._hashSet.clear();
+    this._buckets.clear();
     this._size = 0;
   }
 
   public delete(value: T): boolean {
     const valueHash = this.comparer.getHashCode(value);
-    const entries = this._hashSet.get(valueHash);
+    const entries = this._buckets.get(valueHash);
     if (!entries) return false;
     for (let i = 0; i < entries.length; i++) {
       if (this.comparer.equals(entries[i], value)) {
@@ -64,7 +66,7 @@ export class HashSet<T> implements Set<T> {
   }
 
   public forEach(callbackfn: (value: T, value2: T, set: Set<T>) => void, thisArg?: unknown): void {
-    for (const entries of this._hashSet.values()) {
+    for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         callbackfn.call(thisArg, entry, entry, this);
       }
@@ -73,7 +75,7 @@ export class HashSet<T> implements Set<T> {
 
   public has(value: T): boolean {
     const valueHash = this.comparer.getHashCode(value);
-    const entries = this._hashSet.get(valueHash);
+    const entries = this._buckets.get(valueHash);
     if (!entries) return false;
     for (let i = 0; i < entries.length; i++) {
       if (this.comparer.equals(entries[i], value)) {
@@ -88,23 +90,19 @@ export class HashSet<T> implements Set<T> {
   }
 
   public *entries(): IterableIterator<[T, T]> {
-    for (const entries of this._hashSet.values()) {
+    for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield [entry, entry];
       }
     }
   }
 
-  public *keys(): IterableIterator<T> {
-    for (const entries of this._hashSet.values()) {
-      for (const entry of entries) {
-        yield entry;
-      }
-    }
+  public keys(): IterableIterator<T> {
+    return this.values();
   }
 
   public *values(): IterableIterator<T> {
-    for (const entries of this._hashSet.values()) {
+    for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield entry;
       }
@@ -120,7 +118,7 @@ export class HashSet<T> implements Set<T> {
   }
 
   public intersection<U>(other: ReadonlySetLike<U>): Set<T & U> {
-    const result = new HashSet<T & U>(this.comparer);
+    const result = new HashSet<T & U>(this.comparer as EqualityComparer<T & U>);
     for (const value of this) {
       if (other.has(value as (T & U))) {
         result.add(value as (T & U));
@@ -166,6 +164,45 @@ export class HashSet<T> implements Set<T> {
   public isDisjointFrom(other: ReadonlySetLike<unknown> | Iterable<unknown>): boolean {
     for (const value of iterateReadonlySetLike(other)) {
       if (this.has(value as T)) return false;
+    }
+    return true;
+  }
+
+  public setEquals(other: Iterable<T>): boolean {
+    return this[SetEqualsSymbol](other);
+  }
+
+  public [SetEqualsSymbol](other: Iterable<unknown>): boolean {
+    if (other instanceof HashSet && referenceTypeEquals(this.comparer, other.comparer)) {
+      if (this.size !== other.size) return false;
+      for (const v of this.values()) {
+        if (!other.has(v)) return false;
+      }
+      return true;
+    }
+    // just populate the marker map without having to evaluate hash code once more
+    // TODO use BitArray
+    const markerMap = new Map<SafeInteger, boolean[]>();
+    for (const value of other) {
+      if (!this.comparer.isSupported(value)) return false;
+      const hash = this.comparer.getHashCode(value);
+      const myBucket = this._buckets.get(hash);
+      if (!myBucket) return false;
+
+      let markerBucket = markerMap.get(hash);
+      if (!markerBucket) {
+        markerBucket = new Array(myBucket.length).fill(false);
+        markerMap.set(hash, markerBucket);
+      }
+      const bucketIndex = myBucket.indexOf(value);
+      if (bucketIndex < 0) return false;
+      markerBucket[bucketIndex] = true;
+    }
+    // Check whether there is any item not existing in `other`.
+    assert(markerMap.size <= this._buckets.size);
+    if (markerMap.size < this._buckets.size) return false;
+    for (const bucket of markerMap.values()) {
+      if (bucket.includes(false)) return false;
     }
     return true;
   }
