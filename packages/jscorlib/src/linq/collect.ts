@@ -6,6 +6,8 @@ declare module "./linqWrapper" {
     toArray(): T[];
     toMap<TKey>(keySelector: SequenceElementSelector<T, TKey>): Map<TKey, T>;
     toMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>, valueSelector: SequenceElementSelector<T, TValue>): Map<TKey, TValue>;
+    toMultiMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>): Map<TKey, TValue[]>;
+    toMultiMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>, valueSelector: SequenceElementSelector<T, TValue>): Map<TKey, TValue[]>;
     toSet(): Set<T>;
     toSet<TValue>(valueSelector: SequenceElementSelector<T, TValue>): Set<TValue>;
   }
@@ -33,6 +35,39 @@ export function Linq$toMap<T, TKey, TValue>(
   } else {
     for (const e of this.unwrap()) {
       map.set(keySelector(e, i), e as unknown as TValue);
+      i++;
+    }
+  }
+  return map;
+}
+
+export function Linq$toMultiMap<T, TKey, TValue>(
+  this: LinqWrapper<T>,
+  keySelector: SequenceElementSelector<T, TKey>,
+  valueSelector?: SequenceElementSelector<T, TValue>,
+): Map<TKey, TValue[]> {
+  const map = new Map<TKey, TValue[]>();
+  let i = 0;
+  if (valueSelector) {
+    for (const e of this.unwrap()) {
+      const key = keySelector(e, i);
+      let values = map.get(key);
+      if (!values) {
+        values = [];
+        map.set(key, values);
+      }
+      values.push(valueSelector(e, i));
+      i++;
+    }
+  } else {
+    for (const e of this.unwrap()) {
+      const key = keySelector(e, i);
+      let values = map.get(key);
+      if (!values) {
+        values = [];
+        map.set(key, values);
+      }
+      values.push(e as unknown as TValue);
       i++;
     }
   }
