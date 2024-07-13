@@ -12,6 +12,7 @@ export * as CollectHashSet from "./collectHashSet";
 export * as Count from "./count";
 export * as Distinct from "./distinct";
 export * as ForEach from "./forEach";
+export * as GroupBy from "./groupBy";
 export * from "./linqWrapper";
 export * as MinMax from "./minmax";
 export * as Pick from "./pick";
