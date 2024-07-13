@@ -13,7 +13,15 @@ const lazyPrimitiveTypeComparerMap = new Lazy<{ [t in PrimitiveTypeId]?: Compare
     // if (x === y)
     return 0;
   },
-  number: (x, y) => x > y ? 1 : x < y ? -1 : 0,
+  // Place -0 before +0
+  number: (x, y) => {
+    if (x > y) return 1;
+    if (x < y) return -1;
+    // We want to place negative 0 before positive 0.
+    if (Object.is(x, 0) && Object.is(y, -0)) return 1;
+    if (Object.is(x, -0) && Object.is(y, 0)) return -1;
+    return 0;
+  },
 }));
 
 const lazyClassInstanceComparerMap = new Lazy<WeakMap<ClassTypeId, ComparerFunction>>(() => {

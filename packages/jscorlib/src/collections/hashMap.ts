@@ -4,7 +4,6 @@ import * as Arrays from "../arrays";
 import { assert } from "../diagnostics";
 import { SafeInteger } from "../numbers";
 import { AnyValueEqualityComparer, EqualityComparer } from "./equalityComparison";
-import { HashSet } from "./hashSet";
 
 export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
   // For now, we just delegate load factors etc. into the built-in one.

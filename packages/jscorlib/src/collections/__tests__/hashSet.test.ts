@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import * as _Collections from "../hashSet";
+import { sort } from "../../arrays";
 
 function populateSet(set: Set<string>): void {
   set.add("username");
@@ -31,5 +32,12 @@ describe("HashSet", () => {
     const set = new _Collections.HashSet<string>();
     populateSet(set);
     expect([...set]).toStrictEqual(["username", "productID", "orderNumber"]);
+  });
+
+  it("distinguishes between +0 / -0 by default", () => {
+    const set = _Collections.HashSet.from<number>([+0, -0, 1, 2, 3, 0]);
+    const setArray = [...set];
+    sort(setArray);
+    expect(setArray).toStrictEqual([-0, 0, 1, 2, 3]);
   });
 });

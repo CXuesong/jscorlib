@@ -67,7 +67,7 @@ const typeIdOrderMap: Partial<Record<PrimitiveTypeId, number>> = {
  * * string
  * * object
  * 
- * Values of the same type are compared with the comparer function retrieved from {@link getComparer}.
+ * `object`s of the same type are compared with the comparer function retrieved from {@link getComparer}.
  * Attempting to compare other primitive types, or object types that are yet to be registered (with {@link registerComparer})
  * will cause {@link InvalidOperationError}.
  */
@@ -102,6 +102,12 @@ export function defaultArrayComparer(x: unknown, y: unknown): number {
       // if (x === y)
       return 0;
     case "number":
+      if (x > y) return 1;
+      if (x < y) return -1;
+      // We want to place negative 0 before positive 0.
+      if (Object.is(x, 0) && Object.is(y, -0)) return 1;
+      if (Object.is(x, -0) && Object.is(y, 0)) return -1;
+      return 0;
     case "bigint":
       if (x > y) return 1;
       if (x < y) return -1;

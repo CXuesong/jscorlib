@@ -215,6 +215,6 @@ export class HashSet<T> implements Set<T>, SetEquatable {
 }
 
 function iterateReadonlySetLike<T>(obj: ReadonlySetLike<T> | Iterable<T>): Iterable<T> {
-  if ("keys" in obj) return { [Symbol.iterator]: () => obj.keys() };
-  return obj;
+  if (Symbol.iterator in obj) return obj;
+  return { [Symbol.iterator]: () => obj.keys() };
 }

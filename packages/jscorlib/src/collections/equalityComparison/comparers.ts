@@ -21,6 +21,7 @@ export class NumberEqualityComparer implements EqualityComparer<number> {
     return Object.is(x, y);
   }
   public getHashCode(value: number): SafeInteger {
+    // TODO are there multiple representations of NaN in JS?
     this._floatView[0] = value;
     return this._intView[0] ^ this._intView[1];
   }
