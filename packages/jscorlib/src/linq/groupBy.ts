@@ -1,7 +1,7 @@
 import { HashMap } from "../collections";
 import { EqualityComparer } from "../collections/equalityComparison";
 import { LinqWrapper } from "./linqWrapper";
-import { ArrayLikeLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
+import { IntermediateLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementSimpleSelector } from "./typing";
 
 declare module "./linqWrapper" {
@@ -59,7 +59,7 @@ class GroupingLinqWrapper<T, TKey> extends IntermediateLinqWrapper<LinqGrouping<
     for (const [key, values] of map) {
       yield {
         key,
-        values: new ArrayLikeLinqWrapper(values).asLinq(),
+        values: new IterableLinqWrapper(values).asLinq(),
       };
     }
   }

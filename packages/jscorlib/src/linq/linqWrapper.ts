@@ -1,6 +1,5 @@
 import { ArgumentRangeError, InvalidOperationError } from "../errors";
-import { AbstractLinqWrapper, ArrayLikeLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
-import { isArrayLikeStrict } from "../types/internal";
+import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 
 /**
  * Provides basic methods in addition to {@link !Iterable} in order to
@@ -56,9 +55,7 @@ export function asLinq<T>(sequence: Iterable<T>): LinqWrapper<T> {
   if (sequence instanceof AbstractLinqWrapper) return sequence.asLinq() as LinqWrapper<T>;
   let wrapper = wrapperCache.get(sequence);
   if (!wrapper) {
-    wrapper = isArrayLikeStrict(sequence)
-      ? new ArrayLikeLinqWrapper(sequence).asLinq()
-      : new IterableLinqWrapper(sequence).asLinq();
+    wrapper = new IterableLinqWrapper(sequence).asLinq();
     wrapperCache.set(sequence, wrapper);
   }
   return wrapper as LinqWrapper<T>;

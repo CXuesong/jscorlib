@@ -1,7 +1,10 @@
 import { bench, describe } from "vitest";
+import { AbstractLinqWrapper, IterableLinqWrapper } from "../linqWrapper.internal";
 
 describe("Iterating throuh an array (index, value)", () => {
   const largeArray = new Array<number>(100_000).fill(100);
+  const arrayIterableLinq = new IterableLinqWrapper(largeArray);
+  const arrayLikeLinq = new ArrayLikeLinqWrapper(largeArray);
   bench("for", () => {
     for (let i = 0; i < largeArray.length; i++) {
       void i;
@@ -15,9 +18,25 @@ describe("Iterating throuh an array (index, value)", () => {
       void largeArray[i];
     }
   });
-  bench("for...of", () => {
+  bench("for...of (Array)", () => {
     let i = 0;
     for (const e of largeArray) {
+      void i;
+      void e;
+      i++;
+    }
+  });
+  bench("for...of (IterableLinqWrapper)", () => {
+    let i = 0;
+    for (const e of arrayIterableLinq) {
+      void i;
+      void e;
+      i++;
+    }
+  });
+  bench("for...of (ArrayLikeLinqWrapper)", () => {
+    let i = 0;
+    for (const e of arrayLikeLinq) {
       void i;
       void e;
       i++;
@@ -44,3 +63,20 @@ describe("Iterating throuh an array (index, value)", () => {
     });
   });
 });
+
+// If we are going to return an Iterator, we might as well just reutrn `array[Iterator]()`
+// Using `for` loop impacts performance.
+class ArrayLikeLinqWrapper<T> extends AbstractLinqWrapper<T> {
+  public constructor(private readonly _array: ArrayLike<T> & Iterable<T>) {
+    super();
+  }
+  public *[Symbol.iterator](): Iterator<T> {
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < this._array.length; i++) {
+      yield this._array[i];
+    }
+  }
+  public override unwrap(): Iterable<T> {
+    return this._array;
+  }
+}
