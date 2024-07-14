@@ -1,7 +1,7 @@
 import { HashMap } from "../collections";
 import { EqualityComparer } from "../collections/equalityComparison";
 import { LinqWrapper } from "./linqWrapper";
-import { IterableFactoryLinqWrapper } from "./linqWrapper.internal";
+import { ArrayLikeLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementSimpleSelector } from "./typing";
 
 declare module "./linqWrapper" {
@@ -17,8 +17,10 @@ declare module "./linqWrapper" {
  * @template TValue type of the element from the input sequence.
 */
 export interface LinqGrouping<TKey, TValue> {
+  /** The grouping key. */
   key: TKey;
-  values: Iterable<TValue>;
+  /** The abstracted representation of value sequence. */
+  values: LinqWrapper<TValue>;
 }
 
 export function Linq$groupBy<T, TKey>(
@@ -27,29 +29,38 @@ export function Linq$groupBy<T, TKey>(
   comparer?: EqualityComparer<TKey>,
 ): LinqWrapper<LinqGrouping<TKey, T>> {
   const unwrapped = this.unwrap();
-  return new IterableFactoryLinqWrapper(() => groupingIterable(unwrapped, keySelector, comparer)).asLinq();
+  return new GroupingLinqWrapper({
+    iterable: unwrapped,
+    keySelector,
+    comparer,
+  }).asLinq();
 }
 
-function groupingIterable<T, TKey>(
-  iterable: Iterable<T>,
+interface GroupingIteratorInfo<T, TKey> {
+  readonly iterable: Iterable<T>;
   keySelector: SequenceElementSimpleSelector<T, TKey>,
   comparer?: EqualityComparer<TKey>,
-): Iterable<LinqGrouping<TKey, T>> {
-  interface ArrayLinqGrouping extends LinqGrouping<TKey, T> {
-    values: T[];
-  }
-  const map = comparer ? new HashMap<TKey, ArrayLinqGrouping>(comparer) : new Map<TKey, ArrayLinqGrouping>();
-  for (const e of iterable) {
-    const key = keySelector(e);
-    let group = map.get(key);
-    if (!group) {
-      group = {
-        key,
-        values: [],
-      };
-      map.set(key, group);
+}
+
+class GroupingLinqWrapper<T, TKey> extends IntermediateLinqWrapper<LinqGrouping<TKey, T>, GroupingIteratorInfo<T, TKey>> {
+  public override *[Symbol.iterator](): Iterator<LinqGrouping<TKey, T>> {
+    const { iterable, keySelector, comparer } = this.__state;
+    const map = comparer ? new HashMap<TKey, T[]>(comparer) : new Map<TKey, T[]>();
+    for (const e of iterable) {
+      const key = keySelector(e);
+      let values = map.get(key);
+      if (!values) {
+        values = [];
+        map.set(key, values);
+      }
+      values.push(e);
     }
-    group.values.push(e);
+    // n.b. iterable iterators cannot rewind by themselves.
+    for (const [key, values] of map) {
+      yield {
+        key,
+        values: new ArrayLikeLinqWrapper(values).asLinq(),
+      };
+    }
   }
-  return map.values();
 }

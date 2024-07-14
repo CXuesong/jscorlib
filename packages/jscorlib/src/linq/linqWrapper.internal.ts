@@ -23,6 +23,22 @@ export class IterableLinqWrapper<T> extends AbstractLinqWrapper<T> {
   }
 }
 
+export class ArrayLikeLinqWrapper<T> extends AbstractLinqWrapper<T> {
+  public constructor(private readonly _array: ArrayLike<T> & Iterable<T>) {
+    super();
+  }
+  public *[Symbol.iterator](): Iterator<T> {
+    // perf consideration
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < this._array.length; i++) {
+      yield this._array[i];
+    }
+  }
+  public override unwrap(): Iterable<T> {
+    return this._array;
+  }
+}
+
 export class IterableFactoryLinqWrapper<T> extends AbstractLinqWrapper<T> {
   public constructor(private readonly _iteratorFactory: () => Iterable<T>) {
     super();
