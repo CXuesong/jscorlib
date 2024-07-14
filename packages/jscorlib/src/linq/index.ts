@@ -7,6 +7,7 @@
  * @module
  */
 export * as Aggregate from "./aggregate";
+export * as AnyAll from "./anyAll";
 export * as Chunk from "./chunk";
 export * as Collect from "./collect";
 export * as CollectHashMap from "./collectHashMap";
