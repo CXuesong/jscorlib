@@ -57,7 +57,7 @@ export interface ArgumentTypeErrorOptions extends ArgumentErrorOptions {
   argumentTypes?: TypeId[];
 }
 
-export function buildArgumentTypeErrorMessage(options?: ArgumentTypeErrorOptions): string {
+function buildArgumentTypeErrorMessage(options?: ArgumentTypeErrorOptions): string {
   const { valueType, argumentTypes } = options ?? {};
   const argumentExpr = tryBuildArgumentIdentifier(options?.paramIndex, options?.paramName);
   const argTypeExpr = argumentTypes?.length ? argumentTypes.map(t => typeIdToString(t)).join(" | ") : undefined;
@@ -90,6 +90,14 @@ export class ArgumentTypeError extends TypeError implements ArgumentError {
     this.paramIndex = options?.paramIndex;
     this.paramName = options?.paramName;
   }
+  /**
+   * Short-hand function to create an {@link ArgumentTypeError} instace with general message.
+   * 
+   * @see {@link checkArgumentType}
+   */
+  public static create(paramIndex: number | undefined, paramName?: string, message?: string): ArgumentRangeError {
+    return new ArgumentTypeError(message, { paramIndex, paramName });
+  }
 }
 
 function buildArgumentNullErrorMessage(options?: ArgumentTypeErrorOptions): string {
@@ -109,7 +117,7 @@ export class ArgumentNullError extends ArgumentTypeError {
   public constructor(message?: string, options?: ArgumentTypeErrorOptions) {
     super(message ?? buildArgumentNullErrorMessage(options), options);
   }
-  public static create(paramIndex: number | undefined, paramName?: string, message?: string): ArgumentRangeError {
+  public static override create(paramIndex: number | undefined, paramName?: string, message?: string): ArgumentRangeError {
     return new ArgumentNullError(message, { paramIndex, paramName });
   }
 }
