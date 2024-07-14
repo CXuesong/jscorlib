@@ -34,7 +34,7 @@ export function split(str: string, delimiter: string | RegExp | CustomStringSpli
     return splitByString(str, delimiter, limit);
   }
 
-  if (SplitSymbol in delimiter && typeof delimiter[SplitSymbol] === "function") {
+  if (delimiter && SplitSymbol in delimiter && typeof delimiter[SplitSymbol] === "function") {
     return delimiter[SplitSymbol](str, { limit });
   }
 

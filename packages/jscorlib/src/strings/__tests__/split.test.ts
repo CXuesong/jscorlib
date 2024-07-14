@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ArgumentRangeError, ArgumentTypeError } from "../../errors";
 import * as _Strings from "../split";
 
 describe("format", () => {
@@ -60,5 +61,11 @@ describe("format", () => {
     expect(_Strings.split("abcdef", /(?:)/u, 10)).toStrictEqual(["a", "b", "c", "d", "e", "f"]);
     // `u` causes input string to be separated by Unicode code points.
     expect(_Strings.split("x\ud83d\ude04\ud83d\ude04x", /(?:)/u, 4)).toStrictEqual(["x", "\ud83d\ude04", "\ud83d\ude04", "x"]);
+  });
+
+  it("argument check", () => {
+    expect(() => _Strings.split("", "", -1)).toThrow(ArgumentRangeError);
+    expect(() => _Strings.split("", "", -10)).toThrow(ArgumentRangeError);
+    expect(() => _Strings.split("", undefined!)).toThrow(ArgumentTypeError);
   });
 });
