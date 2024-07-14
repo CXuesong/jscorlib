@@ -6,9 +6,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "g:build": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build",
-    "g:build:prod": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build:prod",
-    "g:lint": "yarn workspaces foreach --all --verbose --parallel run lint"
+    "build": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build",
+    "build:prod": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build:prod",
+    "lint": "yarn workspaces foreach --all --verbose --parallel run lint",
+    "test:prod": "yarn workspaces foreach --all --verbose --parallel --interlaced run test:prod",
+    "bench:prod": "yarn workspaces foreach --all --verbose --parallel --interlaced run bench:prod"
   },
   "workspaces": [
     "./packages/*",
