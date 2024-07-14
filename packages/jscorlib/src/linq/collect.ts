@@ -1,15 +1,15 @@
 import type { LinqWrapper } from "./linqWrapper";
-import { SequenceElementSelector } from "./typing";
+import { IndexedSequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     toArray(): T[];
-    toMap<TKey>(keySelector: SequenceElementSelector<T, TKey>): Map<TKey, T>;
-    toMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>, valueSelector: SequenceElementSelector<T, TValue>): Map<TKey, TValue>;
-    toMultiMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>): Map<TKey, TValue[]>;
-    toMultiMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>, valueSelector: SequenceElementSelector<T, TValue>): Map<TKey, TValue[]>;
+    toMap<TKey>(keySelector: IndexedSequenceElementSelector<T, TKey>): Map<TKey, T>;
+    toMap<TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>, valueSelector: IndexedSequenceElementSelector<T, TValue>): Map<TKey, TValue>;
+    toMultiMap<TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>): Map<TKey, TValue[]>;
+    toMultiMap<TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>, valueSelector: IndexedSequenceElementSelector<T, TValue>): Map<TKey, TValue[]>;
     toSet(): Set<T>;
-    toSet<TValue>(valueSelector: SequenceElementSelector<T, TValue>): Set<TValue>;
+    toSet<TValue>(valueSelector: IndexedSequenceElementSelector<T, TValue>): Set<TValue>;
   }
 }
 
@@ -21,8 +21,8 @@ export function Linq$toArray<T>(this: LinqWrapper<T>): T[] {
 
 export function Linq$toMap<T, TKey, TValue>(
   this: LinqWrapper<T>,
-  keySelector: SequenceElementSelector<T, TKey>,
-  valueSelector?: SequenceElementSelector<T, TValue>,
+  keySelector: IndexedSequenceElementSelector<T, TKey>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue>,
 ): Map<TKey, TValue> {
   const map = new Map<TKey, TValue>();
   let i = 0;
@@ -43,8 +43,8 @@ export function Linq$toMap<T, TKey, TValue>(
 
 export function Linq$toMultiMap<T, TKey, TValue>(
   this: LinqWrapper<T>,
-  keySelector: SequenceElementSelector<T, TKey>,
-  valueSelector?: SequenceElementSelector<T, TValue>,
+  keySelector: IndexedSequenceElementSelector<T, TKey>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue>,
 ): Map<TKey, TValue[]> {
   const map = new Map<TKey, TValue[]>();
   let i = 0;
@@ -76,7 +76,7 @@ export function Linq$toMultiMap<T, TKey, TValue>(
 
 export function Linq$toSet<T, TValue = T>(
   this: LinqWrapper<T>,
-  valueSelector?: SequenceElementSelector<T, TValue>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue>,
 ): Set<TValue> {
   const set = new Set<TValue>();
   if (valueSelector) {

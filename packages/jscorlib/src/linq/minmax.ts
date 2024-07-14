@@ -3,7 +3,7 @@ import { ComparerFunction } from "../collections/comparison";
 import { fail } from "../diagnostics";
 import { InvalidOperationError } from "../errors";
 import type { LinqWrapper } from "./linqWrapper";
-import { SequenceElementSimpleSelector } from "./typing";
+import { SequenceElementSelector } from "./typing";
 import { unwrapUnorderedLinqWrapper } from "./utils.internal";
 
 export type AggregateAccumulator<T, TAccumulate> = (accumulate: TAccumulate, element: T) => TAccumulate;
@@ -11,9 +11,9 @@ export type AggregateAccumulator<T, TAccumulate> = (accumulate: TAccumulate, ele
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     min(comparer?: ComparerFunction<T>): T;
-    minBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T;
+    minBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T;
     max(comparer?: ComparerFunction<T>): T;
-    maxBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T;
+    maxBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T;
   }
 }
 
@@ -21,7 +21,7 @@ export function Linq$min<T>(this: LinqWrapper<T>, comparer?: ComparerFunction<T>
   return minMaxImpl(this, "min", undefined, comparer);
 }
 
-export function Linq$minBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T {
+export function Linq$minBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T {
   return minMaxImpl(this, "min", keySelector, comparer);
 }
 
@@ -29,14 +29,14 @@ export function Linq$max<T>(this: LinqWrapper<T>, comparer?: ComparerFunction<T>
   return minMaxImpl(this, "max", undefined, comparer);
 }
 
-export function Linq$maxBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T {
+export function Linq$maxBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T {
   return minMaxImpl(this, "max", keySelector, comparer);
 }
 
 function minMaxImpl<T, TKey = T>(
   wrapper: LinqWrapper<T>,
   mode: "min" | "max",
-  keySelector?: SequenceElementSimpleSelector<T, TKey>,
+  keySelector?: SequenceElementSelector<T, TKey>,
   comparer?: ComparerFunction<TKey>,
 ): T {
   comparer ??= defaultArrayComparer;

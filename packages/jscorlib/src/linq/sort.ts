@@ -4,31 +4,31 @@ import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol, TryUnwrapUnorderedSymbol } from "./traits";
-import { SequenceElementSimpleSelector } from "./typing";
+import { SequenceElementSelector } from "./typing";
 import { unwrapUnorderedLinqWrapper } from "./utils.internal";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     order<TKey>(comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
-    orderBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
+    orderBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
     orderDescending<TKey>(comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
-    orderByDescending<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
+    orderByDescending<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
   }
 }
 
 export interface OrderedLinqWrapperBase<T> {
-  thenBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T>;
-  thenByDescending<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T>;
+  thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T>;
+  thenByDescending<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T>;
 }
 
 export interface OrderedLinqWrapper<T> extends LinqWrapper<T>, OrderedLinqWrapperBase<T> {
 }
 
-export function Linq$orderBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
+export function Linq$orderBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
   return resetOrderClause(this, { selector: keySelector, comparer, descending: false });
 }
 
-export function Linq$orderByDescending<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
+export function Linq$orderByDescending<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
   return resetOrderClause(this, { selector: keySelector, comparer, descending: true });
 }
 
@@ -77,10 +77,10 @@ class OrderedLinqWrapperImpl<T>
   public override asLinq(): OrderedLinqWrapper<T> {
     return this as unknown as OrderedLinqWrapper<T>;
   }
-  public thenBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
+  public thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
     return appendOrderClause(this, { selector: keySelector, comparer, descending: false });
   }
-  public thenByDescending<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
+  public thenByDescending<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
     return appendOrderClause(this, { selector: keySelector, comparer, descending: true });
   }
   public override[TryGetCountDirectSymbol](): number | undefined {

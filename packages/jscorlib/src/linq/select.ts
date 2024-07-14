@@ -2,39 +2,39 @@ import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
-import { SequenceElementSelector } from "./typing";
+import { IndexedSequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
-    select<TResult>(selector: SequenceElementSelector<T, TResult>): LinqWrapper<TResult>;
-    selectMany<TResult>(selector: SequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult>;
+    select<TResult>(selector: IndexedSequenceElementSelector<T, TResult>): LinqWrapper<TResult>;
+    selectMany<TResult>(selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult>;
   }
 }
 
-export function Linq$select<T, TResult>(this: LinqWrapper<T>, selector: SequenceElementSelector<T, TResult>): LinqWrapper<TResult> {
+export function Linq$select<T, TResult>(this: LinqWrapper<T>, selector: IndexedSequenceElementSelector<T, TResult>): LinqWrapper<TResult> {
   if (this instanceof SelectLinqWrapper) {
     const state = this.__state;
     return new SelectLinqWrapper<T, TResult>({
       ...state,
       selectors: [
         ...state.selectors,
-        { selector: selector as SequenceElementSelector<unknown, unknown> },
+        { selector: selector as IndexedSequenceElementSelector<unknown, unknown> },
       ],
     }).asLinq();
   }
 
   return new SelectLinqWrapper<T, TResult>({
     iterable: this.unwrap(),
-    selectors: [{ selector: selector as SequenceElementSelector<unknown, unknown> }],
+    selectors: [{ selector: selector as IndexedSequenceElementSelector<unknown, unknown> }],
   }).asLinq();
 }
 
-export function Linq$selectMany<T, TResult>(this: LinqWrapper<T>, selector: SequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult> {
+export function Linq$selectMany<T, TResult>(this: LinqWrapper<T>, selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult> {
   const unwrapped = this.unwrap();
   return new IterableFactoryLinqWrapper(() => selectManyIterable(unwrapped, selector)).asLinq();
 }
 
-function* selectManyIterable<T, TResult>(iterable: Iterable<T>, selector: SequenceElementSelector<T, Iterable<TResult>>): Iterable<TResult> {
+function* selectManyIterable<T, TResult>(iterable: Iterable<T>, selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): Iterable<TResult> {
   let index = 0;
   for (const e of iterable) {
     yield* selector(e, index);
@@ -43,7 +43,7 @@ function* selectManyIterable<T, TResult>(iterable: Iterable<T>, selector: Sequen
 }
 
 interface SelectorEntry {
-  selector: SequenceElementSelector<unknown, unknown>;
+  selector: IndexedSequenceElementSelector<unknown, unknown>;
   // Reserved for future use.
   flatten?: false;
 }

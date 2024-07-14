@@ -1,14 +1,14 @@
 import { isTypedArray } from "util/types";
 import { LinqWrapper } from "./linqWrapper";
-import { SequenceElementCallback } from "./typing";
+import { IndexedSequenceElementCallback } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
-    forEach(callback: SequenceElementCallback<T>): void;
+    forEach(callback: IndexedSequenceElementCallback<T>): void;
   }
 }
 
-export function Linq$forEach<T>(this: LinqWrapper<T>, callback: SequenceElementCallback<T>): void {
+export function Linq$forEach<T>(this: LinqWrapper<T>, callback: IndexedSequenceElementCallback<T>): void {
   const unwrapped = this.unwrap();
 
   // Perf optimization for arrays

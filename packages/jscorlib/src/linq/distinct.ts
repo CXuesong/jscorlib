@@ -1,13 +1,13 @@
-import { HashSet } from "../collections/hashSet";
 import { EqualityComparer } from "../collections/equalityComparison";
+import { HashSet } from "../collections/hashSet";
 import type { LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
-import { SequenceElementSimpleSelector } from "./typing";
+import { SequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     distinct(comparer?: EqualityComparer<T>): LinqWrapper<T>;
-    distinctBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: EqualityComparer<TKey>): LinqWrapper<T>;
+    distinctBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): LinqWrapper<T>;
   }
 }
 
@@ -23,7 +23,7 @@ export function Linq$distinct<T>(this: LinqWrapper<T>, comparer?: EqualityCompar
   }).asLinq();
 }
 
-export function Linq$distinctBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: EqualityComparer<TKey>): LinqWrapper<T> {
+export function Linq$distinctBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): LinqWrapper<T> {
   if (this instanceof DistinctLinqWrapper) {
     const state = this.__state;
     // Trivial: distinct gets chained multiple times with the same keySelector (while almost impossible)
@@ -38,7 +38,7 @@ export function Linq$distinctBy<T, TKey>(this: LinqWrapper<T>, keySelector: Sequ
 
 interface DistinctIteratorInfo<T, TKey> {
   readonly iterable: Iterable<T>;
-  keySelector?: SequenceElementSimpleSelector<T, TKey>;
+  keySelector?: SequenceElementSelector<T, TKey>;
   comparer?: EqualityComparer<TKey>
 }
 

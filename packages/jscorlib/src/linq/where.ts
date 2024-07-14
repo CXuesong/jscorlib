@@ -1,15 +1,15 @@
 import type { LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
-import { SequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
+import { IndexedSequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     where<TReturn extends T>(predicate: SequenceElementTypeAssertionPredicate<T, TReturn>): LinqWrapper<TReturn>;
-    where(predicate: SequenceElementPredicate<T>): LinqWrapper<T>;
+    where(predicate: IndexedSequenceElementPredicate<T>): LinqWrapper<T>;
   }
 }
 
-export function Linq$where<T>(this: LinqWrapper<T>, predicate: SequenceElementPredicate<T>): LinqWrapper<T> {
+export function Linq$where<T>(this: LinqWrapper<T>, predicate: IndexedSequenceElementPredicate<T>): LinqWrapper<T> {
   // n.b. Even if `this` is empty upon the time of invocation of this function,
   // `this` may have items when iterator gets enumerated later.
   if (this instanceof WhereLinqWrapper) {
@@ -27,7 +27,7 @@ export function Linq$where<T>(this: LinqWrapper<T>, predicate: SequenceElementPr
 
 interface WhereIteratorInfo<T> {
   readonly iterable: Iterable<T>;
-  predicates: ReadonlyArray<SequenceElementPredicate<T>>;
+  predicates: ReadonlyArray<IndexedSequenceElementPredicate<T>>;
 }
 
 class WhereLinqWrapper<T> extends IntermediateLinqWrapper<T, WhereIteratorInfo<T>> {

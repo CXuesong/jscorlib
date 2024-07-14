@@ -3,21 +3,21 @@ import { assert } from "../diagnostics";
 import { ArgumentRangeError, InvalidOperationError } from "../errors";
 import { asSafeInteger } from "../numbers/asSafeInteger";
 import type { LinqWrapper } from "./linqWrapper";
-import { SequenceElementPredicate } from "./typing";
+import { IndexedSequenceElementPredicate } from "./typing";
 import { isArrayLikeStrict } from "./utils.internal";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     first(): T;
-    first(predicate?: SequenceElementPredicate<T>): T;
+    first(predicate?: IndexedSequenceElementPredicate<T>): T;
     last(): T;
-    last(predicate?: SequenceElementPredicate<T>): T;
+    last(predicate?: IndexedSequenceElementPredicate<T>): T;
     firstOrDefault(): T | undefined;
-    firstOrDefault(predicate: SequenceElementPredicate<T> | undefined, defaultValue: T): T;
-    firstOrDefault(predicate?: SequenceElementPredicate<T>, defaultValue?: T): T | undefined;
+    firstOrDefault(predicate: IndexedSequenceElementPredicate<T> | undefined, defaultValue: T): T;
+    firstOrDefault(predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined;
     lastOrDefault(): T | undefined;
-    lastOrDefault(predicate: SequenceElementPredicate<T> | undefined, defaultValue: T): T;
-    lastOrDefault(predicate?: SequenceElementPredicate<T>, defaultValue?: T): T | undefined;
+    lastOrDefault(predicate: IndexedSequenceElementPredicate<T> | undefined, defaultValue: T): T;
+    lastOrDefault(predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined;
     elementAt(index: BidirectionalIndex): T;
     elementAtOrDefault(index: BidirectionalIndex): T;
     elementAtOrDefault(index: BidirectionalIndex, defaultValue: T): T;
@@ -27,7 +27,7 @@ declare module "./linqWrapper" {
 
 const NoMatch = Symbol("NoMatch");
 
-export function Linq$first<T>(this: LinqWrapper<T>, predicate?: SequenceElementPredicate<T>): T {
+export function Linq$first<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>): T {
   const e = getFirst(this.unwrap(), predicate);
   if (e !== NoMatch) return e;
 
@@ -35,7 +35,7 @@ export function Linq$first<T>(this: LinqWrapper<T>, predicate?: SequenceElementP
   throw new InvalidOperationError("Sequence contains no element.");
 }
 
-export function Linq$last<T>(this: LinqWrapper<T>, predicate?: SequenceElementPredicate<T>): T {
+export function Linq$last<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>): T {
   const e = getLast(this.unwrap(), predicate);
   if (e !== NoMatch) return e;
 
@@ -43,13 +43,13 @@ export function Linq$last<T>(this: LinqWrapper<T>, predicate?: SequenceElementPr
   throw new InvalidOperationError("Sequence contains no element.");
 }
 
-export function Linq$firstOrDefault<T>(this: LinqWrapper<T>, predicate?: SequenceElementPredicate<T>, defaultValue?: T): T | undefined {
+export function Linq$firstOrDefault<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined {
   const e = getFirst(this.unwrap(), predicate);
   if (e !== NoMatch) return e;
   return defaultValue;
 }
 
-export function Linq$lastOrDefault<T>(this: LinqWrapper<T>, predicate?: SequenceElementPredicate<T>, defaultValue?: T): T | undefined {
+export function Linq$lastOrDefault<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined {
   const e = getLast(this.unwrap(), predicate);
   if (e !== NoMatch) return e;
   return defaultValue;
@@ -67,7 +67,7 @@ export function Linq$elementAtOrDefault<T>(this: LinqWrapper<T>, index: Bidirect
   return defaultValue;
 }
 
-function getFirst<T>(iterable: Iterable<T>, predicate?: SequenceElementPredicate<T>): T | typeof NoMatch {
+function getFirst<T>(iterable: Iterable<T>, predicate?: IndexedSequenceElementPredicate<T>): T | typeof NoMatch {
   if (predicate) {
     let index = 0;
     for (const i of iterable) {
@@ -82,7 +82,7 @@ function getFirst<T>(iterable: Iterable<T>, predicate?: SequenceElementPredicate
   return getElementAt(iterable, 0);
 }
 
-function getLast<T>(iterable: Iterable<T>, predicate?: SequenceElementPredicate<T>): T | typeof NoMatch {
+function getLast<T>(iterable: Iterable<T>, predicate?: IndexedSequenceElementPredicate<T>): T | typeof NoMatch {
   if (predicate) {
     if (isArrayLikeStrict(iterable)) {
       const length = iterable.length;

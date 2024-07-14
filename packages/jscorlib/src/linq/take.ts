@@ -5,13 +5,13 @@ import { Linq$tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { AbstractLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
-import { SequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
+import { IndexedSequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     skip(count: SafeInteger): LinqWrapper<T>;
     take(count: SafeInteger): LinqWrapper<T>;
-    takeWhile(predicate: SequenceElementPredicate<T>): LinqWrapper<T>;
+    takeWhile(predicate: IndexedSequenceElementPredicate<T>): LinqWrapper<T>;
     takeWhile<TResult extends T>(predicate: SequenceElementTypeAssertionPredicate<T, TResult>): LinqWrapper<TResult>;
   }
 }

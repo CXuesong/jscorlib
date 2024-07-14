@@ -1,19 +1,19 @@
 import { HashMap } from "../collections";
 import { EqualityComparer } from "../collections/equalityComparison";
 import type { LinqWrapper } from "./linqWrapper";
-import { SequenceElementSelector } from "./typing";
+import { IndexedSequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
-    toHashMap<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): HashMap<TKey, T>;
-    toHashMap<TKey, TValue>(keySelector: SequenceElementSelector<T, TKey>, valueSelector: SequenceElementSelector<T, TValue>, comparer?: EqualityComparer<TKey>): HashMap<TKey, TValue>;
+    toHashMap<TKey>(keySelector: IndexedSequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): HashMap<TKey, T>;
+    toHashMap<TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>, valueSelector: IndexedSequenceElementSelector<T, TValue>, comparer?: EqualityComparer<TKey>): HashMap<TKey, TValue>;
   }
 }
 
 export function Linq$toHashMap<T, TKey, TValue>(
   this: LinqWrapper<T>,
-  keySelector: SequenceElementSelector<T, TKey>,
-  valueSelector?: SequenceElementSelector<T, TValue> | EqualityComparer<TKey>,
+  keySelector: IndexedSequenceElementSelector<T, TKey>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue> | EqualityComparer<TKey>,
   comparer?: EqualityComparer<TKey>,
 ): HashMap<TKey, TValue> {
   if (typeof valueSelector === "object") {

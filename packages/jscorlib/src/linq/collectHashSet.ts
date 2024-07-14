@@ -1,18 +1,18 @@
 import { HashSet } from "../collections";
 import { EqualityComparer } from "../collections/equalityComparison";
 import type { LinqWrapper } from "./linqWrapper";
-import { SequenceElementSelector } from "./typing";
+import { IndexedSequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
     toHashSet(comparer?: EqualityComparer<T>): HashSet<T>;
-    toHashSet<TValue>(valueSelector: SequenceElementSelector<T, TValue>, comparer?: EqualityComparer<TValue>): HashSet<TValue>;
+    toHashSet<TValue>(valueSelector: IndexedSequenceElementSelector<T, TValue>, comparer?: EqualityComparer<TValue>): HashSet<TValue>;
   }
 }
 
 export function Linq$toHashSet<T, TValue = T>(
   this: LinqWrapper<T>,
-  valueSelector?: SequenceElementSelector<T, TValue> | EqualityComparer<TValue>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue> | EqualityComparer<TValue>,
   comparer?: EqualityComparer<TValue>,
 ): HashSet<TValue> {
   if (typeof valueSelector === "object") {

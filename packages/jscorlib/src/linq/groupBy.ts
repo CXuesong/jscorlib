@@ -2,11 +2,11 @@ import { HashMap } from "../collections";
 import { EqualityComparer } from "../collections/equalityComparison";
 import { LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
-import { SequenceElementSimpleSelector } from "./typing";
+import { SequenceElementSelector } from "./typing";
 
 declare module "./linqWrapper" {
   export interface LinqWrapper<T> {
-    groupBy<TKey>(keySelector: SequenceElementSimpleSelector<T, TKey>, comparer?: EqualityComparer<T>): LinqWrapper<LinqGrouping<TKey, T>>;
+    groupBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<T>): LinqWrapper<LinqGrouping<TKey, T>>;
   }
 }
 
@@ -25,7 +25,7 @@ export interface LinqGrouping<TKey, TValue> {
 
 export function Linq$groupBy<T, TKey>(
   this: LinqWrapper<T>,
-  keySelector: SequenceElementSimpleSelector<T, TKey>,
+  keySelector: SequenceElementSelector<T, TKey>,
   comparer?: EqualityComparer<TKey>,
 ): LinqWrapper<LinqGrouping<TKey, T>> {
   const unwrapped = this.unwrap();
@@ -38,7 +38,7 @@ export function Linq$groupBy<T, TKey>(
 
 interface GroupingIteratorInfo<T, TKey> {
   readonly iterable: Iterable<T>;
-  keySelector: SequenceElementSimpleSelector<T, TKey>,
+  keySelector: SequenceElementSelector<T, TKey>,
   comparer?: EqualityComparer<TKey>,
 }
 
