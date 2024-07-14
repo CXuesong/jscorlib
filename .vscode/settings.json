@@ -1,5 +1,5 @@
 {
-    "eslint.experimental.useFlatConfig": true,
+    "eslint.useFlatConfig": true,
     "eslint.workingDirectories": [
         {
             "mode": "auto"
@@ -14,5 +14,11 @@
     },
     "[javascript]": {
         "editor.tabSize": 2
-    }
+    },
+    "[yaml]": {
+        "editor.tabSize": 2
+    },
+    "[github-actions-workflow]": {
+        "editor.tabSize": 2
+    },
 }

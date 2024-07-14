@@ -1,0 +1,43 @@
+name: Build workspace packages
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - /*.md
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - /*.md
+  schedule:
+    - cron: 7 0 * * MON
+
+jobs:
+  build_linux:
+    name: Build workspace packages (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Restore workspace
+        shell: pwsh
+        run: ./scripts/Restore-Workspace.ps1
+      - name: Build workspace
+        shell: pwsh
+        run: ./scripts/Build-Workspace.ps1
+      - name: Analyze workspace
+        shell: pwsh
+        run: ./scripts/Analyze-Workspace.ps1
+      - name: Collect artifacts
+        if: always()
+        shell: pwsh
+        run: ./scripts/Collect-Artifacts.ps1 -ArtifactPath build-artifacts
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: BuildArtifacts-Linux-Release
+          path: ./build-artifacts
