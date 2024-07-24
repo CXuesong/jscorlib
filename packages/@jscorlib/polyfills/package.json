@@ -1,0 +1,36 @@
+{
+  "name": "@jscorlib/polyfills",
+  "version": "0.0.0-int.1",
+  "description": "polyfills for jscorlib library.",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "type": "module",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "pwsh -File ./scripts/build.ps1",
+    "build:prod": "pwsh -File ./scripts/build.ps1 -Clean",
+    "lint": "eslint src",
+    "test": "vitest",
+    "test:prod": "vitest run",
+    "bench": "vitest bench",
+    "bench:prod": "vitest bench --watch false"
+  },
+  "devDependencies": {
+    "@jscorlib-repo/linters": "workspace:^",
+    "@jscorlib-repo/test-helpers": "workspace:^",
+    "@jscorlib-repo/typedoc-presets": "workspace:^",
+    "typescript": "^5.5.2"
+  }
+}
