@@ -43,7 +43,7 @@ export class DisposableStack implements globalThis.DisposableStack {
       [Symbol.dispose]: () => {
         onDispose();
       },
-    })
+    });
   }
   public move(): DisposableStack {
     const inst = new DisposableStack();
@@ -51,6 +51,8 @@ export class DisposableStack implements globalThis.DisposableStack {
     this._stack = undefined;
     return inst;
   }
-  public [Symbol.dispose] = this.dispose;
-  public readonly [Symbol.toStringTag] = "jscorlib::DisposableStack"
+  public [Symbol.dispose](): void {
+    this.dispose();
+  }
+  public readonly [Symbol.toStringTag] = "jscorlib::DisposableStack";
 }

@@ -7,5 +7,5 @@
  * 
  * @module
  */
-export * from "./disposableStack"
-export * from "./installer"
+export * from "./disposableStack";
+export * from "./installer";

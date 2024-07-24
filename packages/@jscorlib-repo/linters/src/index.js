@@ -1,5 +1,2 @@
-import * as path from "node:path";
-import * as url from "node:url";
-
-// VSCode is on Node 20 right now. import.meta.dirname is not available.
-export const repoRootDir = path.resolve(url.fileURLToPath(import.meta.url), "../../../../..");
+export * from "./environment.js";
+export * as ESLintRules from "./eslint-rules/index.js";
