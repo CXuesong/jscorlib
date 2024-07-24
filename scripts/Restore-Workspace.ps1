@@ -1,5 +1,5 @@
 Import-Module $PSScriptRoot/Utilities.psm1
 
 # Assumes $PWD is repo root
-yarn install --frozen-lockfile
+yarn install --immutable
 checkLastExitCode

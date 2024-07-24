@@ -24,8 +24,8 @@
     "lint": "eslint src",
     "test": "vitest",
     "test:prod": "vitest run",
-    "bench": "vitest bench",
-    "bench:prod": "vitest bench --watch false"
+    "bench": "vitest bench --passWithNoTests",
+    "bench:prod": "vitest bench --watch false --passWithNoTests"
   },
   "devDependencies": {
     "@jscorlib-repo/linters": "workspace:^",

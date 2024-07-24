@@ -1,7 +1,7 @@
 export class DisposableStack implements globalThis.DisposableStack {
   private _stack: Disposable[] | undefined = [];
   public get disposed(): boolean {
-    return !!this._stack;
+    return !this._stack;
   }
   private _getCheckedStack(): Disposable[] {
     if (!this._stack) throw new ReferenceError("DisposableStack has already been disposed.");
