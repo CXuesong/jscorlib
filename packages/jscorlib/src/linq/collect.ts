@@ -1,6 +1,6 @@
+import { PipeBody, PipeFunction } from "../pipables";
 import type { LinqWrapper } from "./linqWrapper";
 import { IndexedSequenceElementSelector } from "./typing";
-import { PipeBody, PipeFunction } from "../pipables";
 
 export function toArray<T>(): PipeBody<LinqWrapper<T>, T[]> {
   return target => {

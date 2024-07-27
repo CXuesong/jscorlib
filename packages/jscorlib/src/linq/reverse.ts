@@ -14,7 +14,7 @@ export function reverse<T>(): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
 
     return new ReverseLinqWrapper({
       iterable: target.unwrap(),
-    }).asLinq();
+    });
   };
 }
 reverse satisfies PipeFunction;

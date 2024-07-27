@@ -1,9 +1,9 @@
+import { PipeBody, PipeFunction } from "../pipables";
 import { tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { IndexedSequenceElementSelector } from "./typing";
-import { PipeBody, PipeFunction } from "../pipables";
 
 export function select<T, TResult>(selector: IndexedSequenceElementSelector<T, TResult>): PipeBody<LinqWrapper<T>, LinqWrapper<TResult>> {
   return target => {
@@ -15,13 +15,13 @@ export function select<T, TResult>(selector: IndexedSequenceElementSelector<T, T
           ...state.selectors,
           { selector: selector as IndexedSequenceElementSelector<unknown, unknown> },
         ],
-      }).asLinq();
+      });
     }
 
     return new SelectLinqWrapper<T, TResult>({
       iterable: target.unwrap(),
       selectors: [{ selector: selector as IndexedSequenceElementSelector<unknown, unknown> }],
-    }).asLinq();
+    });
   };
 }
 select satisfies PipeFunction;
@@ -29,7 +29,7 @@ select satisfies PipeFunction;
 export function selectMany<T, TResult>(selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): PipeBody<LinqWrapper<T>, LinqWrapper<TResult>> {
   return target => {
     const unwrapped = target.unwrap();
-    return new IterableFactoryLinqWrapper(() => selectManyIterable(unwrapped, selector)).asLinq();
+    return new IterableFactoryLinqWrapper(() => selectManyIterable(unwrapped, selector));
   };
 }
 selectMany satisfies PipeFunction;

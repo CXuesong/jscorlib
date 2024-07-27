@@ -2,21 +2,15 @@ import { PipeTarget } from "../pipables";
 import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 
 /**
- * Provides basic methods in addition to {@link !Iterable} in order to
- * support LINQ extension methods.
+ * Represents an extension point to expose the additional LINQ methods
+ * via {@link PipeTarget}.
  * 
  * @template T type of the sequence item.
+ * 
+ * @remarks To invoke LINQ methods, use the {@link $} method with LINQ pipe functions
+ * in this module.
  */
-export interface LinqWrapperBase<T> extends Iterable<T>, PipeTarget {
-  /**
-   * Returns the current object as {@link LinqWrapper}.
-   * 
-   * @remarks This method is usually used as a short-hand of `asLinq(this)`,
-   * when you want to access the shadowed methods exposed from `LinqWrapper<T>`.
-   * @experimental I'm not sure whether this method actually makes any use.
-   * Let's wait and see.
-   */
-  asLinq(): LinqWrapper<T>;
+export interface LinqWrapper<T> extends Iterable<T>, PipeTarget {
   /**
    * Infrastructure. Unwraps and returns the underlying {@link !Iterable} object,
    * if available.
@@ -36,26 +30,13 @@ export interface LinqWrapperBase<T> extends Iterable<T>, PipeTarget {
   unwrap(): Iterable<T>;
 }
 
-/**
- * Represents an extension point to expose the additional LINQ methods (extension methods)
- * via TypeScript interface augmentation.
- * 
- * @template T type of the sequence item.
- * 
- * @remarks To import the built-in or custom LINQ methods, you need to import
- * the corresponding module and call either {@link registerLinqModule} (recommended)
- * or {@link registerLinqMethod}.
- */
-export interface LinqWrapper<T> extends LinqWrapperBase<T>, Iterable<T> {
-}
-
 const wrapperCache = new WeakMap<Iterable<unknown>, LinqWrapper<unknown>>();
 
 export function asLinq<T>(sequence: Iterable<T>): LinqWrapper<T> {
-  if (sequence instanceof AbstractLinqWrapper) return sequence.asLinq() as LinqWrapper<T>;
+  if (sequence instanceof AbstractLinqWrapper) return sequence as LinqWrapper<T>;
   let wrapper = wrapperCache.get(sequence);
   if (!wrapper) {
-    wrapper = new IterableLinqWrapper(sequence).asLinq();
+    wrapper = new IterableLinqWrapper(sequence);
     wrapperCache.set(sequence, wrapper);
   }
   return wrapper as LinqWrapper<T>;

@@ -1,12 +1,12 @@
 import { defaultArrayComparer, sort } from "../arrays";
 import { ComparerFunction } from "../collections/comparison";
+import { PipeBody, PipeFunction } from "../pipables";
 import { tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol, TryUnwrapUnorderedSymbol } from "./traits";
 import { SequenceElementSelector } from "./typing";
 import { unwrapUnorderedLinqWrapper } from "./utils.internal";
-import { PipeBody, PipeFunction } from "../pipables";
 
 export interface OrderedLinqWrapperBase<T> {
   thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T>;
@@ -44,7 +44,7 @@ function resetOrderClause<T, TKey>(wrapper: LinqWrapper<T>, clause: OrderClause<
   return new OrderedLinqWrapperImpl({
     iterable: unwrapped as Iterable<T>,
     orderClauses: [clause],
-  }).asLinq();
+  });
 }
 
 function appendOrderClause<T, TKey>(wrapper: OrderedLinqWrapperImpl<T>, clause: OrderClause<T, TKey>): OrderedLinqWrapper<T> {
@@ -52,7 +52,7 @@ function appendOrderClause<T, TKey>(wrapper: OrderedLinqWrapperImpl<T>, clause: 
   return new OrderedLinqWrapperImpl<T>({
     ...state,
     orderClauses: [...state.orderClauses, clause],
-  }).asLinq();
+  });
 }
 
 interface OrderClause<T, TKey = T> {
@@ -70,9 +70,6 @@ interface OrderedIteratorInfo<T> {
 class OrderedLinqWrapperImpl<T>
   extends IntermediateLinqWrapper<T, OrderedIteratorInfo<T>>
   implements OrderedLinqWrapperBase<T>, BuiltInLinqTraits<T> {
-  public override asLinq(): OrderedLinqWrapper<T> {
-    return this as unknown as OrderedLinqWrapper<T>;
-  }
   public thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
     return appendOrderClause(this, { selector: keySelector, comparer, descending: false });
   }

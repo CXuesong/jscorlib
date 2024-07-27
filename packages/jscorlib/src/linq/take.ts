@@ -18,7 +18,7 @@ export function skip<T>(count: SafeInteger): PipeBody<LinqWrapper<T>, LinqWrappe
         return new SkipTakeLinqWrapper<T>({
           ...state,
           skip: state.skip + count,
-        }).asLinq();
+        });
       }
       // has take limitation
       if (state.take > count) {
@@ -26,16 +26,16 @@ export function skip<T>(count: SafeInteger): PipeBody<LinqWrapper<T>, LinqWrappe
           ...state,
           skip: state.skip + count,
           take: state.take - count,
-        }).asLinq();
+        });
       }
       // skipped too far
-      return EmptyLinqWrapper.instance.asLinq();
+      return EmptyLinqWrapper.instance;
     }
     return new SkipTakeLinqWrapper({
       iterable: target.unwrap(),
       skip: count,
       take: undefined,
-    }).asLinq();
+    });
   };
 }
 skip satisfies PipeFunction;
@@ -44,19 +44,19 @@ export function take<T>(count: SafeInteger): PipeBody<LinqWrapper<T>, LinqWrappe
   return target => {
     count = asSafeInteger(count);
     if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
-    if (count === 0) return EmptyLinqWrapper.instance.asLinq();
+    if (count === 0) return EmptyLinqWrapper.instance;
     if (target instanceof SkipTakeLinqWrapper) {
       const state = target.__state;
       return new SkipTakeLinqWrapper<T>({
         ...state,
         take: state.take == null ? count : Math.min(state.take, count),
-      }).asLinq();
+      });
     }
     return new SkipTakeLinqWrapper({
       iterable: target.unwrap(),
       skip: 0,
       take: count,
-    }).asLinq();
+    });
   };
 }
 take satisfies PipeFunction;

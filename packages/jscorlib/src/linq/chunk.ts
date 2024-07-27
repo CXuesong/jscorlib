@@ -12,7 +12,7 @@ export function chunk<T>(count: SafeInteger): PipeBody<LinqWrapper<T>, LinqWrapp
     count = asSafeInteger(count);
     if (count <= 0) throw ArgumentRangeError.create(0, "count", "Expect value to be positive.");
     const unwrapped = target.unwrap();
-    return new IterableFactoryLinqWrapper(() => chunkIterable(unwrapped, count)).asLinq();
+    return new IterableFactoryLinqWrapper(() => chunkIterable(unwrapped, count));
   };
 }
 chunk satisfies PipeFunction;

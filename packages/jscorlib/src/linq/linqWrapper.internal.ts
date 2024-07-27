@@ -1,15 +1,12 @@
 import { PipeBody } from "../pipables";
-import type { LinqWrapper, LinqWrapperBase } from "./linqWrapper";
+import type { LinqWrapper } from "./linqWrapper";
 
 // TODO global shared instanceof support with Symbol.for
-export abstract class AbstractLinqWrapper<T> implements LinqWrapperBase<T> {
+export abstract class AbstractLinqWrapper<T> implements LinqWrapper<T> {
   public $<T>(pipeBody: PipeBody<this, T>): T {
     return pipeBody(this);
   }
   public abstract [Symbol.iterator](): Iterator<T>;
-  public asLinq(): LinqWrapper<T> {
-    return this as unknown as LinqWrapper<T>;
-  }
   public unwrap(): Iterable<T> {
     return this;
   }

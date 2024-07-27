@@ -1,9 +1,9 @@
 import { EqualityComparer } from "../collections/equalityComparison";
 import { HashSet } from "../collections/hashSet";
+import { PipeBody, PipeFunction } from "../pipables";
 import type { LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementSelector } from "./typing";
-import { PipeBody, PipeFunction } from "../pipables";
 
 export function distinct<T>(comparer?: EqualityComparer<T>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
   return target => {
@@ -15,7 +15,7 @@ export function distinct<T>(comparer?: EqualityComparer<T>): PipeBody<LinqWrappe
     return new DistinctLinqWrapper({
       iterable: target.unwrap(),
       comparer,
-    }).asLinq();
+    });
   };
 }
 distinct satisfies PipeFunction;
@@ -31,7 +31,7 @@ export function distinctBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey
       iterable: target.unwrap(),
       keySelector,
       comparer,
-    }).asLinq();
+    });
   };
 }
 distinctBy satisfies PipeFunction;

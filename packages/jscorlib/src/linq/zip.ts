@@ -36,7 +36,7 @@ export function zip<T, Ts extends any[], TResult>(
     return new ZipLinqWrapper<[T, ...Ts], TResult>({
       iterables,
       selector,
-    }).asLinq();
+    });
   };
 }
 zip satisfies PipeFunction;

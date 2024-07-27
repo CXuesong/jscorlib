@@ -28,7 +28,7 @@ export function groupBy<T, TKey>(
       iterable: unwrapped,
       keySelector,
       comparer,
-    }).asLinq();
+    });
   };
 }
 groupBy satisfies PipeFunction;
@@ -56,7 +56,7 @@ class GroupingLinqWrapper<T, TKey> extends IntermediateLinqWrapper<LinqGrouping<
     for (const [key, values] of map) {
       yield {
         key,
-        values: new IterableLinqWrapper(values).asLinq(),
+        values: new IterableLinqWrapper(values),
       };
     }
   }

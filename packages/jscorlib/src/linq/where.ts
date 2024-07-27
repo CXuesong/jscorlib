@@ -14,12 +14,12 @@ export function where<T>(predicate: IndexedSequenceElementPredicate<T>): PipeBod
       return new WhereLinqWrapper<T>({
         ...state,
         predicates: [...state.predicates, predicate],
-      }).asLinq();
+      });
     }
     return new WhereLinqWrapper({
       iterable: target.unwrap(),
       predicates: [predicate],
-    }).asLinq();
+    });
   };
 }
 where satisfies PipeFunction;

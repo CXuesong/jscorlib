@@ -1,10 +1,11 @@
+import type { tryGetCountDirect } from "./count";
 import type { LinqWrapper } from "./linqWrapper";
 
 export const TryGetCountDirectSymbol = Symbol.for("jscorlib::Linq.TryGetCountDirect");
 export const TryUnwrapUnorderedSymbol = Symbol.for("jscorlib::Linq.TryUnwrapUnordered");
 
 export interface BuiltInLinqTraits<T> {
-  /** Provides specialized implementation for {@link LinqWrapper.tryGetCountDirect}. */
+  /** Provides specialized implementation for {@link tryGetCountDirect}. */
   [TryGetCountDirectSymbol]?(): number | undefined;
   /**
    * Retrieves the input iterator, if the current LINQ wrapper is only re-ordering
