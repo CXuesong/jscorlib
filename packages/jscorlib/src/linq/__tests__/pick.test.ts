@@ -1,24 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { asLinq, registerLinqModule } from "../linqWrapper";
-import * as Pick from "../pick";
-
-registerLinqModule(Pick);
+import { asLinq } from "../linqWrapper";
+import * as _Linq from "../pick";
 
 describe("pick", () => {
   it("array", () => {
     const arr = [1, 2, 3, 4, 5, "a", "b", "c", "d"];
-    expect(asLinq(arr).first()).toBe(1);
-    expect(asLinq(arr).last()).toBe("d");
-    expect(asLinq(arr).elementAt(5)).toBe("a");
+    expect(asLinq(arr).$_(_Linq.first())).toBe(1);
+    expect(asLinq(arr).$_(_Linq.last())).toBe("d");
+    expect(asLinq(arr).$_(_Linq.elementAt(5))).toBe("a");
   });
   it("TypedArray", () => {
     const arr = new Int32Array(100);
     arr.fill(1, 0, 25);
     arr.fill(5, 25, 75);
     arr.fill(10, 75, 100);
-    expect(asLinq(arr).first()).toBe(1);
-    expect(asLinq(arr).last()).toBe(10);
-    expect(asLinq(arr).elementAt(50)).toBe(5);
+    expect(asLinq(arr).$_(_Linq.first())).toBe(1);
+    expect(asLinq(arr).$_(_Linq.last())).toBe(10);
+    expect(asLinq(arr).$_(_Linq.elementAt(50))).toBe(5);
   });
   it("map", () => {
     // Map: entry orders are persisted
@@ -28,9 +26,9 @@ describe("pick", () => {
     map.set(3, 3);
     map.set(4, 4);
     map.set(5, 5);
-    expect(asLinq(map).first()).toStrictEqual([1, 1]);
-    expect(asLinq(map).last()).toStrictEqual([5, 5]);
-    expect(asLinq(map).elementAt(2)).toStrictEqual([3, 3]);
+    expect(asLinq(map).$_(_Linq.first())).toStrictEqual([1, 1]);
+    expect(asLinq(map).$_(_Linq.last())).toStrictEqual([5, 5]);
+    expect(asLinq(map).$_(_Linq.elementAt(2))).toStrictEqual([3, 3]);
   });
   it("iterable", () => {
     function* myIterable(): Iterable<number | string> {
@@ -44,8 +42,8 @@ describe("pick", () => {
       yield "c";
       yield "d";
     }
-    expect(asLinq(myIterable()).first()).toBe(1);
-    expect(asLinq(myIterable()).last()).toBe("d");
-    expect(asLinq(myIterable()).elementAt(5)).toBe("a");
+    expect(asLinq(myIterable()).$_(_Linq.first())).toBe(1);
+    expect(asLinq(myIterable()).$_(_Linq.last())).toBe("d");
+    expect(asLinq(myIterable()).$_(_Linq.elementAt(5))).toBe("a");
   });
 });

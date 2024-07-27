@@ -3,12 +3,7 @@ import { EqualityComparer } from "../collections/equalityComparison";
 import { LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementSelector } from "./typing";
-
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    groupBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<T>): LinqWrapper<LinqGrouping<TKey, T>>;
-  }
-}
+import { PipeBody, PipeFunction } from "../pipables";
 
 /**
  * Represents basic traits of a group after grouping the input sequence.
@@ -23,18 +18,20 @@ export interface LinqGrouping<TKey, TValue> {
   values: LinqWrapper<TValue>;
 }
 
-export function Linq$groupBy<T, TKey>(
-  this: LinqWrapper<T>,
+export function groupBy<T, TKey>(
   keySelector: SequenceElementSelector<T, TKey>,
   comparer?: EqualityComparer<TKey>,
-): LinqWrapper<LinqGrouping<TKey, T>> {
-  const unwrapped = this.unwrap();
-  return new GroupingLinqWrapper({
-    iterable: unwrapped,
-    keySelector,
-    comparer,
-  }).asLinq();
+): PipeBody<LinqWrapper<T>, LinqWrapper<LinqGrouping<TKey, T>>> {
+  return target => {
+    const unwrapped = target.unwrap();
+    return new GroupingLinqWrapper({
+      iterable: unwrapped,
+      keySelector,
+      comparer,
+    }).asLinq();
+  };
 }
+groupBy satisfies PipeFunction;
 
 interface GroupingIteratorInfo<T, TKey> {
   readonly iterable: Iterable<T>;

@@ -1,19 +1,15 @@
 import { describe, expect, it } from "vitest";
-import * as Count from "../count";
-import { asLinq, registerLinqModule } from "../linqWrapper";
-import * as Sort from "../sort";
-
-registerLinqModule(Sort);
-registerLinqModule(Count);
+import { asLinq } from "../linqWrapper";
+import * as _Linq from "../sort";
 
 describe("sort", () => {
   it("orderBy", () => {
-    const ordered = asLinq([3, 1, 2]).orderBy(x => x);
+    const ordered = asLinq([3, 1, 2]).$_(_Linq.orderBy(x => x));
     expect([...ordered]).toEqual([1, 2, 3]);
   });
   
   it("orderByDescending", () => {
-    const ordered = asLinq([3, 1, 2]).orderByDescending(x => x);
+    const ordered = asLinq([3, 1, 2]).$_(_Linq.orderByDescending(x => x));
     expect([...ordered]).toEqual([3, 2, 1]);
   });
   
@@ -23,7 +19,7 @@ describe("sort", () => {
       { name: "Bob", age: 30 },
       { name: "Alice", age: 30 },
     ]);
-    const ordered = linq.orderBy(x => x.name).thenBy(x => x.age);
+    const ordered = linq.$_(_Linq.orderBy(x => x.name)).thenBy(x => x.age);
     expect([...ordered]).toEqual([
       { name: "Alice", age: 25 },
       { name: "Alice", age: 30 },
@@ -37,7 +33,7 @@ describe("sort", () => {
       { name: "Bob", age: 30 },
       { name: "Alice", age: 30 },
     ]);
-    const ordered = linq.orderBy(x => x.name).thenByDescending(x => x.age);
+    const ordered = linq.$_(_Linq.orderBy(x => x.name)).thenByDescending(x => x.age);
     expect([...ordered]).toEqual([
       { name: "Alice", age: 30 },
       { name: "Alice", age: 25 },

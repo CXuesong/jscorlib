@@ -2,11 +2,6 @@ import { assert } from "../diagnostics";
 import { LinqWrapperBase } from "./linqWrapper";
 import { BuiltInLinqTraits, TryUnwrapUnorderedSymbol } from "./traits";
 
-export {
-  /** @deprecated */
-  isArrayLikeStrict,
-} from "../types/internal/utils";
-
 export function unwrapUnorderedLinqWrapper<T>(wrapper: LinqWrapperBase<T>): Iterable<T> {
   let it = wrapper as (BuiltInLinqTraits<T> & Iterable<T>);
   while (typeof it[TryUnwrapUnorderedSymbol] === "function") {

@@ -7,6 +7,7 @@ export * as Events from "./events";
 export * as Globalization from "./globalization";
 export * as Linq from "./linq";
 export * as Numbers from "./numbers";
+export * as Pipables from "./pipables";
 export * as Promises from "./promises";
 export * as Strings from "./strings";
 export * as Synchronization from "./synchronization";

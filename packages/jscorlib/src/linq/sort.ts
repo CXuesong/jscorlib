@@ -1,20 +1,12 @@
 import { defaultArrayComparer, sort } from "../arrays";
 import { ComparerFunction } from "../collections/comparison";
-import { Linq$tryGetCountDirect } from "./count";
+import { tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol, TryUnwrapUnorderedSymbol } from "./traits";
 import { SequenceElementSelector } from "./typing";
 import { unwrapUnorderedLinqWrapper } from "./utils.internal";
-
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    order<TKey>(comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
-    orderBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
-    orderDescending<TKey>(comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
-    orderByDescending<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T>;
-  }
-}
+import { PipeBody, PipeFunction } from "../pipables";
 
 export interface OrderedLinqWrapperBase<T> {
   thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T>;
@@ -24,21 +16,25 @@ export interface OrderedLinqWrapperBase<T> {
 export interface OrderedLinqWrapper<T> extends LinqWrapper<T>, OrderedLinqWrapperBase<T> {
 }
 
-export function Linq$orderBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
-  return resetOrderClause(this, { selector: keySelector, comparer, descending: false });
+export function orderBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): PipeBody<LinqWrapper<T>, OrderedLinqWrapper<T>> {
+  return target => resetOrderClause(target, { selector: keySelector, comparer, descending: false });
 }
+orderBy satisfies PipeFunction;
 
-export function Linq$orderByDescending<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
-  return resetOrderClause(this, { selector: keySelector, comparer, descending: true });
+export function orderByDescending<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): PipeBody<LinqWrapper<T>, OrderedLinqWrapper<T>> {
+  return target => resetOrderClause(target, { selector: keySelector, comparer, descending: true });
 }
+orderByDescending satisfies PipeFunction;
 
-export function Linq$order<T, TKey>(this: LinqWrapper<T>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
-  return resetOrderClause(this, { comparer, descending: false });
+export function order<T, TKey>(comparer?: ComparerFunction<TKey>): PipeBody<LinqWrapper<T>, OrderedLinqWrapper<T>> {
+  return target => resetOrderClause(target, { comparer, descending: false });
 }
+order satisfies PipeFunction;
 
-export function Linq$orderDescending<T, TKey>(this: LinqWrapper<T>, comparer?: ComparerFunction<TKey>): OrderedLinqWrapper<T> {
-  return resetOrderClause(this, { comparer, descending: true });
+export function orderDescending<T, TKey>(comparer?: ComparerFunction<TKey>): PipeBody<LinqWrapper<T>, OrderedLinqWrapper<T>> {
+  return target => resetOrderClause(target, { comparer, descending: true });
 }
+orderDescending satisfies PipeFunction;
 
 function resetOrderClause<T, TKey>(wrapper: LinqWrapper<T>, clause: OrderClause<T, TKey>): OrderedLinqWrapper<T> {
   const unwrapped = wrapper instanceof OrderedLinqWrapperImpl
@@ -84,7 +80,7 @@ class OrderedLinqWrapperImpl<T>
     return appendOrderClause(this, { selector: keySelector, comparer, descending: true });
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    return Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
+    return asLinq(this.__state.iterable).$_(tryGetCountDirect());
   }
   public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
     return this.__state.iterable;

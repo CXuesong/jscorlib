@@ -1,4 +1,4 @@
-import { ArgumentRangeError, InvalidOperationError } from "../errors";
+import { PipeTarget } from "../pipables";
 import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
 
 /**
@@ -7,7 +7,7 @@ import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal
  * 
  * @template T type of the sequence item.
  */
-export interface LinqWrapperBase<T> extends Iterable<T> {
+export interface LinqWrapperBase<T> extends Iterable<T>, PipeTarget {
   /**
    * Returns the current object as {@link LinqWrapper}.
    * 
@@ -59,31 +59,4 @@ export function asLinq<T>(sequence: Iterable<T>): LinqWrapper<T> {
     wrapperCache.set(sequence, wrapper);
   }
   return wrapper as LinqWrapper<T>;
-}
-
-/**
- * General definition of "Extension Methods" in JS.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ExtensionMethod<TThis = unknown> = (this: TThis, ...args: any[]) => any;
-
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-export interface LinqExtensionMethodModule<TThis = unknown> {
-  // We cannot place typeparam in index type.
-  [exportKey: `Linq$${string}`]: ExtensionMethod<TThis>;
-}
-
-export function registerLinqMethod<T>(name: string, methodImpl: ExtensionMethod<LinqWrapper<T>>): void {
-  const prototype = AbstractLinqWrapper.prototype as unknown as Record<string, unknown>;
-  if (name.startsWith("_") || name.startsWith("$")) throw ArgumentRangeError.create(0, "name", `LINQ method name cannot start with "_" or "$".`);
-  if (name in prototype) throw new InvalidOperationError(`LINQ method "${name}" has already been registered.`);
-  prototype[name] = methodImpl;
-}
-
-export function registerLinqModule<T>(module: LinqExtensionMethodModule<LinqWrapper<T>>): void {
-  for (const key of Object.keys(module)) {
-    if (typeof key === "string" && key.startsWith("Linq$")) {
-      registerLinqMethod(key.substring(5), module[key as `Linq$${string}`]);
-    }
-  }
 }

@@ -1,38 +1,38 @@
-import { Linq$tryGetCountDirect } from "./count";
+import { tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper, IterableFactoryLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
 import { IndexedSequenceElementSelector } from "./typing";
+import { PipeBody, PipeFunction } from "../pipables";
 
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    select<TResult>(selector: IndexedSequenceElementSelector<T, TResult>): LinqWrapper<TResult>;
-    selectMany<TResult>(selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult>;
-  }
-}
+export function select<T, TResult>(selector: IndexedSequenceElementSelector<T, TResult>): PipeBody<LinqWrapper<T>, LinqWrapper<TResult>> {
+  return target => {
+    if (target instanceof SelectLinqWrapper) {
+      const state = target.__state;
+      return new SelectLinqWrapper<T, TResult>({
+        ...state,
+        selectors: [
+          ...state.selectors,
+          { selector: selector as IndexedSequenceElementSelector<unknown, unknown> },
+        ],
+      }).asLinq();
+    }
 
-export function Linq$select<T, TResult>(this: LinqWrapper<T>, selector: IndexedSequenceElementSelector<T, TResult>): LinqWrapper<TResult> {
-  if (this instanceof SelectLinqWrapper) {
-    const state = this.__state;
     return new SelectLinqWrapper<T, TResult>({
-      ...state,
-      selectors: [
-        ...state.selectors,
-        { selector: selector as IndexedSequenceElementSelector<unknown, unknown> },
-      ],
+      iterable: target.unwrap(),
+      selectors: [{ selector: selector as IndexedSequenceElementSelector<unknown, unknown> }],
     }).asLinq();
-  }
-
-  return new SelectLinqWrapper<T, TResult>({
-    iterable: this.unwrap(),
-    selectors: [{ selector: selector as IndexedSequenceElementSelector<unknown, unknown> }],
-  }).asLinq();
+  };
 }
+select satisfies PipeFunction;
 
-export function Linq$selectMany<T, TResult>(this: LinqWrapper<T>, selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): LinqWrapper<TResult> {
-  const unwrapped = this.unwrap();
-  return new IterableFactoryLinqWrapper(() => selectManyIterable(unwrapped, selector)).asLinq();
+export function selectMany<T, TResult>(selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): PipeBody<LinqWrapper<T>, LinqWrapper<TResult>> {
+  return target => {
+    const unwrapped = target.unwrap();
+    return new IterableFactoryLinqWrapper(() => selectManyIterable(unwrapped, selector)).asLinq();
+  };
 }
+selectMany satisfies PipeFunction;
 
 function* selectManyIterable<T, TResult>(iterable: Iterable<T>, selector: IndexedSequenceElementSelector<T, Iterable<TResult>>): Iterable<TResult> {
   let index = 0;
@@ -86,6 +86,6 @@ class SelectLinqWrapper<T, TResult>
   public [TryGetCountDirectSymbol](): number | undefined {
     // projection does not change item count.
     // N.b. This does not hold as soon as we introduce selectMany here.
-    return Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
+    return asLinq(this.__state.iterable).$_(tryGetCountDirect());
   }
 }

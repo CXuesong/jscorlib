@@ -3,38 +3,38 @@ import { HashSet } from "../collections/hashSet";
 import type { LinqWrapper } from "./linqWrapper";
 import { IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { SequenceElementSelector } from "./typing";
+import { PipeBody, PipeFunction } from "../pipables";
 
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    distinct(comparer?: EqualityComparer<T>): LinqWrapper<T>;
-    distinctBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): LinqWrapper<T>;
-  }
+export function distinct<T>(comparer?: EqualityComparer<T>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
+  return target => {
+    if (target instanceof DistinctLinqWrapper) {
+      const state = target.__state;
+      // Trivial: distinct gets chained multiple times.
+      if (state.keySelector == null) return target;
+    }
+    return new DistinctLinqWrapper({
+      iterable: target.unwrap(),
+      comparer,
+    }).asLinq();
+  };
 }
+distinct satisfies PipeFunction;
 
-export function Linq$distinct<T>(this: LinqWrapper<T>, comparer?: EqualityComparer<T>): LinqWrapper<T> {
-  if (this instanceof DistinctLinqWrapper) {
-    const state = this.__state;
-    // Trivial: distinct gets chained multiple times.
-    if (state.keySelector == null) return this;
-  }
-  return new DistinctLinqWrapper({
-    iterable: this.unwrap(),
-    comparer,
-  }).asLinq();
+export function distinctBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
+  return target => {
+    if (target instanceof DistinctLinqWrapper) {
+      const state = target.__state;
+      // Trivial: distinct gets chained multiple times with the same keySelector (while almost impossible)
+      if (state.keySelector == keySelector) return target;
+    }
+    return new DistinctLinqWrapper({
+      iterable: target.unwrap(),
+      keySelector,
+      comparer,
+    }).asLinq();
+  };
 }
-
-export function Linq$distinctBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): LinqWrapper<T> {
-  if (this instanceof DistinctLinqWrapper) {
-    const state = this.__state;
-    // Trivial: distinct gets chained multiple times with the same keySelector (while almost impossible)
-    if (state.keySelector == keySelector) return this;
-  }
-  return new DistinctLinqWrapper({
-    iterable: this.unwrap(),
-    keySelector,
-    comparer,
-  }).asLinq();
-}
+distinctBy satisfies PipeFunction;
 
 interface DistinctIteratorInfo<T, TKey> {
   readonly iterable: Iterable<T>;

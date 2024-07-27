@@ -1,10 +1,8 @@
 import { describe, expect, it } from "vitest";
-import * as GroupBy from "../groupBy";
-import { asLinq, registerLinqModule } from "../linqWrapper";
+import * as _Linq from "../groupBy";
+import { asLinq } from "../linqWrapper";
 
-registerLinqModule(GroupBy);
-
-function collectGroups<TKey, TValue>(groups: Iterable<GroupBy.LinqGrouping<TKey, TValue>>): Map<TKey, TValue[]> {
+function collectGroups<TKey, TValue>(groups: Iterable<_Linq.LinqGrouping<TKey, TValue>>): Map<TKey, TValue[]> {
   const map = new Map<TKey, TValue[]>();
   for (const g of groups) {
     expect(map.has(g.key)).toBeFalsy();
@@ -28,8 +26,8 @@ describe("groupBy", () => {
       "Maria Martinez",
       "Robert Johnson",
     ];
-    const byFirstName = asLinq(names).groupBy(n => n.split(" ")[0]);
-    const byLastName = asLinq(names).groupBy(n => n.split(" ")[1]);
+    const byFirstName = asLinq(names).$_(_Linq.groupBy(n => n.split(" ")[0]));
+    const byLastName = asLinq(names).$_(_Linq.groupBy(n => n.split(" ")[1]));
     expect(collectGroups(byFirstName)).toEqual(new Map([
       ["James", ["James Smith"]],
       ["Michael", ["Michael Smith"]],
@@ -48,4 +46,3 @@ describe("groupBy", () => {
     ]));
   });
 });
-

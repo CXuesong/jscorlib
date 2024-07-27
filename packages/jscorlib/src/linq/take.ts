@@ -1,68 +1,69 @@
 import { assert } from "../diagnostics";
 import { ArgumentRangeError } from "../errors";
 import { asSafeInteger, SafeInteger } from "../numbers";
-import { Linq$tryGetCountDirect } from "./count";
+import { PipeBody, PipeFunction } from "../pipables";
+import { tryGetCountDirect } from "./count";
 import { asLinq, LinqWrapper } from "./linqWrapper";
 import { AbstractLinqWrapper, IntermediateLinqWrapper } from "./linqWrapper.internal";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "./traits";
-import { IndexedSequenceElementPredicate, SequenceElementTypeAssertionPredicate } from "./typing";
 
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    skip(count: SafeInteger): LinqWrapper<T>;
-    take(count: SafeInteger): LinqWrapper<T>;
-    takeWhile(predicate: IndexedSequenceElementPredicate<T>): LinqWrapper<T>;
-    takeWhile<TResult extends T>(predicate: SequenceElementTypeAssertionPredicate<T, TResult>): LinqWrapper<TResult>;
-  }
-}
-
-export function Linq$skip<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrapper<T> {
-  count = asSafeInteger(count);
-  if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
-  if (count === 0) return this;
-  if (this instanceof SkipTakeLinqWrapper) {
-    const state = this.__state;
-    if (state.take == null) {
-      return new SkipTakeLinqWrapper<T>({
-        ...state,
-        skip: state.skip + count,
-      }).asLinq();
+export function skip<T>(count: SafeInteger): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
+  return target => {
+    count = asSafeInteger(count);
+    if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
+    if (count === 0) return target;
+    if (target instanceof SkipTakeLinqWrapper) {
+      const state = target.__state;
+      if (state.take == null) {
+        return new SkipTakeLinqWrapper<T>({
+          ...state,
+          skip: state.skip + count,
+        }).asLinq();
+      }
+      // has take limitation
+      if (state.take > count) {
+        return new SkipTakeLinqWrapper<T>({
+          ...state,
+          skip: state.skip + count,
+          take: state.take - count,
+        }).asLinq();
+      }
+      // skipped too far
+      return EmptyLinqWrapper.instance.asLinq();
     }
-    // has take limitation
-    if (state.take > count) {
-      return new SkipTakeLinqWrapper<T>({
-        ...state,
-        skip: state.skip + count,
-        take: state.take - count,
-      }).asLinq();
-    }
-    // skipped too far
-    return EmptyLinqWrapper.instance.asLinq();
-  }
-  return new SkipTakeLinqWrapper({
-    iterable: this.unwrap(),
-    skip: count,
-    take: undefined,
-  }).asLinq();
-}
-
-export function Linq$take<T>(this: LinqWrapper<T>, count: SafeInteger): LinqWrapper<T> {
-  count = asSafeInteger(count);
-  if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
-  if (count === 0) return EmptyLinqWrapper.instance.asLinq();
-  if (this instanceof SkipTakeLinqWrapper) {
-    const state = this.__state;
-    return new SkipTakeLinqWrapper<T>({
-      ...state,
-      take: state.take == null ? count : Math.min(state.take, count),
+    return new SkipTakeLinqWrapper({
+      iterable: target.unwrap(),
+      skip: count,
+      take: undefined,
     }).asLinq();
-  }
-  return new SkipTakeLinqWrapper({
-    iterable: this.unwrap(),
-    skip: 0,
-    take: count,
-  }).asLinq();
+  };
 }
+skip satisfies PipeFunction;
+
+export function take<T>(count: SafeInteger): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
+  return target => {
+    count = asSafeInteger(count);
+    if (count < 0) throw ArgumentRangeError.create(0, "count", "Expect value to be non-negative.");
+    if (count === 0) return EmptyLinqWrapper.instance.asLinq();
+    if (target instanceof SkipTakeLinqWrapper) {
+      const state = target.__state;
+      return new SkipTakeLinqWrapper<T>({
+        ...state,
+        take: state.take == null ? count : Math.min(state.take, count),
+      }).asLinq();
+    }
+    return new SkipTakeLinqWrapper({
+      iterable: target.unwrap(),
+      skip: 0,
+      take: count,
+    }).asLinq();
+  };
+}
+take satisfies PipeFunction;
+
+// takeWhile(predicate: IndexedSequenceElementPredicate<T>): LinqWrapper<T>;
+// takeWhile<TResult extends T>(predicate: SequenceElementTypeAssertionPredicate<T, TResult>): LinqWrapper<TResult>;
+
 
 interface SkipTakeIteratorInfo<T> {
   readonly iterable: Iterable<T>;
@@ -94,7 +95,7 @@ class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIterator
     }
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    let count = Linq$tryGetCountDirect.call(asLinq(this.__state.iterable));
+    let count = asLinq(this.__state.iterable).$_(tryGetCountDirect());
     if (count == null) return undefined;
     count -= this.__state.skip;
     // All the items have been skipped.

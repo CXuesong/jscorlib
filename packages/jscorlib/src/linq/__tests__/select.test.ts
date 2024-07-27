@@ -1,16 +1,13 @@
 import { describe, expect, it, vitest } from "vitest";
-import * as Count from "../count";
-import { asLinq, registerLinqModule } from "../linqWrapper";
-import * as Select from "../select";
+import * as _Count from "../count";
+import { asLinq } from "../linqWrapper";
+import * as _Select from "../select";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "../traits";
-
-registerLinqModule(Select);
-registerLinqModule(Count);
 
 describe("select", () => {
   it("select", () => {
     const arr = [1, 2, 3, "a", "b", "c"];
-    expect([...asLinq(arr).select(x => `Item: ${x}`)]).toStrictEqual([
+    expect([...asLinq(arr).$_(_Select.select(x => `Item: ${x}`))]).toStrictEqual([
       "Item: 1",
       "Item: 2",
       "Item: 3",
@@ -18,17 +15,20 @@ describe("select", () => {
       "Item: b",
       "Item: c",
     ]);
-    const linq = asLinq(arr).select(x => x + "test");
-    expect(linq.tryGetCountDirect()).toBe(6);
+    const linq = asLinq(arr).$_(_Select.select(x => x + "test"));
+    expect(linq.$_(_Count.tryGetCountDirect())).toBe(6);
 
     // Linq$count should be calling [[TryGetCountDirectSymbol]] first
     vitest.spyOn(linq as BuiltInLinqTraits<string>, TryGetCountDirectSymbol).mockReturnValue(123);
-    expect(linq.count()).toBe(123);
+    expect(linq.$_(_Count.count())).toBe(123);
   });
   it("selectMany", () => {
     const arr1 = [1, 2, 3];
     const arr2 = [4, 5, 6];
-    expect([...asLinq(arr1).selectMany(x => asLinq(arr2).select(y => [x, y] as const))]).toStrictEqual([
+    expect([
+      ...asLinq(arr1)
+        .$_(_Select.selectMany(x => asLinq(arr2).$_(_Select.select(y => [x, y] as const)))),
+    ]).toStrictEqual([
       [1, 4],
       [1, 5],
       [1, 6],

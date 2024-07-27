@@ -2,70 +2,68 @@ import { BidirectionalIndex } from "../arrays";
 import { assert } from "../diagnostics";
 import { ArgumentRangeError, InvalidOperationError } from "../errors";
 import { asSafeInteger } from "../numbers/asSafeInteger";
+import { isArrayLikeStrict } from "../types/internal";
 import type { LinqWrapper } from "./linqWrapper";
 import { IndexedSequenceElementPredicate } from "./typing";
-import { isArrayLikeStrict } from "./utils.internal";
-
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    first(): T;
-    first(predicate?: IndexedSequenceElementPredicate<T>): T;
-    last(): T;
-    last(predicate?: IndexedSequenceElementPredicate<T>): T;
-    firstOrDefault(): T | undefined;
-    firstOrDefault(predicate: IndexedSequenceElementPredicate<T> | undefined, defaultValue: T): T;
-    firstOrDefault(predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined;
-    lastOrDefault(): T | undefined;
-    lastOrDefault(predicate: IndexedSequenceElementPredicate<T> | undefined, defaultValue: T): T;
-    lastOrDefault(predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined;
-    elementAt(index: BidirectionalIndex): T;
-    elementAtOrDefault(index: BidirectionalIndex): T;
-    elementAtOrDefault(index: BidirectionalIndex, defaultValue: T): T;
-    elementAtOrDefault(index: BidirectionalIndex, defaultValue?: T): T | undefined;
-  }
-}
+import { PipeBody, PipeFunction } from "../pipables";
 
 const NoMatch = Symbol("NoMatch");
 
-export function Linq$first<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>): T {
-  const e = getFirst(this.unwrap(), predicate);
-  if (e !== NoMatch) return e;
-
-  if (predicate) throw new InvalidOperationError("Sequence contains no matching element.");
-  throw new InvalidOperationError("Sequence contains no element.");
+export function first<T>(predicate?: IndexedSequenceElementPredicate<T>): PipeBody<LinqWrapper<T>, T> {
+  return target => {
+    const e = getFirst(target.unwrap(), predicate);
+    if (e !== NoMatch) return e;
+    if (predicate) throw new InvalidOperationError("Sequence contains no matching element.");
+    throw new InvalidOperationError("Sequence contains no element.");
+  };
 }
+first satisfies PipeFunction;
 
-export function Linq$last<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>): T {
-  const e = getLast(this.unwrap(), predicate);
-  if (e !== NoMatch) return e;
-
-  if (predicate) throw new InvalidOperationError("Sequence contains no matching element.");
-  throw new InvalidOperationError("Sequence contains no element.");
+export function last<T>(predicate?: IndexedSequenceElementPredicate<T>): PipeBody<LinqWrapper<T>, T> {
+  return target => {
+    const e = getLast(target.unwrap(), predicate);
+    if (e !== NoMatch) return e;
+    if (predicate) throw new InvalidOperationError("Sequence contains no matching element.");
+    throw new InvalidOperationError("Sequence contains no element.");
+  };
 }
+last satisfies PipeFunction;
 
-export function Linq$firstOrDefault<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined {
-  const e = getFirst(this.unwrap(), predicate);
-  if (e !== NoMatch) return e;
-  return defaultValue;
+export function firstOrDefault<T>(predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): PipeBody<LinqWrapper<T>, T | undefined> {
+  return target => {
+    const e = getFirst(target.unwrap(), predicate);
+    if (e !== NoMatch) return e;
+    return defaultValue;
+  };
 }
+firstOrDefault satisfies PipeFunction;
 
-export function Linq$lastOrDefault<T>(this: LinqWrapper<T>, predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): T | undefined {
-  const e = getLast(this.unwrap(), predicate);
-  if (e !== NoMatch) return e;
-  return defaultValue;
+export function lastOrDefault<T>(predicate?: IndexedSequenceElementPredicate<T>, defaultValue?: T): PipeBody<LinqWrapper<T>, T | undefined> {
+  return target => {
+    const e = getLast(target.unwrap(), predicate);
+    if (e !== NoMatch) return e;
+    return defaultValue;
+  };
 }
+lastOrDefault satisfies PipeFunction;
 
-export function Linq$elementAt<T>(this: LinqWrapper<T>, index: BidirectionalIndex): T | undefined {
-  const e = getElementAt(this.unwrap(), index);
-  if (e !== NoMatch) return e;
-  throw ArgumentRangeError.create(0, "index", "Index is out of range.");
+export function elementAt<T>(index: BidirectionalIndex): PipeBody<LinqWrapper<T>, T | undefined> {
+  return target => {
+    const e = getElementAt(target.unwrap(), index);
+    if (e !== NoMatch) return e;
+    throw ArgumentRangeError.create(0, "index", "Index is out of range.");
+  };
 }
+elementAt satisfies PipeFunction;
 
-export function Linq$elementAtOrDefault<T>(this: LinqWrapper<T>, index: BidirectionalIndex, defaultValue?: T): T | undefined {
-  const e = getElementAt(this.unwrap(), index);
-  if (e !== NoMatch) return e;
-  return defaultValue;
+export function elementAtOrDefault<T>(index: BidirectionalIndex, defaultValue?: T): PipeBody<LinqWrapper<T>, T | undefined> {
+  return target => {
+    const e = getElementAt(target.unwrap(), index);
+    if (e !== NoMatch) return e;
+    return defaultValue;
+  };
 }
+elementAtOrDefault satisfies PipeFunction;
 
 function getFirst<T>(iterable: Iterable<T>, predicate?: IndexedSequenceElementPredicate<T>): T | typeof NoMatch {
   if (predicate) {

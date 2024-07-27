@@ -5,33 +5,29 @@ import { InvalidOperationError } from "../errors";
 import type { LinqWrapper } from "./linqWrapper";
 import { SequenceElementSelector } from "./typing";
 import { unwrapUnorderedLinqWrapper } from "./utils.internal";
+import { PipeBody, PipeFunction } from "../pipables";
 
 export type AggregateAccumulator<T, TAccumulate> = (accumulate: TAccumulate, element: T) => TAccumulate;
 
-declare module "./linqWrapper" {
-  export interface LinqWrapper<T> {
-    min(comparer?: ComparerFunction<T>): T;
-    minBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T;
-    max(comparer?: ComparerFunction<T>): T;
-    maxBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T;
-  }
+export function min<T>(comparer?: ComparerFunction<T>): PipeBody<LinqWrapper<T>, T> {
+  return target => minMaxImpl(target, "min", undefined, comparer);
 }
+min satisfies PipeFunction;
 
-export function Linq$min<T>(this: LinqWrapper<T>, comparer?: ComparerFunction<T>): T {
-  return minMaxImpl(this, "min", undefined, comparer);
+export function minBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): PipeBody<LinqWrapper<T>, T> {
+  return target => minMaxImpl(target, "min", keySelector, comparer);
 }
+minBy satisfies PipeFunction;
 
-export function Linq$minBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T {
-  return minMaxImpl(this, "min", keySelector, comparer);
+export function max<T>(comparer?: ComparerFunction<T>): PipeBody<LinqWrapper<T>, T> {
+  return target => minMaxImpl(target, "max", undefined, comparer);
 }
+max satisfies PipeFunction;
 
-export function Linq$max<T>(this: LinqWrapper<T>, comparer?: ComparerFunction<T>): T {
-  return minMaxImpl(this, "max", undefined, comparer);
+export function maxBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): PipeBody<LinqWrapper<T>, T> {
+  return target => minMaxImpl(target, "max", keySelector, comparer);
 }
-
-export function Linq$maxBy<T, TKey>(this: LinqWrapper<T>, keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): T {
-  return minMaxImpl(this, "max", keySelector, comparer);
-}
+maxBy satisfies PipeFunction;
 
 function minMaxImpl<T, TKey = T>(
   wrapper: LinqWrapper<T>,

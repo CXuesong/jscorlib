@@ -1,19 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { asLinq, registerLinqModule } from "../linqWrapper";
-import * as Reverse from "../reverse";
-
-registerLinqModule(Reverse);
+import { asLinq } from "../linqWrapper";
+import * as _Linq from "../reverse";
 
 describe("reverse", () => {
   it("array", () => {
     const arr = [1, 2, 3, null, undefined, 4, 5];
-    expect([...asLinq(arr).reverse()]).toStrictEqual([5, 4, undefined, null, 3, 2, 1]);
-    expect([...asLinq(arr).reverse().reverse()]).toStrictEqual(arr);
+    expect([...asLinq(arr).$_(_Linq.reverse())]).toStrictEqual([5, 4, undefined, null, 3, 2, 1]);
+    expect([...asLinq(arr).$_(_Linq.reverse()).$_(_Linq.reverse())]).toStrictEqual(arr);
   });
   it("TypedArray", () => {
     const arr = new Int32Array([1, 2, 3, 4, 5]);
-    expect([...asLinq(arr).reverse()]).toStrictEqual([5, 4, 3, 2, 1]);
-    expect([...asLinq(arr).reverse().reverse()]).toStrictEqual([...arr]);
+    expect([...asLinq(arr).$_(_Linq.reverse())]).toStrictEqual([5, 4, 3, 2, 1]);
+    expect([...asLinq(arr).$_(_Linq.reverse()).$_(_Linq.reverse())]).toStrictEqual([...arr]);
   });
   it("map", () => {
     // Map: entry orders are persisted
@@ -23,14 +21,14 @@ describe("reverse", () => {
     map.set(3, 3);
     map.set(4, 4);
     map.set(5, 5);
-    expect([...asLinq(map).reverse()]).toStrictEqual([
+    expect([...asLinq(map).$_(_Linq.reverse())]).toStrictEqual([
       [5, 5],
       [4, 4],
       [3, 3],
       [2, 2],
       [1, 1],
     ]);
-    expect([...asLinq(map).reverse().reverse()]).toStrictEqual([...map]);
+    expect([...asLinq(map).$_(_Linq.reverse()).$_(_Linq.reverse())]).toStrictEqual([...map]);
   });
   it("iterable", () => {
     function* myIterable(): Iterable<number | string> {
@@ -39,6 +37,6 @@ describe("reverse", () => {
       yield "a";
       yield "b";
     }
-    expect([...asLinq(myIterable()).reverse()]).toStrictEqual(["b", "a", 2, 1]);
+    expect([...asLinq(myIterable()).$_(_Linq.reverse())]).toStrictEqual(["b", "a", 2, 1]);
   });
 });
