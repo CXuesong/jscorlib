@@ -80,7 +80,7 @@ class OrderedLinqWrapperImpl<T>
     return appendOrderClause(this, { selector: keySelector, comparer, descending: true });
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    return asLinq(this.__state.iterable).$_(tryGetCountDirect());
+    return asLinq(this.__state.iterable).$(tryGetCountDirect());
   }
   public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
     return this.__state.iterable;

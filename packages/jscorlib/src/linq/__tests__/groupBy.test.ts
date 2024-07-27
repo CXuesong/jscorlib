@@ -26,8 +26,8 @@ describe("groupBy", () => {
       "Maria Martinez",
       "Robert Johnson",
     ];
-    const byFirstName = asLinq(names).$_(_Linq.groupBy(n => n.split(" ")[0]));
-    const byLastName = asLinq(names).$_(_Linq.groupBy(n => n.split(" ")[1]));
+    const byFirstName = asLinq(names).$(_Linq.groupBy(n => n.split(" ")[0]));
+    const byLastName = asLinq(names).$(_Linq.groupBy(n => n.split(" ")[1]));
     expect(collectGroups(byFirstName)).toEqual(new Map([
       ["James", ["James Smith"]],
       ["Michael", ["Michael Smith"]],

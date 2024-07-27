@@ -3,7 +3,7 @@ import type { LinqWrapper, LinqWrapperBase } from "./linqWrapper";
 
 // TODO global shared instanceof support with Symbol.for
 export abstract class AbstractLinqWrapper<T> implements LinqWrapperBase<T> {
-  public $_<T>(pipeBody: PipeBody<this, T>): T {
+  public $<T>(pipeBody: PipeBody<this, T>): T {
     return pipeBody(this);
   }
   public abstract [Symbol.iterator](): Iterator<T>;

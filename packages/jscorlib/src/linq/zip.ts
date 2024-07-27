@@ -70,10 +70,10 @@ class ZipLinqWrapper<Ts extends any[], TResult = Ts>
   public [TryGetCountDirectSymbol](): number | undefined {
     const { iterables } = this.__state;
     assert(iterables.length > 0);
-    let cur = asLinq(iterables[0]).$_(tryGetCountDirect());
+    let cur = asLinq(iterables[0]).$(tryGetCountDirect());
     if (cur == null) return undefined;
     for (let i = 1; i < iterables.length; i++) {
-      const count = asLinq(iterables[i]).$_(tryGetCountDirect());
+      const count = asLinq(iterables[i]).$(tryGetCountDirect());
       if (count == null) return undefined;
       if (cur > count) cur = count;
     }

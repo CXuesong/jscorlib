@@ -4,13 +4,13 @@ import { asLinq } from "../linqWrapper";
 
 describe("count", () => {
   it("array", () => {
-    expect(asLinq([1, 2, 3, 4, 5]).$_(_Linq.count())).toBe(5);
-    expect(asLinq([1, 2, 3, 4, 5]).$_(_Linq.tryGetCountDirect())).toBe(5);
+    expect(asLinq([1, 2, 3, 4, 5]).$(_Linq.count())).toBe(5);
+    expect(asLinq([1, 2, 3, 4, 5]).$(_Linq.tryGetCountDirect())).toBe(5);
   });
   it("TypedArray", () => {
     const arr = new Int32Array(100);
-    expect(asLinq(arr).$_(_Linq.count())).toBe(100);
-    expect(asLinq(arr).$_(_Linq.tryGetCountDirect())).toBe(100);
+    expect(asLinq(arr).$(_Linq.count())).toBe(100);
+    expect(asLinq(arr).$(_Linq.tryGetCountDirect())).toBe(100);
   });
   it("map", () => {
     const map = new Map<number, number>();
@@ -19,8 +19,8 @@ describe("count", () => {
     map.set(3, 3);
     map.set(4, 4);
     map.set(5, 5);
-    expect(asLinq(map).$_(_Linq.count())).toBe(5);
-    expect(asLinq(map).$_(_Linq.tryGetCountDirect())).toBe(5);
+    expect(asLinq(map).$(_Linq.count())).toBe(5);
+    expect(asLinq(map).$(_Linq.tryGetCountDirect())).toBe(5);
   });
   it("iterable", () => {
     function* myIterable(): Iterable<number> {
@@ -30,7 +30,7 @@ describe("count", () => {
       yield 4;
       yield 5;
     }
-    expect(asLinq(myIterable()).$_(_Linq.count())).toBe(5);
-    expect(asLinq(myIterable()).$_(_Linq.tryGetCountDirect())).toBeUndefined();
+    expect(asLinq(myIterable()).$(_Linq.count())).toBe(5);
+    expect(asLinq(myIterable()).$(_Linq.tryGetCountDirect())).toBeUndefined();
   });
 });

@@ -5,10 +5,10 @@ import { asLinq } from "../linqWrapper";
 
 describe("aggregate", () => {
   it("with seed", () => {
-    expect(asLinq([1, 2, 3, 4, 5]).$_(_Linq.aggregate(10, (a, e) => a + e))).toBe(25);
+    expect(asLinq([1, 2, 3, 4, 5]).$(_Linq.aggregate(10, (a, e) => a + e))).toBe(25);
   });
   it("without seed", () => {
-    expect(asLinq([1, 2, 3, 4, 5]).$_(_Linq.aggregate((a, e) => a + e))).toBe(15);
-    expect(() => asLinq<number>([]).$_(_Linq.aggregate((a, e) => a + e))).toThrowError(InvalidOperationError);
+    expect(asLinq([1, 2, 3, 4, 5]).$(_Linq.aggregate((a, e) => a + e))).toBe(15);
+    expect(() => asLinq<number>([]).$(_Linq.aggregate((a, e) => a + e))).toThrowError(InvalidOperationError);
   });
 });

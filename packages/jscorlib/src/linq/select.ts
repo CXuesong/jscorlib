@@ -86,6 +86,6 @@ class SelectLinqWrapper<T, TResult>
   public [TryGetCountDirectSymbol](): number | undefined {
     // projection does not change item count.
     // N.b. This does not hold as soon as we introduce selectMany here.
-    return asLinq(this.__state.iterable).$_(tryGetCountDirect());
+    return asLinq(this.__state.iterable).$(tryGetCountDirect());
   }
 }

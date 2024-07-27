@@ -9,5 +9,5 @@ export type PipeBody<TTarget = any, TReturnValue = any> = (target: TTarget) => T
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 export interface PipeTarget {
-  $_<T>(pipeBody: PipeBody<this, T>): T;
+  $<T>(pipeBody: PipeBody<this, T>): T;
 }

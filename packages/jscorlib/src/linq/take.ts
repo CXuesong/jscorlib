@@ -95,7 +95,7 @@ class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIterator
     }
   }
   public override[TryGetCountDirectSymbol](): number | undefined {
-    let count = asLinq(this.__state.iterable).$_(tryGetCountDirect());
+    let count = asLinq(this.__state.iterable).$(tryGetCountDirect());
     if (count == null) return undefined;
     count -= this.__state.skip;
     // All the items have been skipped.
