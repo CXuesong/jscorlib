@@ -2,8 +2,6 @@ import { PipeBody, PipeFunction } from "../pipables";
 import type { LinqWrapper } from "./linqWrapper";
 import { SequenceElementPredicate } from "./typing";
 
-export type AggregateAccumulator<T, TAccumulate> = (accumulate: TAccumulate, element: T) => TAccumulate;
-
 export function any<T>(
   predicate?: SequenceElementPredicate<T>,
 ): PipeBody<LinqWrapper<T>, boolean> {

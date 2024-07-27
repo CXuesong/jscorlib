@@ -7,8 +7,6 @@ import { SequenceElementSelector } from "./typing";
 import { unwrapUnorderedLinqWrapper } from "./utils.internal";
 import { PipeBody, PipeFunction } from "../pipables";
 
-export type AggregateAccumulator<T, TAccumulate> = (accumulate: TAccumulate, element: T) => TAccumulate;
-
 export function min<T>(comparer?: ComparerFunction<T>): PipeBody<LinqWrapper<T>, T> {
   return target => minMaxImpl(target, "min", undefined, comparer);
 }
