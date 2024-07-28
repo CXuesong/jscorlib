@@ -15,6 +15,7 @@
 node_modules
 *.log
 dist
+packages/**/obj
 packages/**/lib
 packages/**/package.tgz
 

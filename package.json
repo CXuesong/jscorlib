@@ -10,6 +10,7 @@
     "build:prod": "yarn workspaces foreach --all --verbose --topological-dev --parallel --interlaced run build:prod",
     "lint": "yarn workspaces foreach --all --verbose --parallel run lint",
     "test:prod": "yarn workspaces foreach --all --verbose --parallel --interlaced run test:prod",
+    "test:coverage:prod": "yarn workspaces foreach --all --exclude . --verbose --parallel --interlaced run test:prod --coverage",
     "bench:prod": "yarn workspaces foreach --all --verbose --parallel --interlaced run bench:prod"
   },
   "workspaces": [

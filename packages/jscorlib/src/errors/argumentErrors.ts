@@ -122,6 +122,15 @@ export class ArgumentNullError extends ArgumentTypeError {
   }
 }
 
+/**
+ * A helper function to ensure the given argument value satisfies the type constraints.
+ * @param paramIndex 0-based index of the parameter.
+ * @param paramName parameter name.
+ * @param value passed in parameter value.
+ * @param allowedType any allowed types of this parameter.
+ * 
+ * @throws {@link ArgumentTypeError} Provided parameter does not satisfy the type constraints.
+ */
 export function checkArgumentType<TTypeIds extends TypeId[]>(
   paramIndex: number, paramName: string, value: unknown, ...allowedType: TTypeIds
 ): asserts value is TypeFromTypeId<TTypeIds[number]>;

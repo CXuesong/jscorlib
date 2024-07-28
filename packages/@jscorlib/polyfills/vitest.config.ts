@@ -13,5 +13,10 @@ export default defineConfig({
         "**/__benchmarks__/*.test.(ts|js)",
       ],
     },
+    coverage: {
+      provider: "v8",
+      reporter: ["lcov"],
+      reportsDirectory: "./obj/coverage",
+    },
   },
 });

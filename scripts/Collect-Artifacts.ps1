@@ -38,6 +38,7 @@ foreach ($Package in $Packages) {
     }
 
     Copy-PackageItem src -Recurse
+    Copy-PackageItem obj -Recurse
     Copy-PackageItem lib -Recurse
     Copy-PackageItem package.json
     Copy-PackageItem *.md

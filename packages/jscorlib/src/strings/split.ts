@@ -4,18 +4,41 @@ import { asSafeInteger, SafeInteger } from "../numbers";
 import { CustomStringSplitDelimiter, SplitSymbol } from "./typing";
 
 export interface StringSplitOptions {
+  /** Limit the number of elements returned in the array. */
   limit: SafeInteger | undefined;
 }
 
 /**
+ * Split a string into substrings using the specified separator and return them as an array.
+ * @param str the string to split.
+ * @param delimiter a string or Regular Expression that separates the `str` into substrings.
+ * @param limit limit the number of elements returned in the array.
  * 
- * @param str 
- * @param delimiter 
- * @param limit 
+ * @remarks
+ * * Unlike JS built-in {@link String.split} method, if the separated substring count were to exceed the `limit`,
+ * the last item will contain the rest of the string.
+ * * Like the built-in method, if `delimiter` is empty string, this function will return an array of UTF-16 characters
+ * of `str`. If `delimiter` matches empty string, the corresponding array item will be the next UTF-16 character from
+ * the current matching position of `str`.
  * 
  * @see [TC 39 Stage 1 Draft: Reversible string split](https://github.com/tc39/proposal-reversible-string-split)
  */
 export function split(str: string, delimiter: string | RegExp | CustomStringSplitDelimiter, limit?: SafeInteger): string[];
+/**
+ * Split a string into substrings using the specified separator and return them as an array.
+ * @param str the string to split.
+ * @param delimiter a string or Regular Expression that separates the `str` into substrings.
+ * @param options additional options.
+ * 
+ * @remarks
+ * * Unlike JS built-in {@link String.split} method, if the separated substring count were to exceed the `limit`,
+ * the last item will contain the rest of the string.
+ * * Like the built-in method, if `delimiter` is empty string, this function will return an array of UTF-16 characters
+ * of `str`. If `delimiter` matches empty string, the corresponding array item will be the next UTF-16 character from
+ * the current matching position of `str`.
+ * 
+ * @see [TC 39 Stage 1 Draft: Reversible string split](https://github.com/tc39/proposal-reversible-string-split)
+ */
 export function split(str: string, delimiter: string | RegExp | CustomStringSplitDelimiter, options?: StringSplitOptions): string[];
 export function split(str: string, delimiter: string | RegExp | CustomStringSplitDelimiter, arg2?: SafeInteger | StringSplitOptions): string[] {
   let limit = typeof arg2 === "object" ? arg2.limit : arg2;

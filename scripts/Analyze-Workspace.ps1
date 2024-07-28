@@ -5,9 +5,9 @@ yarn lint
 checkLastExitCode
 
 Write-Host "Run tests"
-yarn test:prod
+yarn test:coverage:prod
 checkLastExitCode
 
 Write-Host "Run benchmarks"
-yarn test:prod
+yarn bench:prod
 checkLastExitCode

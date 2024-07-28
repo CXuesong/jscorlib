@@ -100,10 +100,10 @@ describe("eventEmitter", () => {
     await new Promise(res => setTimeout(res, ASYNC_CHECK_DELAY));
 
     expect(handler2.mock.results).toHaveLength(2);
-    expect(handler2.mock.results[0].type).toBe("return");
-    expect(handler2.mock.results[0].value).toBeUndefined();
-    expect(handler2.mock.results[1].type).toBe("return");
-    expect(handler2.mock.results[1].value).toBeUndefined();
+    expect(handler2.mock.settledResults[0].type).toBe("fulfilled");
+    expect(handler2.mock.settledResults[0].value).toBeUndefined();
+    expect(handler2.mock.settledResults[1].type).toBe("fulfilled");
+    expect(handler2.mock.settledResults[1].value).toBeUndefined();
   });
 
   it("async handlers - async invoke", async () => {
@@ -134,21 +134,21 @@ describe("eventEmitter", () => {
       ["b"],
     ]);
     // All the handlers should have completed here.
-    expect(handler1.mock.results).toStrictEqual([
+    expect(handler1.mock.settledResults).toStrictEqual([
       {
-        "type": "return",
+        "type": "fulfilled",
         "value": undefined,
       },
       {
-        "type": "return",
+        "type": "fulfilled",
         "value": undefined,
       },
       {
-        "type": "return",
+        "type": "fulfilled",
         "value": undefined,
       },
       {
-        "type": "return",
+        "type": "fulfilled",
         "value": undefined,
       },
     ]);
@@ -205,8 +205,8 @@ describe("eventEmitter", () => {
       ["a"],
       ["a"],
     ]);
-    expect(handler2.mock.results[0].type).toBe("throw");
-    expect(handler2.mock.results[1].type).toBe("throw");
+    expect(handler2.mock.settledResults[0].type).toBe("rejected");
+    expect(handler2.mock.settledResults[1].type).toBe("rejected");
 
     await (SynchronizationContext.current as TestSynchronizationContext).waitCallbacks();
     expect(unhandledErrors).toHaveLength(2);

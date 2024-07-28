@@ -1,6 +1,9 @@
 /*
 We will have to design the extension methods this way due to
 https://github.com/microsoft/TypeScript/issues/41709
+
+See also
+https://github.com/microsoft/TypeScript/issues/51556
 */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
