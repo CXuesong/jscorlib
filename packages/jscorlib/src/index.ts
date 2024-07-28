@@ -5,6 +5,7 @@ export * as Diagnostics from "./diagnostics";
 export * as Errors from "./errors";
 export * as Events from "./events";
 export * as Globalization from "./globalization";
+export * as Http from "./http";
 export * as Linq from "./linq";
 export * as Numbers from "./numbers";
 export * as Pipables from "./pipables";

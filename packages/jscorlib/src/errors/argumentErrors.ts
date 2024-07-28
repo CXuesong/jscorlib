@@ -23,6 +23,9 @@ function buildArgumentErrorMessage(stem: string, options?: ArgumentErrorOptions)
   return paramId == null ? stem : `${stem} Parameter: ${paramId}.`;
 }
 
+/**
+ * Represents common information shared between {@link ArgumentTypeError} and {@link ArgumentRangeError}.
+ */
 export interface ArgumentError extends Error {
   /** name of the parameter that causes this exception. */
   readonly paramName?: string;
