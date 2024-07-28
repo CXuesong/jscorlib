@@ -18,8 +18,9 @@ export interface StringSplitOptions {
  * * Unlike JS built-in {@link String.split} method, if the separated substring count were to exceed the `limit`,
  * the last item will contain the rest of the string.
  * * Like the built-in method, if `delimiter` is empty string, this function will return an array of UTF-16 characters
- * of `str`. If `delimiter` matches empty string, the corresponding array item will be the next UTF-16 character from
- * the current matching position of `str`.
+ * of `str`. If `delimiter` is a Regular Expression and it matches empty string, the corresponding array item will be
+ * the next UTF-16 character (without `u` flag) or Unicode code point (with `u` flag) from the current matching position
+ * of `str`.
  * 
  * @see [TC 39 Stage 1 Draft: Reversible string split](https://github.com/tc39/proposal-reversible-string-split)
  */
@@ -34,8 +35,9 @@ export function split(str: string, delimiter: string | RegExp | CustomStringSpli
  * * Unlike JS built-in {@link String.split} method, if the separated substring count were to exceed the `limit`,
  * the last item will contain the rest of the string.
  * * Like the built-in method, if `delimiter` is empty string, this function will return an array of UTF-16 characters
- * of `str`. If `delimiter` matches empty string, the corresponding array item will be the next UTF-16 character from
- * the current matching position of `str`.
+ * of `str`. If `delimiter` is a Regular Expression and it matches empty string, the corresponding array item will be
+ * the next UTF-16 character (without `u` flag) or Unicode code point (with `u` flag) from the current matching position
+ * of `str`.
  * 
  * @see [TC 39 Stage 1 Draft: Reversible string split](https://github.com/tc39/proposal-reversible-string-split)
  */

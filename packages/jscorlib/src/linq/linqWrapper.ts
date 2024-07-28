@@ -1,5 +1,5 @@
 import { PipeTarget } from "../pipables";
-import { AbstractLinqWrapper, IterableLinqWrapper } from "./linqWrapper.internal";
+import { AbstractLinqWrapper, IterableLinqWrapper } from "./internal";
 
 /**
  * Represents an extension point to expose the additional LINQ methods

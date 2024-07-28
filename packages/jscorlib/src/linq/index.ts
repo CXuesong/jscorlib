@@ -6,23 +6,6 @@
  * 
  * @module
  */
-export * from "./aggregate";
-export * from "./anyAll";
-export * from "./chunk";
-export * from "./collect";
-export * from "./collectHashMap";
-export * from "./collectHashSet";
-export * from "./count";
-export * from "./distinct";
-export * from "./forEach";
-export * from "./groupBy";
 export * from "./linqWrapper";
-export * from "./minmax";
-export * from "./pick";
-export * from "./reverse";
-export * from "./select";
-export * from "./sort";
+export * from "./operators";
 export * from "./traits";
-export * from "./typing";
-export * from "./where";
-export * from "./zip";

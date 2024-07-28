@@ -1,4 +1,4 @@
-import type { tryGetCountDirect } from "./count";
+import type { tryGetCountDirect } from "./operators/count";
 import type { LinqWrapper } from "./linqWrapper";
 
 export const TryGetCountDirectSymbol = Symbol.for("jscorlib::Linq.TryGetCountDirect");
