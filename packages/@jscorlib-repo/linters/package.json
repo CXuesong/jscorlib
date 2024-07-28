@@ -19,10 +19,10 @@
     "eslint": "./bin/eslint.js"
   },
   "dependencies": {
-    "@stylistic/eslint-plugin": "^2.3.0",
+    "@stylistic/eslint-plugin": "^2.4.0",
     "@types/eslint__js": "^8.42.3",
-    "eslint": "^9.6.0",
-    "eslint-plugin-jsdoc": "^48.5.0",
-    "typescript-eslint": "^8.0.0-alpha.37"
+    "eslint": "^9.8.0",
+    "eslint-plugin-jsdoc": "^48.8.3",
+    "typescript-eslint": "^8.0.0-alpha.54"
   }
 }
