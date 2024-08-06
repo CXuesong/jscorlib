@@ -19,10 +19,10 @@ export function fail(message?: string): void {
   if (process.env.NODE_ENV === "production") return;
 
   const err = new DebugFailure(message);
-  console.assert(false, "[jscorlib] Diagnostics.Fail has been called.", err);
+  console.assert(false, "[jscorlib] Diagnostics.fail has been called.", err);
 
   if (typeof confirm === "function") {
-    if (!confirm(`[jscorlib] Diagnostics.Fail has been called.
+    if (!confirm(`[jscorlib] Diagnostics.fail has been called.
 "Yes" = trigger a JS breakpoint.
 "No" = ignore the debugging failure.
 ----------
@@ -31,7 +31,7 @@ ${err.stack || String(err)}
       return;
     }
   } else if (typeof alert === "function") {
-    alert(`[jscorlib] Diagnostics.Fail has been called.
+    alert(`[jscorlib] Diagnostics.fail has been called.
 "OK" = trigger a JS breakpoint.
 ----------
 ${err.stack || String(err)}

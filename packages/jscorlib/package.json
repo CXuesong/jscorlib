@@ -31,6 +31,7 @@
     "@jscorlib-repo/linters": "workspace:^",
     "@jscorlib-repo/test-helpers": "workspace:^",
     "@jscorlib-repo/typedoc-presets": "workspace:^",
+    "@jscorlib/polyfills": "workspace:^",
     "typescript": "^5.5.4"
   }
 }

@@ -135,8 +135,8 @@ export class Semaphore {
     const waiter: SemaphoreWaiter = {
       resolve: () => {
         cleanup();
-        assert(this._count > 0);
-        this._count--;
+        // If we are already in waiter queue, it means _count should have already been exhausted.
+        assert(this._count === 0);
         pr.resolve(true);
       },
     };
@@ -181,8 +181,9 @@ export class Semaphore {
     return prevCount;
   }
   public toString(): string {
-    if (this._maxCount == null) return `[Semaphore ${this._count}]`;
-    return `[Semaphore ${this._count}/${this._maxCount}]`;
+    return this._maxCount == null
+      ? `[Semaphore ${this._count - this._waiters.length}]`
+      : `[Semaphore ${this._count - this._waiters.length}/${this._maxCount}]`;
   }
   public readonly [Symbol.toStringTag] = "Semaphore";
 }

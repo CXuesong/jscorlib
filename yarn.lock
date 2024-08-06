@@ -428,7 +428,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jscorlib/polyfills@workspace:packages/@jscorlib/polyfills":
+"@jscorlib/polyfills@workspace:^, @jscorlib/polyfills@workspace:packages/@jscorlib/polyfills":
   version: 0.0.0-use.local
   resolution: "@jscorlib/polyfills@workspace:packages/@jscorlib/polyfills"
   dependencies:
@@ -2121,6 +2121,7 @@ __metadata:
     "@jscorlib-repo/linters": "workspace:^"
     "@jscorlib-repo/test-helpers": "workspace:^"
     "@jscorlib-repo/typedoc-presets": "workspace:^"
+    "@jscorlib/polyfills": "workspace:^"
     typescript: "npm:^5.5.4"
   languageName: unknown
   linkType: soft
