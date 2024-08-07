@@ -38,6 +38,9 @@ jobs:
       - name: Analyze workspace
         shell: pwsh
         run: ./scripts/Analyze-Workspace.ps1
+      - name: Build GitHub Pages
+        shell: pwsh
+        run: ./scripts/Build-GitHubPages.ps1
       - name: Collect artifacts
         if: always()
         shell: pwsh
