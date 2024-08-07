@@ -6,7 +6,13 @@
         }
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib",
-    "[typescript]": {
+    "[css]": {
+        "editor.tabSize": 2
+    },
+    "[scss]": {
+        "editor.tabSize": 2
+    },
+    "[github-actions-workflow]": {
         "editor.tabSize": 2
     },
     "[json]": {
@@ -15,10 +21,10 @@
     "[javascript]": {
         "editor.tabSize": 2
     },
-    "[yaml]": {
+    "[typescript]": {
         "editor.tabSize": 2
     },
-    "[github-actions-workflow]": {
+    "[yaml]": {
         "editor.tabSize": 2
     },
 }

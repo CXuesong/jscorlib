@@ -14,7 +14,7 @@
   "module": "./src/index.js",
   "devDependencies": {
     "typedoc": "^0.26.5",
-    "typedoc-plugin-mdn-links": "^3.2.6",
+    "typedoc-plugin-mdn-links": "^3.2.7",
     "typescript": "^5.5.4"
   }
 }

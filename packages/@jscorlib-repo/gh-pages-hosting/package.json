@@ -1,0 +1,30 @@
+{
+  "name": "@jscorlib-repo/gh-pages-hosting",
+  "version": "0.0.1",
+  "description": "building scripts for GitHub Pages",
+  "repository": "https://github.com/CXuesong/jscorlib.git",
+  "author": "CXuesong",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./src/tsconfig.json"
+  },
+  "devDependencies": {
+    "@jscorlib-repo/documentations": "workspace:^",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@tsconfig/svelte": "^5.0.4",
+    "sass": "^1.77.8",
+    "svelte": "^4.2.18",
+    "svelte-check": "^3.8.5",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5",
+    "vite-plugin-checker": "^0.7.2",
+    "vite-tsconfig-paths": "^4.3.2"
+  }
+}
