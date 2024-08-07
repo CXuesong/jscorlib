@@ -10,14 +10,16 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "pwsh -File ./scripts/build.ps1",
+    "build:collect-resources": "pwsh -File ./scripts/build.ps1 -CollectResources",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./src/tsconfig.json"
   },
   "devDependencies": {
-    "@jscorlib-repo/documentations": "workspace:^",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@tsconfig/svelte": "^5.0.4",
+    "carbon-components-svelte": "^0.85.0",
+    "carbon-icons-svelte": "^12.10.0",
     "sass": "^1.77.8",
     "svelte": "^4.2.18",
     "svelte-check": "^3.8.5",
