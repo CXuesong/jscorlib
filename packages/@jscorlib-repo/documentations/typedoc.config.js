@@ -8,6 +8,7 @@ const repoRoot = path.resolve(url.fileURLToPath(import.meta.url), "../../../..")
 export default {
   entryPoints: [
     `${repoRoot}/packages/jscorlib`,
+    `${repoRoot}/packages/@jscorlib/polyfills`,
   ],
   out: "dist",
 
