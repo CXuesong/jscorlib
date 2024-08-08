@@ -1,4 +1,4 @@
-# jscorlib [WIP]
+# jscorlib libraries [WIP]
 
 a set of JS helpers inspired by .NET BCL, TC 39 drafts, and more, hopefully filling some of the gaps in native JavaScript API.
 
