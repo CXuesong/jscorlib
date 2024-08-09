@@ -14,6 +14,7 @@ export default defineConfig({
     }),
     svelte(),
   ],
+  base: "./",
   build: {
     outDir: "./dist",
     emptyOutDir: true,
