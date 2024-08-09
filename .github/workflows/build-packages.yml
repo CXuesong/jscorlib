@@ -48,5 +48,31 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: build-packages-artifacts
+          name: build-artifacts
           path: ./build-artifacts
+
+  deploy_gh_pages:
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy-pages.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: build_linux
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./build-artifacts
+          pattern: /workspace-packages/@jscorlib-repo/gh-pages-hosting
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build-artifacts/workspace-packages/@jscorlib-repo/gh-pages-hosting/dist
+      - name: Deploy to GitHub Pages
+        id: deploy-pages
+        uses: actions/deploy-pages@v4
