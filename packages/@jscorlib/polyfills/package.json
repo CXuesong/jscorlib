@@ -1,6 +1,6 @@
 {
   "name": "@jscorlib/polyfills",
-  "version": "0.0.0-int.2",
+  "version": "0.0.0-int.3",
   "description": "a limited set of loose polyfills for jscorlib library.",
   "repository": "https://github.com/CXuesong/jscorlib.git",
   "author": "CXuesong",
