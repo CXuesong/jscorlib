@@ -1,7 +1,7 @@
 {
   "name": "@jscorlib/polyfills",
-  "version": "0.0.0-int.1",
-  "description": "polyfills for jscorlib library.",
+  "version": "0.0.0-int.2",
+  "description": "a limited set of loose polyfills for jscorlib library.",
   "repository": "https://github.com/CXuesong/jscorlib.git",
   "author": "CXuesong",
   "license": "MIT",
