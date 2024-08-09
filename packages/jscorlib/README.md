@@ -1,6 +1,6 @@
 # jscorlib
 
-a set of JS helpers inspired by [.NET BCL](https://learn.microsoft.com/en-us/dotnet/standard/class-library-overview), [TC 39 drafts](https://github.com/tc39/proposals?tab=readme-ov-file), and more, which hopefully reduces repetitive work by filling gaps in the native JavaScript API.
+a set of JS helpers inspired by [.NET BCL](https://learn.microsoft.com/en-us/dotnet/standard/class-library-overview), [TC 39 drafts](https://github.com/tc39/proposals?tab=readme-ov-file), and more, which hopefully reduces repetitive work by filling the gaps in the native JavaScript API.
 
 This is the entry-point package of the `jscorlib` library.
 

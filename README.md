@@ -1,8 +1,18 @@
 # jscorlib packages [WIP]
 
-a set of JS helpers inspired by [.NET BCL](https://learn.microsoft.com/en-us/dotnet/standard/class-library-overview), [TC 39 drafts](https://github.com/tc39/proposals?tab=readme-ov-file), and more, which hopefully reduces repetitive work by filling gaps in the native JavaScript API.
+a set of JS helpers inspired by [.NET BCL](https://learn.microsoft.com/en-us/dotnet/standard/class-library-overview), [TC 39 drafts](https://github.com/tc39/proposals?tab=readme-ov-file), and more, which hopefully reduces repetitive work by filling the gaps in the native JavaScript API.
+
+This set of packages are still in v0 phase. While you are welcome to play with them experimentally, and filing bugs and/or ideas, they are _not_ intended for consumption in your Production projects. Because APIs and implementations are subject to drastic changes.
 
 The entry-point package of the library is [`jscorlib`](./packages/jscorlib/).
+
+## See also
+
+* Npm
+    * [jscorlib](https://www.npmjs.com/package/jscorlib) | ![NPM Version](https://img.shields.io/npm/v/jscorlib) ![NPM Downloads](https://img.shields.io/npm/dw/jscorlib)
+    * [@jscorlib/polyfills](https://www.npmjs.com/package/@jscorlib/polyfills) | ![NPM Version](https://img.shields.io/npm/v/%40jscorlib%2Fpolyfills) ![NPM Downloads](https://img.shields.io/npm/dw/%40jscorlib%2Fpolyfills)
+* [Library landing page](https://cxuesong.github.io/jscorlib/)
+* [API documentation](https://cxuesong.github.io/jscorlib/docs/latest/)
 
 ## Design concepts
 
