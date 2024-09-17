@@ -1,6 +1,16 @@
 import { ReferenceType } from "../../types";
 import { EqualsSymbol, Equatable } from "./typing";
 
+/**
+ * Determines the equality of 2 reference type values.
+ * @param x one value.
+ * @param y the other value.
+ * @returns
+ * `true` if one of the following conditions is satisfied
+ * * `Object.is(x, y)` is `true` (this also implies `x === y`).
+ * * Both `x` and `y` has implemented {@link Equatable} interface, and `x[EqualsSymbol](y)` returns `true`.
+ *     * If `y[EqualsSymbol](x)` returns `false` in the meantime, the behavior is undefined.
+ */
 export function referenceTypeEquals(x: ReferenceType | null | undefined, y: ReferenceType | null | undefined): boolean {
   if (Object.is(x, y)) return true;
   if (!x || !y) return false;

@@ -1,12 +1,12 @@
 import { HashSet } from "../../collections";
-import { EqualityComparer } from "../../collections/equalityComparison";
+import { HashableEqualityComparer } from "../../collections/equalityComparison";
 import type { LinqWrapper } from "../linqWrapper";
 import { IndexedSequenceElementSelector } from "./typing";
 import { PipeBody, PipeFunction } from "../../pipables";
 
 export function toHashSet<T, TValue = T>(
-  valueSelector?: IndexedSequenceElementSelector<T, TValue> | EqualityComparer<TValue>,
-  comparer?: EqualityComparer<TValue>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue> | HashableEqualityComparer<TValue>,
+  comparer?: HashableEqualityComparer<TValue>,
 ): PipeBody<LinqWrapper<T>, HashSet<TValue>> {
   return target => {
     if (typeof valueSelector === "object") {

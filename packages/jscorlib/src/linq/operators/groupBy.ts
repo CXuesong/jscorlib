@@ -1,5 +1,5 @@
 import { HashMap } from "../../collections";
-import { EqualityComparer } from "../../collections/equalityComparison";
+import { HashableEqualityComparer } from "../../collections/equalityComparison";
 import { LinqWrapper } from "../linqWrapper";
 import { IntermediateLinqWrapper, IterableLinqWrapper } from "../internal";
 import { SequenceElementSelector } from "./typing";
@@ -20,7 +20,7 @@ export interface LinqGrouping<TKey, TValue> {
 
 export function groupBy<T, TKey>(
   keySelector: SequenceElementSelector<T, TKey>,
-  comparer?: EqualityComparer<TKey>,
+  comparer?: HashableEqualityComparer<TKey>,
 ): PipeBody<LinqWrapper<T>, LinqWrapper<LinqGrouping<TKey, T>>> {
   return target => {
     const unwrapped = target.unwrap();
@@ -36,7 +36,7 @@ groupBy satisfies PipeFunction;
 interface GroupingIteratorInfo<T, TKey> {
   readonly iterable: Iterable<T>;
   keySelector: SequenceElementSelector<T, TKey>,
-  comparer?: EqualityComparer<TKey>,
+  comparer?: HashableEqualityComparer<TKey>,
 }
 
 class GroupingLinqWrapper<T, TKey> extends IntermediateLinqWrapper<LinqGrouping<TKey, T>, GroupingIteratorInfo<T, TKey>> {

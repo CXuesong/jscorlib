@@ -2,18 +2,18 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { assert } from "../diagnostics";
 import { SafeInteger } from "../numbers";
-import { AnyValueEqualityComparer, EqualityComparer } from "./equalityComparison";
+import { AnyValueEqualityComparer, HashableEqualityComparer } from "./equalityComparison";
 import { referenceTypeEquals } from "./equalityComparison/equals";
 import { SetEqualsSymbol, SetEquatable } from "./sets/typing";
 
 export class HashSet<T> implements Set<T>, SetEquatable {
   private _buckets = new Map<SafeInteger, T[]>();
   private _size = 0;
-  public readonly comparer: EqualityComparer<T>;
-  public constructor(comparer?: EqualityComparer<T>) {
+  public readonly comparer: HashableEqualityComparer<T>;
+  public constructor(comparer?: HashableEqualityComparer<T>) {
     this.comparer = comparer ?? AnyValueEqualityComparer.instance;
   }
-  public static from<T>(values?: Iterable<T> | ReadonlySetLike<T>, comparer?: EqualityComparer<T>): HashSet<T> {
+  public static from<T>(values?: Iterable<T> | ReadonlySetLike<T>, comparer?: HashableEqualityComparer<T>): HashSet<T> {
     const inst = new HashSet(comparer);
     if (!values) return inst;
     if (values instanceof HashSet && values.comparer === inst.comparer) {
@@ -118,7 +118,7 @@ export class HashSet<T> implements Set<T>, SetEquatable {
   }
 
   public intersection<U>(other: ReadonlySetLike<U>): Set<T & U> {
-    const result = new HashSet<T & U>(this.comparer as EqualityComparer<T & U>);
+    const result = new HashSet<T & U>(this.comparer as HashableEqualityComparer<T & U>);
     for (const value of this) {
       if (other.has(value as (T & U))) {
         result.add(value as (T & U));

@@ -1,11 +1,11 @@
-import { EqualityComparer } from "../../collections/equalityComparison";
+import { HashableEqualityComparer } from "../../collections/equalityComparison";
 import { HashSet } from "../../collections/hashSet";
 import { PipeBody, PipeFunction } from "../../pipables";
 import type { LinqWrapper } from "../linqWrapper";
 import { IntermediateLinqWrapper } from "../internal";
 import { SequenceElementSelector } from "./typing";
 
-export function distinct<T>(comparer?: EqualityComparer<T>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
+export function distinct<T>(comparer?: HashableEqualityComparer<T>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
   return target => {
     if (target instanceof DistinctLinqWrapper) {
       const state = target.__state;
@@ -20,7 +20,7 @@ export function distinct<T>(comparer?: EqualityComparer<T>): PipeBody<LinqWrappe
 }
 distinct satisfies PipeFunction;
 
-export function distinctBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
+export function distinctBy<T, TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: HashableEqualityComparer<TKey>): PipeBody<LinqWrapper<T>, LinqWrapper<T>> {
   return target => {
     if (target instanceof DistinctLinqWrapper) {
       const state = target.__state;
@@ -39,7 +39,7 @@ distinctBy satisfies PipeFunction;
 interface DistinctIteratorInfo<T, TKey> {
   readonly iterable: Iterable<T>;
   keySelector?: SequenceElementSelector<T, TKey>;
-  comparer?: EqualityComparer<TKey>
+  comparer?: HashableEqualityComparer<TKey>
 }
 
 class DistinctLinqWrapper<T, TKey> extends IntermediateLinqWrapper<T, DistinctIteratorInfo<T, TKey>> {

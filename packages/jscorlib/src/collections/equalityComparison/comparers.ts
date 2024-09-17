@@ -2,9 +2,9 @@ import { assert, fail, getObjectId } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
 import { isReferenceType, ReferenceType } from "../../types/referenceType";
 import { OrdinalStringEqualityComparer } from "./strings";
-import { EqualityComparer, EqualsSymbol, Equatable, GetHashCodeSymbol } from "./typing";
+import { EqualsSymbol, Equatable, GetHashCodeSymbol, HashableEqualityComparer } from "./typing";
 
-export class NumberEqualityComparer implements EqualityComparer<number> {
+export class NumberEqualityComparer implements HashableEqualityComparer<number> {
   public static readonly instance = new NumberEqualityComparer();
   private readonly _floatView = new Float64Array(1);
   private readonly _intView = new Uint32Array(this._floatView.buffer);
@@ -27,7 +27,7 @@ export class NumberEqualityComparer implements EqualityComparer<number> {
   }
 }
 
-export class BigIntEqualityComparer implements EqualityComparer<bigint> {
+export class BigIntEqualityComparer implements HashableEqualityComparer<bigint> {
   public static readonly instance = new BigIntEqualityComparer();
   public isSupported(value: unknown): value is bigint {
     return typeof value === "bigint";
@@ -45,7 +45,7 @@ export class BigIntEqualityComparer implements EqualityComparer<bigint> {
   }
 }
 
-export class BooleanEqualityComparer implements EqualityComparer<boolean> {
+export class BooleanEqualityComparer implements HashableEqualityComparer<boolean> {
   public static readonly instance = new BooleanEqualityComparer();
   public isSupported(value: unknown): value is boolean {
     return typeof value === "boolean";
@@ -58,7 +58,7 @@ export class BooleanEqualityComparer implements EqualityComparer<boolean> {
   }
 }
 
-export class DateEqualityComparer implements EqualityComparer<Date> {
+export class DateEqualityComparer implements HashableEqualityComparer<Date> {
   public static readonly instance = new DateEqualityComparer();
   public isSupported(value: unknown): value is Date {
     return value instanceof Date;
@@ -76,7 +76,7 @@ export class DateEqualityComparer implements EqualityComparer<Date> {
 
 const globalSymbolHashes = new Map<symbol, SafeInteger>();
 
-export class ReferenceTypeEqualityComparer implements EqualityComparer<ReferenceType | null | undefined> {
+export class ReferenceTypeEqualityComparer implements HashableEqualityComparer<ReferenceType | null | undefined> {
   public static readonly instance = new ReferenceTypeEqualityComparer();
   public isSupported(value: unknown): value is ReferenceType | null | undefined {
     return value == null || isReferenceType(value);
@@ -102,7 +102,7 @@ export class ReferenceTypeEqualityComparer implements EqualityComparer<Reference
   }
 }
 
-export class AnyValueEqualityComparer implements EqualityComparer<unknown> {
+export class AnyValueEqualityComparer implements HashableEqualityComparer<unknown> {
   public static readonly instance = new AnyValueEqualityComparer();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public isSupported(value: unknown): value is any {

@@ -3,14 +3,14 @@
 import * as Arrays from "../arrays";
 import { assert } from "../diagnostics";
 import { SafeInteger } from "../numbers";
-import { AnyValueEqualityComparer, EqualityComparer } from "./equalityComparison";
+import { AnyValueEqualityComparer, HashableEqualityComparer } from "./equalityComparison";
 
 export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
   // For now, we just delegate load factors etc. into the built-in one.
   private _buckets = new Map<SafeInteger, Array<[TKey, TValue]>>();
   private _size = 0;
-  public readonly comparer: EqualityComparer<TKey>;
-  public constructor(comparer?: EqualityComparer<TKey>) {
+  public readonly comparer: HashableEqualityComparer<TKey>;
+  public constructor(comparer?: HashableEqualityComparer<TKey>) {
     this.comparer = comparer ?? AnyValueEqualityComparer.instance;
   }
   public clear(): void {

@@ -1,15 +1,15 @@
 import { HashMap } from "../../collections";
-import { EqualityComparer } from "../../collections/equalityComparison";
+import { HashableEqualityComparer } from "../../collections/equalityComparison";
 import type { LinqWrapper } from "../linqWrapper";
 import { IndexedSequenceElementSelector } from "./typing";
 import { PipeBody, PipeFunction } from "../../pipables";
 
-export function toHashMap<T, TKey>(keySelector: IndexedSequenceElementSelector<T, TKey>, comparer?: EqualityComparer<TKey>): PipeBody<LinqWrapper<T>, HashMap<TKey, T>>;
-export function toHashMap<T, TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>, valueSelector: IndexedSequenceElementSelector<T, TValue>, comparer?: EqualityComparer<TKey>): PipeBody<LinqWrapper<T>, HashMap<TKey, TValue>>;
+export function toHashMap<T, TKey>(keySelector: IndexedSequenceElementSelector<T, TKey>, comparer?: HashableEqualityComparer<TKey>): PipeBody<LinqWrapper<T>, HashMap<TKey, T>>;
+export function toHashMap<T, TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>, valueSelector: IndexedSequenceElementSelector<T, TValue>, comparer?: HashableEqualityComparer<TKey>): PipeBody<LinqWrapper<T>, HashMap<TKey, TValue>>;
 export function toHashMap<T, TKey, TValue>(
   keySelector: IndexedSequenceElementSelector<T, TKey>,
-  valueSelector?: IndexedSequenceElementSelector<T, TValue> | EqualityComparer<TKey>,
-  comparer?: EqualityComparer<TKey>,
+  valueSelector?: IndexedSequenceElementSelector<T, TValue> | HashableEqualityComparer<TKey>,
+  comparer?: HashableEqualityComparer<TKey>,
 ): PipeBody<LinqWrapper<T>, HashMap<TKey, TValue>> {
   return target => {
     if (typeof valueSelector === "object") {

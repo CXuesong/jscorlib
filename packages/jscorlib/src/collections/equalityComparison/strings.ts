@@ -1,7 +1,7 @@
 import { SafeInteger } from "../../numbers";
-import { EqualityComparer } from "./typing";
+import { HashableEqualityComparer } from "./typing";
 
-export class OrdinalStringEqualityComparer implements EqualityComparer<string> {
+export class OrdinalStringEqualityComparer implements HashableEqualityComparer<string> {
   public static readonly instance = new OrdinalStringEqualityComparer();
   public isSupported(value: unknown): value is string {
     return typeof value === "string";
@@ -25,7 +25,7 @@ const CHAR_CODE_A = 65;
 const CHAR_CODE_a = 97;
 const CHAR_CODE_z = 122;
 
-export class OrdinalIgnoreCaseStringEqualityComparer implements EqualityComparer<string> {
+export class OrdinalIgnoreCaseStringEqualityComparer implements HashableEqualityComparer<string> {
   public static readonly instance = new OrdinalIgnoreCaseStringEqualityComparer();
   public isSupported(value: unknown): value is string {
     return typeof value === "string";

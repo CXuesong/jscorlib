@@ -1,32 +1,42 @@
 import { SafeInteger } from "../../numbers";
 
 /**
- * A function that compares the equality of two objects.
- * 
- * @returns
- * * `true` if `x` is equal to `y`.
- * * `false` if `x` is not equal to `y`.
- * 
- * @see {@link !Collections.Comparison.ComparerFunction}
- * @see {@link EqualityComparer}
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type EqualityComparerFunction<T = any> = (x: T, y: T) => boolean;
-
-/**
- * Provides methods to compare the equality of two objects.
+ * Provides basic methods to compare the equality of two objects.
  * 
  * @remarks
  * While it is theoretically possible to let a {@link !Function} implement this interface,
  * this can interfere with the overload resolution logic and thus not recommended.
  * 
- * Due to the limitation of current JavaScript API, there is no efficient approach to evaluate
- * hash code for every primitive types (e.g. `string`). This can cause significant performance penalty.
- * 
  * @see {@link EqualityComparerFunction}
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface EqualityComparer<T = any> {
+  /**
+   * Compares the equality of two objects.
+   * 
+   * @returns
+   * * `true` if `x` is equal to `y`.
+   * * `false` if `x` is not equal to `y`.
+   */
+  equals(x: T, y: T): boolean;
+  /**
+   * Given an aribtrary value, checks whether the value can be compared by the current {@link HashableEqualityComparer}.
+   */
+  isSupported(value: unknown): value is T;
+}
+
+/**
+ * Provides methods to compare the equality of two objects, along with a function
+ * to hash the objects for hash map implementation.
+ * 
+ * @remarks
+ * Due to the limitation of current JavaScript API, there is no efficient approach to evaluate
+ * hash code for every primitive types (e.g. `string`). This can cause significant performance penalty.
+ * 
+ * @see {@link EqualityComparer}
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface HashableEqualityComparer<T = any> extends EqualityComparer<T> {
   /**
    * Compares the equality of two objects.
    * 
@@ -43,7 +53,7 @@ export interface EqualityComparer<T = any> {
    */
   getHashCode(value: T): SafeInteger;
   /**
-   * Given an aribtrary value, checks whether the value can be compared by the current {@link EqualityComparer}.
+   * Given an aribtrary value, checks whether the value can be compared by the current {@link HashableEqualityComparer}.
    */
   isSupported(value: unknown): value is T;
 }
