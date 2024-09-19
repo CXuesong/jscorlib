@@ -25,12 +25,48 @@ describe("tryParseDateTimeInvariant", () => {
   });
 
   it("date/time", () => {
-    expect(tryParseDateTimeInvariant("5:30")).toEqual({ hour: 5, minute: 30 });
-    expect(tryParseDateTimeInvariant("5:12:34")).toEqual({ hour: 5, minute: 12, second: 34 });
-    expect(tryParseDateTimeInvariant("5:12:34.567890")).toEqual({ hour: 5, minute: 12, second: 34, fraction: .56789 });
+    expect(tryParseDateTimeInvariant("2024-9-10 PM 5:12:34.567890")).toEqual({
+      year: 2024, month: 9, day: 10,
+      hour: 17, minute: 12, second: 34, fraction: 0.56789,
+    });
+    expect(tryParseDateTimeInvariant("2024-9-10 17:12:34.567890")).toEqual({
+      year: 2024, month: 9, day: 10,
+      hour: 17, minute: 12, second: 34, fraction: 0.56789,
+    });
+  });
 
-    expect(tryParseDateTimeInvariant("AM 5:30")).toEqual({ hour: 5, minute: 30 });
-    expect(tryParseDateTimeInvariant("5:12:34 PM ")).toEqual({ hour: 17, minute: 12, second: 34 });
-    expect(tryParseDateTimeInvariant("PM 5:12:34.567890")).toEqual({ hour: 17, minute: 12, second: 34, fraction: .56789 });
+  it("time zones", () => {
+    expect(tryParseDateTimeInvariant("2024-9-10 PM 5:12:34Z")).toEqual({
+      year: 2024, month: 9, day: 10,
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: 0,
+    });
+    expect(tryParseDateTimeInvariant("2024-9-10 PM 5:12:34 GMT")).toEqual({
+      year: 2024, month: 9, day: 10,
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: 0,
+    });
+    expect(tryParseDateTimeInvariant("2024-9-10 5:12:34 PM+8:30")).toEqual({
+      year: 2024, month: 9, day: 10,
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: 8 * 60 + 30,
+    });
+    expect(tryParseDateTimeInvariant("2024-9-10 17:12:34 -11:00")).toEqual({
+      year: 2024, month: 9, day: 10,
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: -11 * 60,
+    });
+    expect(tryParseDateTimeInvariant("5:12:34 PM+8")).toEqual({
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: 8 * 60,
+    });
+    expect(tryParseDateTimeInvariant("5:12:34 PM+0800")).toEqual({
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: 8 * 60,
+    });
+    expect(tryParseDateTimeInvariant("5:12:34 PM-0830")).toEqual({
+      hour: 17, minute: 12, second: 34,
+      tzOffsetMinutes: -8 * 60 - 30,
+    });
   });
 });

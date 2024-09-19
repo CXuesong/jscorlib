@@ -9,11 +9,11 @@ export interface DateTimeParseResult {
   // 0~1; avoid precision loss
   fraction?: number;
 
-  tzName?: string;
-  tzOffsetNs?: number;
+  // tzName?: string;
+  tzOffsetMinutes?: number;
 }
 
 export interface DateTimeParseFormatError {
-  error: "format-error";
+  error: "format-error" | "tz-format-error";
   message?: string;
 }

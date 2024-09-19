@@ -1,5 +1,5 @@
-import { Diagnostics } from "jscorlib";
 import { EqualityComparer } from "../collections/equalityComparison";
+import { assert } from "../diagnostics";
 import { InvalidOperationError } from "../errors";
 
 export class StringTokenParser {
@@ -62,7 +62,7 @@ export class StringTokenParser {
     return undefined;
   }
   private _matchRegExp(needle: RegExp, consume: boolean): RegExpExecArray | RegExpMatchArray | undefined {
-    Diagnostics.assert(needle.flags.includes("y"));
+    assert(needle.flags.includes("y"));
     needle.lastIndex = this.position;
     const match = needle.exec(this.source);
     if (!match) return undefined;
