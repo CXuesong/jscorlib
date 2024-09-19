@@ -12,6 +12,9 @@ describe("tryParseDateTimeInvariant", () => {
 
     expect(tryParseDateTimeInvariant("1-2-1993")).toEqual({ year: 1993, month: 1, day: 2 });
     expect(tryParseDateTimeInvariant("1-2")).toEqual({ year: undefined, month: 1, day: 2 });
+
+    expect(tryParseDateTimeInvariant("2003-February-1")).toEqual({ year: 2003, month: 2, day: 1 });
+    expect(tryParseDateTimeInvariant("2003-APR-1")).toEqual({ year: 2003, month: 4, day: 1 });
   });
 
   it("time", () => {

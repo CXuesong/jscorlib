@@ -1,12 +1,42 @@
+import { InvariantLocaleIgnoreCaseStringEqualityComparer } from "../../collections/equalityComparison";
 import { assert } from "../../diagnostics";
 import { StringTokenParser } from "../../internal/stringTokenParser";
 import { asSafeInteger } from "../../numbers";
 import { consumeTimeZoneOffsetMins } from "./timeZone";
 import { DateParseResult, DateTimeParseFormatError, DateTimeParseResult, TimeParseResult } from "./typing";
 
-const dateSeparators = ["-", "/"];
+const dateSeparators = ["-", "/", ","];   // "," is used in RFC1123
 const timeSeparators = [":"];
 const fractionSeparators = [".", ","];
+// TODO https://stackoverflow.com/questions/47232534/how-to-get-a-list-of-month-names-in-javascript-using-intl
+const monthNamesLong = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const monthNamesShort = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 export function tryParseDateTimeInvariant(expression: string): DateTimeParseResult | DateTimeParseFormatError {
   if (!expression) return { error: "format-error" };
@@ -79,21 +109,24 @@ function consumeDateYMD(parser: StringTokenParser): [year: number, month: number
     year = year >= 50 ? (1900 + year) : (2000 + year);
   }
 
-  parser.consumeRegExp(/\s*/y);
-  if (!parser.consumeAnyString(dateSeparators)) return parser.popState(), undefined;
-  parser.consumeRegExp(/\s*/y);
+  // Note that we allow delimit parts only by spaces
+  // RFC1123: Thu, 10 Apr 2008 13:30:00 GMT
+  let anySpace = parser.consumeRegExp(/\s+/y);
+  if (!parser.consumeAnyString(dateSeparators) && !anySpace) return parser.popState(), undefined;
+  parser.consumeRegExp(/\s+/y);
 
-  if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
-  const month = asSafeInteger(match[0]);
-  if (month < 1 || month > 12) return parser.popState(), undefined;
+  const month = consumeMonthNumeric(parser) ?? consumeMonthName(parser);
+  if (month == null) return parser.popState(), undefined;
 
-  parser.consumeRegExp(/\s*/y);
-  if (!parser.consumeAnyString(dateSeparators)) {
+  anySpace = parser.consumeRegExp(/\s+/y);
+  if (!parser.consumeAnyString(dateSeparators) && !anySpace) {
     if (isShortYearFormat)
+      // We don't allow "93-10"
       return parser.popState(), undefined;
+    // We allow "1993-10" or "0093-10"
     return parser.acceptState(), [year, month, undefined];
   }
-  parser.consumeRegExp(/\s*/y);
+  parser.consumeRegExp(/\s+/y);
 
   if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
   const day = asSafeInteger(match[0]);
@@ -107,26 +140,56 @@ function consumeDateMDY(parser: StringTokenParser): [year: number | undefined, m
   parser.pushState();
   let match;
 
-  if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
-  const month = asSafeInteger(match[0]);
-  if (month < 1 || month > 12) return parser.popState(), undefined;
+  const month = consumeMonthNumeric(parser) ?? consumeMonthName(parser);
+  if (month == null) return parser.popState(), undefined;
 
-  parser.consumeRegExp(/\s*/y);
-  if (!parser.consumeAnyString(dateSeparators)) return parser.popState(), undefined;
-  parser.consumeRegExp(/\s*/y);
+  // Note that we allow delimit parts only by spaces
+  // RFC1123: Thu, 10 Apr 2008 13:30:00 GMT
+  let anySpace = parser.consumeRegExp(/\s+/y);
+  if (!parser.consumeAnyString(dateSeparators) && !anySpace) return parser.popState(), undefined;
+  parser.consumeRegExp(/\s+/y);
 
   if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
   const day = asSafeInteger(match[0]);
   if (day < 1 || day > 31) return parser.popState(), undefined;
 
-  parser.consumeRegExp(/\s*/y);
-  if (!parser.consumeAnyString(dateSeparators)) return parser.acceptState(), [undefined, month, day];
-  parser.consumeRegExp(/\s*/y);
+  anySpace = parser.consumeRegExp(/\s+/y);
+  if (!parser.consumeAnyString(dateSeparators) && !anySpace) return parser.acceptState(), [undefined, month, day];
+  parser.consumeRegExp(/\s+/y);
 
   if (!(match = parser.consumeRegExp(/\d{3,4}/y))) return parser.popState(), undefined;
   const year = asSafeInteger(match[0]);
 
   return parser.acceptState(), [year, month, day];
+}
+
+function consumeMonthNumeric(parser: StringTokenParser): number | undefined {
+  // !! DO NOT inline parser state
+  parser.pushState();
+  let match;
+
+  // Numeric
+  if ((match = parser.consumeRegExp(/\d\d?/y))) {
+    const month = asSafeInteger(match[0]);
+    if (month < 1 || month > 12) return parser.popState(), undefined;
+    return parser.acceptState(), month;
+  }
+
+  return parser.popState(), undefined;
+}
+
+/** [Inlined parser state] */
+function consumeMonthName(parser: StringTokenParser): number | undefined {
+  // EN
+  for (let i = 0; i < 12; i++) {
+    if (parser.consumeString(monthNamesLong[i], InvariantLocaleIgnoreCaseStringEqualityComparer.instance)) return i + 1;
+  }
+
+  for (let i = 0; i < 12; i++) {
+    if (parser.consumeString(monthNamesShort[i], InvariantLocaleIgnoreCaseStringEqualityComparer.instance)) return i + 1;
+  }
+
+  return undefined;
 }
 
 type TimeParseResultEx = TimeParseResult & { tMarkPresent?: boolean };
@@ -143,7 +206,7 @@ function consumeTime(parser: StringTokenParser): TimeParseResultEx | undefined {
   let second;
   let fraction;
 
-  parser.consumeRegExp(/\s*/y);
+  parser.consumeRegExp(/\s+/y);
 
   if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
   hour = asSafeInteger(match[0]);
@@ -151,26 +214,26 @@ function consumeTime(parser: StringTokenParser): TimeParseResultEx | undefined {
   // 12-hour notation -> 24-hour notation
   if (hour < 12 && ampmDesignator === "pm") hour = (hour + 12) % 24;
 
-  parser.consumeRegExp(/\s*/y);
+  parser.consumeRegExp(/\s+/y);
   if (!parser.consumeAnyString(timeSeparators)) return parser.popState(), undefined;
-  parser.consumeRegExp(/\s*/y);
+  parser.consumeRegExp(/\s+/y);
 
   if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
   // eslint-disable-next-line prefer-const
   minute = asSafeInteger(match[0]);
   if (minute > 59) return parser.popState(), undefined;
 
-  parser.consumeRegExp(/\s*/y);
+  parser.consumeRegExp(/\s+/y);
   if (parser.consumeAnyString(timeSeparators)) {
-    parser.consumeRegExp(/\s*/y);
+    parser.consumeRegExp(/\s+/y);
 
     if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
     second = asSafeInteger(match[0]);
     if (second > 59) return parser.popState(), undefined;
 
-    parser.consumeRegExp(/\s*/y);
+    parser.consumeRegExp(/\s+/y);
     if (parser.consumeAnyString(fractionSeparators)) {
-      parser.consumeRegExp(/\s*/y);
+      parser.consumeRegExp(/\s+/y);
       // "1.23" is valid
       if ((match = parser.consumeRegExp(/\d*/y))) {
         fraction = Number.parseFloat("." + match[0]);
