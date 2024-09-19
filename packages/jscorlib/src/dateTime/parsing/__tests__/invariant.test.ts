@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { tryParseDateTimeInvariant } from "../parseInvariant";
+import { tryParseDateTimeInvariant } from "../invariant";
 
 describe("tryParseDateTimeInvariant", () => {
   it("date", () => {
@@ -67,6 +67,23 @@ describe("tryParseDateTimeInvariant", () => {
     expect(tryParseDateTimeInvariant("5:12:34 PM-0830")).toEqual({
       hour: 17, minute: 12, second: 34,
       tzOffsetMinutes: -8 * 60 - 30,
+    });
+  });
+
+  it("ISO 8601", () => {
+    expect(tryParseDateTimeInvariant("T14:01:52Z")).toEqual({
+      hour: 14, minute: 1, second: 52,
+      tzOffsetMinutes: 0,
+    });
+    expect(tryParseDateTimeInvariant("2024-09-19T14:10:52Z")).toEqual({
+      year: 2024, month: 9, day: 19,
+      hour: 14, minute: 10, second: 52,
+      tzOffsetMinutes: 0,
+    });
+    expect(tryParseDateTimeInvariant("2024-09-19T14:10:52+2:30")).toEqual({
+      year: 2024, month: 9, day: 19,
+      hour: 14, minute: 10, second: 52,
+      tzOffsetMinutes: 2 * 60 + 30,
     });
   });
 });

@@ -1,14 +1,15 @@
-import { assert } from "../diagnostics";
-import { StringTokenParser } from "../internal/stringTokenParser";
-import { asSafeInteger } from "../numbers";
-import type { DateTimeParseFormatError, DateTimeParseResult } from "./parse";
+import { assert } from "../../diagnostics";
+import { StringTokenParser } from "../../internal/stringTokenParser";
+import { asSafeInteger } from "../../numbers";
+import { consumeTimeZoneOffsetMins } from "./timeZone";
+import { DateParseResult, DateTimeParseFormatError, DateTimeParseResult, TimeParseResult } from "./typing";
 
 const dateSeparators = ["-", "/"];
 const timeSeparators = [":"];
 const fractionSeparators = [".", ","];
 
 export function tryParseDateTimeInvariant(expression: string): DateTimeParseResult | DateTimeParseFormatError {
-  if (!expression) return { error: "format-error", message: "Expression is empty." };
+  if (!expression) return { error: "format-error" };
   const parser = new StringTokenParser(expression);
   parser.consumeRegExp(/\s+/y);
 
@@ -21,8 +22,12 @@ export function tryParseDateTimeInvariant(expression: string): DateTimeParseResu
   } else if ((timeResult = consumeTime(parser))) {
     // TIME [+ DATE]
     parser.consumeRegExp(/\s+/y);
-    dateResult = consumeDate(parser);
-    parser.consumeRegExp(/\s+/y);
+    if (!timeResult.tMarkPresent) {
+      // If there is ISO 8601 Time marker "T" and the time is placed at the beginning,
+      // we won't allow date expression placed after it.
+      dateResult = consumeDate(parser);
+      parser.consumeRegExp(/\s+/y);
+    }
   }
   if (!dateResult && !timeResult) {
     // Failfast if we didn't parse any date/time
@@ -37,9 +42,6 @@ export function tryParseDateTimeInvariant(expression: string): DateTimeParseResu
   }
   return checkParserEof(parser) ?? buildFullParseResult(dateResult, timeResult, tz);
 }
-
-type DateParseResult = [year?: number, month?: number, day?: number];
-type TimeParseResult = [hour: number, minute?: number, second?: number, fraction?: number];
 
 function buildFullParseResult(
   dateResult: DateParseResult | undefined,
@@ -127,17 +129,22 @@ function consumeDateMDY(parser: StringTokenParser): [year: number | undefined, m
   return parser.acceptState(), [year, month, day];
 }
 
-function consumeTime(parser: StringTokenParser): TimeParseResult | undefined {
+type TimeParseResultEx = TimeParseResult & { tMarkPresent?: boolean };
+
+function consumeTime(parser: StringTokenParser): TimeParseResultEx | undefined {
   parser.pushState();
 
+  // ISO 8601 Time marker "T" -- this also forces 24-hour notation
+  const tMarkPresent = parser.consumeRegExp(/T/yi) != null;
   let match;
-  let ampmDesignator = consumeAMPMDesignator(parser);
+  let ampmDesignator = tMarkPresent ? undefined : consumeAMPMDesignator(parser);
   let hour;
   let minute;
   let second;
   let fraction;
 
   parser.consumeRegExp(/\s*/y);
+
   if (!(match = parser.consumeRegExp(/\d\d?/y))) return parser.popState(), undefined;
   hour = asSafeInteger(match[0]);
   if (hour > 23 || hour > 12 && ampmDesignator === "am") return parser.popState(), undefined;
@@ -172,7 +179,7 @@ function consumeTime(parser: StringTokenParser): TimeParseResult | undefined {
     }
   }
 
-  if (!ampmDesignator) {
+  if (!tMarkPresent && !ampmDesignator) {
     // postfix
     ampmDesignator = consumeAMPMDesignator(parser);
     if (hour > 12 && ampmDesignator === "am") return parser.popState(), undefined;
@@ -180,53 +187,15 @@ function consumeTime(parser: StringTokenParser): TimeParseResult | undefined {
     if (hour < 12 && ampmDesignator === "pm") hour = (hour + 12) % 24;
   }
 
-  // TODO TZ
-  return parser.acceptState(), [hour, minute, second, fraction];
+  const result: TimeParseResultEx = [hour, minute, second, fraction];
+  result.tMarkPresent = tMarkPresent;
+  return parser.acceptState(), result;
 }
 
 function consumeAMPMDesignator(parser: StringTokenParser): "am" | "pm" | undefined {
   if (parser.consumeRegExp(/AM/yi)) return "am";
   if (parser.consumeRegExp(/PM/yi)) return "pm";
   return undefined;
-}
-
-function consumeTimeZoneOffsetMins(parser: StringTokenParser): number | DateTimeParseFormatError | undefined {
-  parser.pushState();
-
-  let match;
-
-  // UTC
-  if (parser.consumeRegExp(/Z|GMT/yi)) return parser.acceptState(), 0;
-
-  if (!(match = parser.consumeRegExp(/[+-]/y))) return parser.popState(), undefined;
-
-  const factor = match[0] === "+" ? 1 : -1;
-  parser.consumeRegExp(/\s*/y);
-
-  // +800 / +0800
-  if ((match = parser.consumeRegExp(/\d{3,4}/y))) {
-    const h = Number.parseInt(match[0].length === 3 ? match[0].substring(0, 1) : match[0].substring(0, 2));
-    const m = Number.parseInt(match[0].length === 3 ? match[0].substring(1) : match[0].substring(2));
-    return parser.acceptState(), buildOffset(h, m);
-  }
-
-  // +8 / +8:00
-  if ((match = parser.consumeRegExp(/(?<H>\d\d?)?(:?(?<M>\d+))?/y))) {
-    // hh part should contain 2 digits at most.
-    // 3 digits will be interpreted as `hmm` and should have been handled above.
-    const h = Number.parseInt(match.groups!.H);
-    const m = match.groups!.M ? Number.parseInt(match.groups!.M) : 0;
-    return parser.acceptState(), buildOffset(h, m);
-  }
-
-  return parser.popState(), undefined;
-
-  function buildOffset(h: number, m: number): number | DateTimeParseFormatError {
-    if (m > 59) return { error: "tz-format-error", message: "Invalid time zone offset expression." };
-    const offset = h * 60 + m;
-    if (offset > 14 * 60) return { error: "tz-format-error", message: "Time zone offset should be within 14 hours." };
-    return factor * offset;
-  }
 }
 
 function checkParserEof(parser: StringTokenParser): DateTimeParseFormatError | undefined {
