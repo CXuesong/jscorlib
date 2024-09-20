@@ -89,4 +89,18 @@ describe("tryParseDateTimeInvariant", () => {
       tzOffsetMinutes: 2 * 60 + 30,
     });
   });
+
+  it("RFC 1123", () => {
+    expect(tryParseDateTimeInvariant("Thu, 01 Jan 1970 01:23:45 GMT")).toEqual({
+      year: 1970, month: 1, day: 1, dayOfWeek: 4,
+      hour: 1, minute: 23, second: 45,
+      tzOffsetMinutes: 0,
+    });
+    // This is not standard, but we still support parsing it.
+    expect(tryParseDateTimeInvariant("Thu 1 Jan 2024 1:23:45 GMT")).toEqual({
+      year: 2024, month: 1, day: 1, dayOfWeek: 4,
+      hour: 1, minute: 23, second: 45,
+      tzOffsetMinutes: 0,
+    });
+  });
 });
