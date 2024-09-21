@@ -6,11 +6,11 @@ export default defineConfig({
   },
   test: {
     include: [
-      "**/__tests__/*.test.(ts|js)",
+      "src/**/__tests__/*.test.(ts|js)",
     ],
     benchmark: {
       include: [
-        "**/__benchmarks__/*.test.(ts|js)",
+        "src/**/__benchmarks__/*.test.(ts|js)",
       ],
     },
     coverage: {

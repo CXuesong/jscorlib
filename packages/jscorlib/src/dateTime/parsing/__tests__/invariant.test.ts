@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { tryParseDateTimeInvariant } from "../invariant";
+import { tryParseDateTimeInvariant } from "../internal/invariant";
 
 describe("tryParseDateTimeInvariant", () => {
   it("date", () => {

@@ -1,9 +1,9 @@
-import { InvariantLocaleIgnoreCaseStringEqualityComparer } from "../../collections/equalityComparison";
-import { assert } from "../../diagnostics";
-import { StringTokenParser } from "../../internal/stringTokenParser";
-import { asSafeInteger } from "../../numbers";
+import { InvariantLocaleIgnoreCaseStringEqualityComparer } from "../../../collections/equalityComparison";
+import { assert } from "../../../diagnostics";
+import { StringTokenParser } from "../../../internal/stringTokenParser";
+import { asSafeInteger } from "../../../numbers";
 import { consumeTimeZoneOffsetMins } from "./timeZone";
-import { DateParseResult, DateTimeParseFormatError, DateTimeParseResult, TimeParseResult } from "./typing";
+import { DateParseResult, DateTimeParseFormatError, DateTimeParseResult, TimeParseResult } from "./parseResult";
 
 const dateSeparators = ["-", "/", ","];   // "," is used in RFC1123
 const timeSeparators = [":"];

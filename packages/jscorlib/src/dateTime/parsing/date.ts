@@ -1,7 +1,8 @@
 import { assert } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
-import { tryParseDateTimeInvariant } from "./invariant";
-import { createDateTimeParseError, DateTimeParseResult, DateTimeParsingOptions, isDateTimeParseError } from "./typing";
+import { tryParseDateTimeInvariant } from "./internal/invariant";
+import { createDateTimeParseError, DateTimeParseResult, isDateTimeParseError } from "./internal/parseResult";
+import { DateTimeParsingOptions } from "./typing";
 
 /**
  * Converts the specified string expression of date and/or time to its equivalent {@link Date} representation.

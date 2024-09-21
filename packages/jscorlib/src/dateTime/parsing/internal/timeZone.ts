@@ -1,5 +1,5 @@
-import { StringTokenParser } from "../../internal/stringTokenParser";
-import { DateTimeParseFormatError } from "./typing";
+import { StringTokenParser } from "../../../internal/stringTokenParser";
+import { DateTimeParseFormatError } from "./parseResult";
 
 export function consumeTimeZoneOffsetMins(parser: StringTokenParser): number | DateTimeParseFormatError | undefined {
   parser.pushState();
