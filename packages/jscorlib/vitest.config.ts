@@ -13,6 +13,7 @@ export default defineConfig({
         "src/**/__benchmarks__/*.test.(ts|js)",
       ],
     },
+    setupFiles: ["src/__tests__/setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["lcov"],

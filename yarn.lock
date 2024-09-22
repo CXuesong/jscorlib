@@ -2446,6 +2446,7 @@ __metadata:
     "@jscorlib-repo/test-helpers": "workspace:^"
     "@jscorlib-repo/typedoc-presets": "workspace:^"
     "@jscorlib/polyfills": "workspace:^"
+    temporal-polyfill: "npm:^0.2.5"
     typescript: "npm:^5.5.4"
   languageName: unknown
   linkType: soft
@@ -3673,6 +3674,22 @@ __metadata:
     mkdirp: "npm:^1.0.3"
     yallist: "npm:^4.0.0"
   checksum: 10/bfbfbb2861888077fc1130b84029cdc2721efb93d1d1fb80f22a7ac3a98ec6f8972f29e564103bbebf5e97be67ebc356d37fa48dbc4960600a1eb7230fbd1ea0
+  languageName: node
+  linkType: hard
+
+"temporal-polyfill@npm:^0.2.5":
+  version: 0.2.5
+  resolution: "temporal-polyfill@npm:0.2.5"
+  dependencies:
+    temporal-spec: "npm:^0.2.4"
+  checksum: 10/0534d6eb41925e88a3be6f320cbd5255bab6f6f529668f619dbefdcb28ec1606cc43f7a73d60fc713c44518e38d8ac3a8ec82e2059713f045481ac5a3d903157
+  languageName: node
+  linkType: hard
+
+"temporal-spec@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "temporal-spec@npm:0.2.4"
+  checksum: 10/45a68e4f2324752e927976c624699c5cfcbe15d6e9c9558faa5811cc58ea1fb9cef06ec5e1617e40131b744ca16a0011309c877c242b24009562375b407f535b
   languageName: node
   linkType: hard
 
