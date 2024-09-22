@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseDate } from "../date";
 
 describe("parseDate", () => {
-  it("date", () => {
+  it("date / time", () => {
     const dateNow = new Date();
     expect(parseDate("1993-01-02")).toEqual(new Date(1993, 0, 2));
     expect(parseDate("5:12:34")).toEqual(new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate(), 5, 12, 34));

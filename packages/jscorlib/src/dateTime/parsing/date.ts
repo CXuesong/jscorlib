@@ -26,6 +26,7 @@ export function tryParseDate(expression: string, options?: DateTimeParsingOption
 }
 
 function parseResultToDateTime(result: DateTimeParseResult, options?: DateTimeParsingOptions): Date {
+  const tzOffsetMins = result.tzOffsetMinutes ?? (options?.assumeUtc ? 0 : "local");
   // https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Globalization/DateTimeParse.cs,63d1edb58b57f7e9
   /*
   The following table describes the behaviors of getting the default value
@@ -48,7 +49,7 @@ function parseResultToDateTime(result: DateTimeParseResult, options?: DateTimePa
   */
   // Date is always UTC
   if (result.year == null || result.month == null || result.day == null) {
-    const [year, month, day] = getFallbackDate(result, options);
+    const [year, month, day] = getFallbackDate(tzOffsetMins);
     if (result.year == null && result.month == null && result.day == null) {
       // Date part is missing
       result.year = year;
@@ -83,20 +84,20 @@ function parseResultToDateTime(result: DateTimeParseResult, options?: DateTimePa
   return new Date(tzMsSinceEpoch - tzOffsetMs);
 }
 
-function getFallbackDate(result: DateTimeParseResult, options?: DateTimeParsingOptions): [year: SafeInteger, month: SafeInteger, day: SafeInteger] {
-  if (result.tzOffsetMinutes === 0 || result.tzOffsetMinutes == null && options?.assumeUtc) {
+function getFallbackDate(tzOffsetMins: SafeInteger | "local"): [year: SafeInteger, month: SafeInteger, day: SafeInteger] {
+  if (tzOffsetMins === "local") {
+    // Local TZ
+    const dateNow = new Date();
+    return [dateNow.getFullYear(), dateNow.getMonth() + 1, dateNow.getDate()];
+  }
+  if (tzOffsetMins === 0) {
     // UTC
     const dateNow = new Date();
     return [dateNow.getUTCFullYear(), dateNow.getUTCMonth() + 1, dateNow.getUTCDate()];
   }
-  if (result.tzOffsetMinutes != null) {
-    // Explicit TZ
-    const msSinceEpoch = Date.now();
-    const tzOffsetMs = result.tzOffsetMinutes * 60_000;
-    const offsetDateNow = new Date(msSinceEpoch + tzOffsetMs);
-    return [offsetDateNow.getUTCFullYear(), offsetDateNow.getUTCMonth() + 1, offsetDateNow.getUTCDate()];
-  }
-  // Local TZ
-  const dateNow = new Date();
-  return [dateNow.getFullYear(), dateNow.getMonth() + 1, dateNow.getDate()];
+  // Explicit TZ
+  const msSinceEpoch = Date.now();
+  const tzOffsetMs = tzOffsetMins * 60_000;
+  const offsetDateNow = new Date(msSinceEpoch + tzOffsetMs);
+  return [offsetDateNow.getUTCFullYear(), offsetDateNow.getUTCMonth() + 1, offsetDateNow.getUTCDate()];
 }

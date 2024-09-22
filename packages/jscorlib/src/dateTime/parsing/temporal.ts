@@ -1,5 +1,4 @@
 /// <reference types="temporal-polyfill/global" />
-import { assert } from "../../diagnostics";
 import { SafeInteger } from "../../numbers";
 import { tryParseDateTimeInvariant } from "./internal/invariant";
 import { createDateTimeParseError, DateTimeParseResult, isDateTimeParseError } from "./internal/parseResult";
@@ -19,11 +18,66 @@ export function tryParseZonedDateTime(expression: string, options?: DateTimePars
   return parseResultToZonedDateTime(result, options);
 }
 
+export function parseInstant(expression: string, options?: DateTimeParsingOptions): Temporal.Instant {
+  const result = tryParseDateTimeInvariant(expression);
+  if (isDateTimeParseError(result)) throw createDateTimeParseError(result);
+  return parseResultToInstant(result, options);
+}
+
+export function tryParseInstant(expression: string, options?: DateTimeParsingOptions): Temporal.Instant | undefined {
+  const result = tryParseDateTimeInvariant(expression);
+  if (isDateTimeParseError(result)) return undefined;
+  return parseResultToInstant(result, options);
+}
+
 function parseResultToZonedDateTime(result: DateTimeParseResult, options?: DateTimeParsingOptions): Temporal.ZonedDateTime {
+  const [dtLike, tzOffsetMins] = parseResultToDateTimeLikeAndOffset(result, options);
+  const zdtLike: Temporal.ZonedDateTimeLike = dtLike;
+  if (tzOffsetMins === 0) {
+    // UTC
+    zdtLike.timeZone = utcTimeZoneName;
+  } else if (tzOffsetMins === "local") {
+    // Local TZ
+    zdtLike.timeZone = Temporal.Now.timeZoneId();
+  } else {
+    // Specified TZ / TZ offset
+    const h = Math.trunc(Math.abs(tzOffsetMins) / 60);
+    const m = Math.abs(tzOffsetMins) % 60;
+    const sign = h > 0 ? "+" : "-";
+    const hpadding = h < 10 ? "0" : "";
+    const mpadding = m < 10 ? "0" : "";
+    zdtLike.timeZone = `${sign}${hpadding}${h}:${mpadding}${m}`;
+  }
+  return Temporal.ZonedDateTime.from(zdtLike);
+}
+
+function parseResultToInstant(result: DateTimeParseResult, options?: DateTimeParsingOptions): Temporal.Instant {
+  const [dtLike, tzOffsetMins] = parseResultToDateTimeLikeAndOffset(result, options);
+  const zdtLike: Temporal.ZonedDateTimeLike = dtLike;
+  if (tzOffsetMins === 0) {
+    // UTC
+    zdtLike.timeZone = utcTimeZoneName;
+    return Temporal.ZonedDateTime.from(zdtLike).toInstant();
+  }
+  if (tzOffsetMins === "local") {
+    // Local TZ
+    zdtLike.timeZone = Temporal.Now.timeZoneId();
+    return Temporal.ZonedDateTime.from(zdtLike).toInstant();
+  }
+  // Specified TZ / TZ offset -- Offset back to UTC
+  zdtLike.timeZone = utcTimeZoneName;
+  return Temporal.ZonedDateTime.from(zdtLike).toInstant().add({ minutes: -tzOffsetMins });
+}
+
+function parseResultToDateTimeLikeAndOffset(
+  result: DateTimeParseResult,
+  options?: DateTimeParsingOptions,
+): [dtLike: Temporal.PlainDateTimeLike, tzOffsetMins: SafeInteger | "local"] {
+  const tzOffsetMins = result.tzOffsetMinutes ?? (options?.assumeUtc ? 0 : "local");
   // https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Globalization/DateTimeParse.cs,63d1edb58b57f7e9
   // See also: "./date.ts"!parseResultToDateTime
   if (result.year == null || result.month == null || result.day == null) {
-    const [year, month, day] = getFallbackDate(result, options);
+    const [year, month, day] = getFallbackDate(tzOffsetMins);
     if (result.year == null && result.month == null && result.day == null) {
       // date part is missing
       result.year = year;
@@ -41,7 +95,7 @@ function parseResultToZonedDateTime(result: DateTimeParseResult, options?: DateT
   result.second ??= 0;
   result.fraction ??= 0;
 
-  const dtArgs: Temporal.ZonedDateTimeLike = {
+  const dtLike: Temporal.PlainDateTimeLike = {
     year: result.year,
     month: result.month,
     day: result.day,
@@ -53,40 +107,23 @@ function parseResultToZonedDateTime(result: DateTimeParseResult, options?: DateT
     nanosecond: Math.trunc((result.fraction * 1e9) % 1000),
   };
 
-  if (result.tzOffsetMinutes == 0 || result.tzOffsetMinutes == null && options?.assumeUtc) {
-    // UTC
-    dtArgs.timeZone = utcTimeZoneName;
-  } else if (result.tzOffsetMinutes == null && !options?.assumeUtc) {
-    // Local TZ
-    dtArgs.timeZone = Temporal.Now.timeZoneId();
-  } else {
-    // Specified TZ / TZ offset
-    assert(result.tzOffsetMinutes != null);
-    const h = Math.trunc(Math.abs(result.tzOffsetMinutes) / 60);
-    const m = Math.abs(result.tzOffsetMinutes) % 60;
-    const sign = h > 0 ? "+" : "-";
-    const hpadding = h < 10 ? "0" : "";
-    const mpadding = m < 10 ? "0" : "";
-    dtArgs.timeZone = `${sign}${hpadding}${h}:${mpadding}${m}`;
-  }
-  return Temporal.ZonedDateTime.from(dtArgs);
+  return [dtLike, tzOffsetMins];
 }
 
-function getFallbackDate(result: DateTimeParseResult, options?: DateTimeParsingOptions): [year: SafeInteger, month: SafeInteger, day: SafeInteger] {
-  if (result.tzOffsetMinutes == null && !options?.assumeUtc) {
+function getFallbackDate(tzOffsetMins: SafeInteger | "local"): [year: SafeInteger, month: SafeInteger, day: SafeInteger] {
+  if (tzOffsetMins === "local") {
     // Local TZ
     const now = Temporal.Now.zonedDateTimeISO();
     return [now.year, now.month, now.day];
   }
   // TODO calendar
   const utcNow = Temporal.Now.zonedDateTimeISO(utcTimeZoneName);
-  if (result.tzOffsetMinutes === 0 || result.tzOffsetMinutes == null && options?.assumeUtc) {
+  if (tzOffsetMins === 0) {
     // UTC
     return [utcNow.year, utcNow.month, utcNow.day];
   }
-  assert(result.tzOffsetMinutes != null);
   // Explicit TZ
   // Manually offset the UTC time, as Temporal actually recommends to use TZ name instead of TZ offset.
-  const offsetNow = utcNow.add({ minutes: result.tzOffsetMinutes });
+  const offsetNow = utcNow.add({ minutes: tzOffsetMins });
   return [offsetNow.year, offsetNow.month, offsetNow.day];
 }
