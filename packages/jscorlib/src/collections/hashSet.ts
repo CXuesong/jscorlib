@@ -89,7 +89,7 @@ export class HashSet<T> implements Set<T>, SetEquatable {
     return this._size;
   }
 
-  public *entries(): IterableIterator<[T, T]> {
+  public *entries(): SetIterator<[T, T]> {
     for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield [entry, entry];
@@ -97,11 +97,11 @@ export class HashSet<T> implements Set<T>, SetEquatable {
     }
   }
 
-  public keys(): IterableIterator<T> {
+  public keys(): SetIterator<T> {
     return this.values();
   }
 
-  public *values(): IterableIterator<T> {
+  public *values(): SetIterator<T> {
     for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield entry;
@@ -207,7 +207,7 @@ export class HashSet<T> implements Set<T>, SetEquatable {
     return true;
   }
 
-  public [Symbol.iterator](): IterableIterator<T> {
+  public [Symbol.iterator](): SetIterator<T> {
     return this.values();
   }
 

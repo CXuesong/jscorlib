@@ -94,7 +94,7 @@ class SkipTakeLinqWrapper<T> extends IntermediateLinqWrapper<T, SkipTakeIterator
       }
     }
   }
-  public override[TryGetCountDirectSymbol](): number | undefined {
+  public [TryGetCountDirectSymbol](): number | undefined {
     let count = asLinq(this.__state.iterable).$(tryGetCountDirect());
     if (count == null) return undefined;
     count -= this.__state.skip;
@@ -116,7 +116,7 @@ class EmptyLinqWrapper extends AbstractLinqWrapper<never> implements BuiltInLinq
   public override *[Symbol.iterator](): Iterator<never> {
     // Nothing to enumerate
   }
-  public override[TryGetCountDirectSymbol](): number | undefined {
+  public [TryGetCountDirectSymbol](): number | undefined {
     return 0;
   }
 }

@@ -70,16 +70,16 @@ interface OrderedIteratorInfo<T> {
 class OrderedLinqWrapperImpl<T>
   extends IntermediateLinqWrapper<T, OrderedIteratorInfo<T>>
   implements OrderedLinqWrapperBase<T>, BuiltInLinqTraits<T> {
-  public thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
+  public thenBy<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T> {
     return appendOrderClause(this, { selector: keySelector, comparer, descending: false });
   }
-  public thenByDescending<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey> | undefined): LinqWrapper<T> {
+  public thenByDescending<TKey>(keySelector: SequenceElementSelector<T, TKey>, comparer?: ComparerFunction<TKey>): LinqWrapper<T> {
     return appendOrderClause(this, { selector: keySelector, comparer, descending: true });
   }
-  public override[TryGetCountDirectSymbol](): number | undefined {
+  public [TryGetCountDirectSymbol](): number | undefined {
     return asLinq(this.__state.iterable).$(tryGetCountDirect());
   }
-  public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
+  public [TryUnwrapUnorderedSymbol](): Iterable<T> {
     return this.__state.iterable;
   }
   public override *[Symbol.iterator](): Iterator<T> {

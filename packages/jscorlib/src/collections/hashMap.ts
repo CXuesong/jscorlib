@@ -92,7 +92,7 @@ export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
     return this._size;
   }
 
-  public *entries(): IterableIterator<[TKey, TValue]> {
+  public *entries(): MapIterator<[TKey, TValue]> {
     for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield [...entry];
@@ -100,7 +100,7 @@ export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
     }
   }
 
-  public *keys(): IterableIterator<TKey> {
+  public *keys(): MapIterator<TKey> {
     for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield entry[0];
@@ -108,7 +108,7 @@ export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
     }
   }
 
-  public *values(): IterableIterator<TValue> {
+  public *values(): MapIterator<TValue> {
     for (const entries of this._buckets.values()) {
       for (const entry of entries) {
         yield entry[1];
@@ -116,7 +116,7 @@ export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
     }
   }
 
-  public [Symbol.iterator](): IterableIterator<[TKey, TValue]> {
+  public [Symbol.iterator](): MapIterator<[TKey, TValue]> {
     return this.entries();
   }
 

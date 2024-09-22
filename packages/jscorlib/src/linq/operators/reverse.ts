@@ -33,10 +33,10 @@ class ReverseLinqWrapper<T>
       yield array[i];
     }
   }
-  public override[TryGetCountDirectSymbol](): number | undefined {
+  public [TryGetCountDirectSymbol](): number | undefined {
     return asLinq(this.__state.iterable).$(tryGetCountDirect());
   }
-  public override[TryUnwrapUnorderedSymbol](): Iterable<T> {
+  public [TryUnwrapUnorderedSymbol](): Iterable<T> {
     return this.__state.iterable;
   }
 }

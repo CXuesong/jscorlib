@@ -67,22 +67,22 @@ export class LruCache<TKey, TValue> implements Map<TKey, TValue> {
   public get size(): number {
     return this._map.size;
   }
-  public *entries(): IterableIterator<[TKey, TValue]> {
+  public *entries(): MapIterator<[TKey, TValue]> {
     for (const [k, v] of this._sequence) {
       yield [k, v];
     }
   }
-  public *keys(): IterableIterator<TKey> {
+  public *keys(): MapIterator<TKey> {
     for (const [k] of this._sequence) {
       yield k;
     }
   }
-  public *values(): IterableIterator<TValue> {
+  public *values(): MapIterator<TValue> {
     for (const [, v] of this._sequence) {
       yield v;
     }
   }
-  public *[Symbol.iterator](): IterableIterator<[TKey, TValue]> {
+  public *[Symbol.iterator](): MapIterator<[TKey, TValue]> {
     for (const [k, v] of this._sequence) {
       yield [k, v];
     }
