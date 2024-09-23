@@ -1,13 +1,19 @@
 import { assert } from "../../diagnostics";
+import { FormatError } from "../../errors";
 import { SafeInteger } from "../../numbers";
 import { tryParseDateTimeInvariant } from "./internal/invariant";
 import { createDateTimeParseError, DateTimeParseResult, isDateTimeParseError } from "./internal/parseResult";
+import type { parseInstant, parseZonedDateTime } from "./temporal";
 import { DateTimeParsingOptions } from "./typing";
 
 /**
  * Converts the specified string expression of date and/or time to its equivalent {@link Date} representation.
  * @returns an object equivalent to the date and time contained in `expression`.
- * @throws {@link FormatError} the specified string expression cannot be interpreted as a valid date-time expression.
+ * @throws {@link FormatError}
+ *  * the specified string expression cannot be interpreted as a valid date-time expression.
+ *  * `expression` contains time zone ID, but time zone parsing is not supported for {@link Date} parsing.
+ *    You need to switch to {@link parseZonedDateTime} or {@link parseInstant} instead.
+ * @see {@link tryParseDate}
  */
 export function parseDate(expression: string, options?: DateTimeParsingOptions): Date {
   const result = tryParseDateTimeInvariant(expression);
@@ -18,6 +24,7 @@ export function parseDate(expression: string, options?: DateTimeParsingOptions):
 /**
  * Tries to convert the specified string expression of date and/or time to its equivalent {@link Date} representation.
  * @returns an object equivalent to the date and time contained in `expression`, or `undefined` if the conversion has failed.
+ * @see {@link parseDate}
  */
 export function tryParseDate(expression: string, options?: DateTimeParsingOptions): Date | undefined {
   const result = tryParseDateTimeInvariant(expression);
@@ -26,6 +33,7 @@ export function tryParseDate(expression: string, options?: DateTimeParsingOption
 }
 
 function parseResultToDateTime(result: DateTimeParseResult, options?: DateTimeParsingOptions): Date {
+  if (result.tzId != null) throw new FormatError("Specifying time zone ID is not supported.");
   const tzOffsetMins = result.tzOffsetMinutes ?? (options?.assumeUtc ? 0 : "local");
   // https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Globalization/DateTimeParse.cs,63d1edb58b57f7e9
   /*

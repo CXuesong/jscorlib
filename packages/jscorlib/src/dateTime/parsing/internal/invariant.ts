@@ -1,8 +1,8 @@
 import { InvariantLocaleIgnoreCaseStringEqualityComparer } from "../../../collections/equalityComparison";
 import { assert } from "../../../diagnostics";
 import { StringTokenParser } from "../../../internal/stringTokenParser";
-import { asSafeInteger } from "../../../numbers";
-import { consumeTimeZoneOffsetMins } from "./timeZone";
+import { asSafeInteger, SafeInteger } from "../../../numbers";
+import { consumeTimeZoneId, consumeTimeZoneOffsetMins } from "./timeZone";
 import { DateParseResult, DateTimeParseFormatError, DateTimeParseResult, TimeParseResult } from "./parseResult";
 
 const dateSeparators = ["-", "/", ","];   // "," is used in RFC1123
@@ -83,19 +83,23 @@ export function tryParseDateTimeInvariant(expression: string): DateTimeParseResu
     checkParserEof(parser);
     return { error: "format-error" };
   }
-  const tz = consumeTimeZoneOffsetMins(parser);
-  if (typeof tz === "object") {
+  const tzOffsetMins = consumeTimeZoneOffsetMins(parser);
+  if (typeof tzOffsetMins === "object") {
     // Invalid time zone expression
     parser.checkStateStackEmpty();
-    return tz;
+    return tzOffsetMins;
   }
-  return checkParserEof(parser) ?? buildFullParseResult(dateResult, timeResult, tz);
+  parser.consumeRegExp(/\s+/y);
+  const tzId = consumeTimeZoneId(parser);
+  parser.consumeRegExp(/\s+/y);
+  return checkParserEof(parser) ?? buildFullParseResult(dateResult, timeResult, tzOffsetMins, tzId);
 }
 
 function buildFullParseResult(
   dateResult: DateParseResult | undefined,
   timeResult: TimeParseResult | undefined,
-  tzResult: number | undefined,
+  tzOffsetMins: SafeInteger | undefined,
+  tzId: string | undefined,
 ): DateTimeParseResult {
   assert(dateResult != null || timeResult != null);
   return {
@@ -109,7 +113,8 @@ function buildFullParseResult(
     second: timeResult?.[2],
     fraction: timeResult?.[3],
 
-    tzOffsetMinutes: tzResult,
+    tzOffsetMinutes: tzOffsetMins,
+    tzId,
   };
 }
 

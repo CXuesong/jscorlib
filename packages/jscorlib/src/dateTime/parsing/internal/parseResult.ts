@@ -14,8 +14,8 @@ export interface DateTimeParseResult {
   // 0~1; avoid precision loss
   fraction?: number;
 
-  // tzName?: string;
   tzOffsetMinutes?: SafeInteger;
+  tzId?: string;
 }
 
 export interface DateTimeParseFormatError {

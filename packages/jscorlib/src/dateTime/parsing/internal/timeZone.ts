@@ -1,7 +1,8 @@
 import { StringTokenParser } from "../../../internal/stringTokenParser";
+import { SafeInteger } from "../../../numbers";
 import { DateTimeParseFormatError } from "./parseResult";
 
-export function consumeTimeZoneOffsetMins(parser: StringTokenParser): number | DateTimeParseFormatError | undefined {
+export function consumeTimeZoneOffsetMins(parser: StringTokenParser): SafeInteger | DateTimeParseFormatError | undefined {
   parser.pushState();
 
   let match;
@@ -32,10 +33,17 @@ export function consumeTimeZoneOffsetMins(parser: StringTokenParser): number | D
 
   return parser.popState(), undefined;
 
-  function buildOffset(h: number, m: number): number | DateTimeParseFormatError {
+  function buildOffset(h: number, m: number): SafeInteger | DateTimeParseFormatError {
     if (m > 59) return { error: "tz-format-error", message: "Invalid time zone offset expression." };
     const offset = h * 60 + m;
     if (offset > 14 * 60) return { error: "tz-format-error", message: "Time zone offset should be within 14 hours." };
     return factor * offset;
   }
+}
+
+export function consumeTimeZoneId(parser: StringTokenParser): string | undefined {
+  // https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  // [Asia/Shangha]
+  const match = parser.consumeRegExp(/\[\s*(\w[\w.-/]+)\s*\]/y);
+  return match?.[1];
 }

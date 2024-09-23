@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseInstant, parseZonedDateTime } from "../temporal";
+import { parseInstant, parseZonedDateTime, tryParseInstant, tryParseZonedDateTime } from "../temporal";
+import { FormatError } from "../../../errors";
 
 describe("parseZonedDateTime", () => {
   it("date / time", () => {
@@ -16,6 +17,14 @@ describe("parseZonedDateTime", () => {
     expect(parseZonedDateTime("2024-09-19T14:10:52+2:30")).toEqual(Temporal.ZonedDateTime.from("2024-09-19T14:10:52.000[+02:30]"));
     // RFC 1123
     expect(parseZonedDateTime("Thu, 01 Jan 1970 01:23:45 GMT")).toEqual(Temporal.ZonedDateTime.from("1970-01-01T01:23:45.000[UTC]"));
+  });
+
+  it("with explicit timezone", () => {
+    expect(parseZonedDateTime("2024-09-19 14:10:52 [Asia/Shanghai]")).toEqual(Temporal.ZonedDateTime.from("2024-09-19T14:10:52.000[Asia/Shanghai]"));
+    expect(parseZonedDateTime("2024-09-19 14:10:52 +8:00 [Asia/Shanghai]")).toEqual(Temporal.ZonedDateTime.from("2024-09-19T14:10:52.000[Asia/Shanghai]"));
+    // TZ offset / TZ ID does not match
+    expect(() => parseZonedDateTime("2024-09-19 14:10:52 +2:30 [Asia/Shanghai]")).throws(FormatError);
+    expect(tryParseZonedDateTime("2024-09-19 14:10:52 +2:30 [Asia/Shanghai]")).toEqual(undefined);
   });
 });
 
@@ -35,10 +44,17 @@ describe("parseInstant", () => {
     // RFC 1123
     expect(parseInstant("Thu, 01 Jan 1970 01:23:45 GMT")).toEqual(Temporal.Instant.from("1970-01-01T01:23:45.000Z"));
   });
+
+  it("with explicit timezone", () => {
+    expect(parseInstant("2024-09-19 14:10:52 [Asia/Shanghai]")).toEqual(Temporal.Instant.from("2024-09-19T06:10:52Z"));
+    expect(parseInstant("2024-09-19 14:10:52 +8:00 [Asia/Shanghai]")).toEqual(Temporal.Instant.from("2024-09-19T06:10:52Z"));
+    expect(() => parseInstant("2024-09-19 14:10:52 +2:30 [Asia/Shanghai]")).throws(FormatError);
+    expect(tryParseInstant("2024-09-19 14:10:52 +2:30 [Asia/Shanghai]")).toEqual(undefined);
+  });
 });
 
 function zonedDateTimeEquals(a: Temporal.ZonedDateTime, b: Temporal.ZonedDateTime): boolean | undefined {
-  if (typeof a.equals === "function" && typeof b.equals === "function") return a.equals(b);
+  if (a && b && typeof a.equals === "function" && typeof b.equals === "function") return a.equals(b);
   return undefined;
 }
 
