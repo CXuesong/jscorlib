@@ -11,7 +11,7 @@ import { DateTimeParsingOptions } from "./typing";
 const utcTimeZoneName = "UTC";
 
 /**
- * Converts the specified string expression of date and/or time to its equivalent {@link Temporal.ZonedDateTime} representation.
+ * Converts the specified string expression of date and/or time to its equivalent {@link !Temporal.ZonedDateTime} representation.
  * @returns an object equivalent to the date and time contained in `expression`.
  * @throws {@link FormatError}
  *  * the specified string expression cannot be interpreted as a valid date-time expression.
@@ -33,7 +33,7 @@ export function parseZonedDateTime(expression: string, options?: DateTimeParsing
 }
 
 /**
- * Tries to convert the specified string expression of date and/or time to its equivalent {@link Temporal.ZonedDateTime} representation.
+ * Tries to convert the specified string expression of date and/or time to its equivalent {@link !Temporal.ZonedDateTime} representation.
  * @returns an object equivalent to the date and time contained in `expression`, or `undefined` if the conversion has failed.
  * @see {@link parseZonedDateTime}
  */
@@ -50,7 +50,7 @@ export function tryParseZonedDateTime(expression: string, options?: DateTimePars
 }
 
 /**
- * Converts the specified string expression of date and/or time to its equivalent {@link Temporal.Instant} representation.
+ * Converts the specified string expression of date and/or time to its equivalent {@link !Temporal.Instant} representation.
  * @returns an object equivalent to the date and time contained in `expression`.
  * @throws {@link FormatError}
  *  * the specified string expression cannot be interpreted as a valid date-time expression.
@@ -64,7 +64,7 @@ export function parseInstant(expression: string, options?: DateTimeParsingOption
 }
 
 /**
- * Tries to convert the specified string expression of date and/or time to its equivalent {@link Temporal.Instant} representation.
+ * Tries to convert the specified string expression of date and/or time to its equivalent {@link !Temporal.Instant} representation.
  * @returns an object equivalent to the date and time contained in `expression`, or `undefined` if the conversion has failed.
  * @see {@link parseInstant}
  */

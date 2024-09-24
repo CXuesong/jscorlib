@@ -7,7 +7,7 @@ import { SafeInteger } from "../../numbers";
  * While it is theoretically possible to let a {@link !Function} implement this interface,
  * this can interfere with the overload resolution logic and thus not recommended.
  * 
- * @see {@link EqualityComparerFunction}
+ * @see {@link HashableEqualityComparer}
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface EqualityComparer<T = any> {
@@ -20,7 +20,7 @@ export interface EqualityComparer<T = any> {
    */
   equals(x: T, y: T): boolean;
   /**
-   * Given an aribtrary value, checks whether the value can be compared by the current {@link HashableEqualityComparer}.
+   * Given an aribtrary value, checks whether the value can be compared by the current {@link EqualityComparer}.
    */
   isSupported(value: unknown): value is T;
 }

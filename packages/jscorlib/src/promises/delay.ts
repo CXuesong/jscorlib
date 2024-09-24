@@ -2,12 +2,12 @@ import { ArgumentRangeError } from "../errors";
 import { DelayPromiseHolder } from "./internal";
 
 /**
- * Gets a {@link Promise} that resolves after the specified duration.
+ * Gets a {@link !Promise} that resolves after the specified duration.
  * 
  * @param delayMs milliseconds of the delay, or `"infinite"` to wait indefinitely.
  * @param signal a signal used to cancel the returned Promise.
  * 
- * @throws {@link DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
+ * @throws {@link !DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
  *          the {@link AbortSignal.reason} will be thrown.
  * 
  * @see [tc39/proposal-built-in-modules#35](https://github.com/tc39/proposal-built-in-modules/issues/35)

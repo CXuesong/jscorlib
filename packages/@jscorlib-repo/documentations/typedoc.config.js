@@ -14,6 +14,7 @@ export default {
 
   plugin: [
     "typedoc-plugin-mdn-links",
+    "@jscorlib/typedoc-plugin-tc39-links",
   ],
 
   entryPointStrategy: "packages",

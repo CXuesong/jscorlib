@@ -1,0 +1,28 @@
+{
+  // Base config; also for VSCode
+  // https://github.com/Microsoft/vscode/issues/12463
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "isolatedModules": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "strict": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "ESNext"
+    ],
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "stripInternal": true,
+    "outDir": "../lib",
+    "importHelpers": true,
+  },
+  "include": [
+    "**/*.ts",
+  ],
+}
