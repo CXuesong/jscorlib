@@ -1,6 +1,6 @@
 {
   "name": "@jscorlib/typedoc-plugin-tc39-links",
-  "version": "0.0.0-int.3",
+  "version": "0.0.0-int.4",
   "description": "a plugin to provide some of API links to TC 39 drafts.",
   "repository": "https://github.com/CXuesong/jscorlib.git",
   "author": "CXuesong",
