@@ -349,10 +349,11 @@ function consumeTime(parser: StringTokenParser): TimeParseResultEx | undefined {
     if (parser.consumeAnyString(fractionSeparators)) {
       parser.consumeRegExp(/\s+/y);
       // "1.23" is valid
-      if ((match = parser.consumeRegExp(/\d*/y))) {
+      if ((match = parser.consumeRegExp(/\d+/y))) {
         fraction = Number.parseFloat("." + match[0]);
         assert(fraction <= 1);
       }
+      // "1,<EOF>" will be treated the same as "12"
     }
   }
 
