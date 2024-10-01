@@ -12,6 +12,7 @@ export * from "./chunk";
 export * from "./collect";
 export * from "./collectHashMap";
 export * from "./collectHashSet";
+export * from "./concat";
 export * from "./count";
 export * from "./distinct";
 export * from "./forEach";
