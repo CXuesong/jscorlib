@@ -1,6 +1,6 @@
 {
   "name": "jscorlib",
-  "version": "0.0.0-int.4",
+  "version": "0.0.0-int.5",
   "description": "a set of JS helpers inspired by .NET BCL, TC 39 drafts, and more, hopefully filling some gaps in native JavaScript API.",
   "repository": "https://github.com/CXuesong/jscorlib.git",
   "author": "CXuesong",
