@@ -1,7 +1,7 @@
-import { isTypedArray } from "util/types";
+import { PipeBody, PipeFunction } from "../../pipables";
+import { isTypedArray } from "../../types";
 import { LinqWrapper } from "../linqWrapper";
 import { IndexedSequenceElementCallback } from "./typing";
-import { PipeBody, PipeFunction } from "../../pipables";
 
 export function forEach<T>(callback: IndexedSequenceElementCallback<T>): PipeBody<LinqWrapper<T>, void> {
   return target => {

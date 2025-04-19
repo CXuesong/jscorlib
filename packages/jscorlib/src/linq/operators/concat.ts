@@ -4,6 +4,8 @@ import { asLinq, LinqWrapper } from "../linqWrapper";
 import { BuiltInLinqTraits, TryGetCountDirectSymbol } from "../traits";
 import { tryGetCountDirect } from "./count";
 
+export function concat<T>(another: Iterable<T>): PipeBody<LinqWrapper<T>, LinqWrapper<T>>;
+export function concat<T, TAnother>(another: Iterable<TAnother>): PipeBody<LinqWrapper<T>, LinqWrapper<T | TAnother>>;
 export function concat<T, TAnother>(another: Iterable<TAnother>): PipeBody<LinqWrapper<T>, LinqWrapper<T | TAnother>> {
   return target => {
     if (target instanceof ConcatLinqWrapper) {
