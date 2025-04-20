@@ -12,6 +12,98 @@
     ".": {
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
+    },
+    "./arrays": {
+      "import": "./lib/arrays/index.js",
+      "types": "./lib/arrays/index.d.ts"
+    },
+    "./collections": {
+      "import": "./lib/collections/index.js",
+      "types": "./lib/collections/index.d.ts"
+    },
+    "./collections/comparison": {
+      "import": "./lib/collections/comparison/index.js",
+      "types": "./lib/collections/comparison/index.d.ts"
+    },
+    "./collections/equalityComparison": {
+      "import": "./lib/collections/equalityComparison/index.js",
+      "types": "./lib/collections/equalityComparison/index.d.ts"
+    },
+    "./collections/hashMap": {
+      "import": "./lib/collections/hashMap/index.js",
+      "types": "./lib/collections/hashMap/index.d.ts"
+    },
+    "./collections/hashSet": {
+      "import": "./lib/collections/hashSet/index.js",
+      "types": "./lib/collections/hashSet/index.d.ts"
+    },
+    "./collections/iterators": {
+      "import": "./lib/collections/iterators/index.js",
+      "types": "./lib/collections/iterators/index.d.ts"
+    },
+    "./collections/linkedList": {
+      "import": "./lib/collections/linkedList/index.js",
+      "types": "./lib/collections/linkedList/index.d.ts"
+    },
+    "./collections/sets": {
+      "import": "./lib/collections/sets/index.js",
+      "types": "./lib/collections/sets/index.d.ts"
+    },
+    "./containers": {
+      "import": "./lib/containers/index.js",
+      "types": "./lib/containers/index.d.ts"
+    },
+    "./dateTime": {
+      "import": "./lib/dateTime/index.js",
+      "types": "./lib/dateTime/index.d.ts"
+    },
+    "./diagnostics": {
+      "import": "./lib/diagnostics/index.js",
+      "types": "./lib/diagnostics/index.d.ts"
+    },
+    "./errors": {
+      "import": "./lib/errors/index.js",
+      "types": "./lib/errors/index.d.ts"
+    },
+    "./events": {
+      "import": "./lib/events/index.js",
+      "types": "./lib/events/index.d.ts"
+    },
+    "./globalization": {
+      "import": "./lib/globalization/index.js",
+      "types": "./lib/globalization/index.d.ts"
+    },
+    "./http": {
+      "import": "./lib/http/index.js",
+      "types": "./lib/http/index.d.ts"
+    },
+    "./linq": {
+      "import": "./lib/linq/index.js",
+      "types": "./lib/linq/index.d.ts"
+    },
+    "./numbers": {
+      "import": "./lib/numbers/index.js",
+      "types": "./lib/numbers/index.d.ts"
+    },
+    "./pipables": {
+      "import": "./lib/pipables/index.js",
+      "types": "./lib/pipables/index.d.ts"
+    },
+    "./promises": {
+      "import": "./lib/promises/index.js",
+      "types": "./lib/promises/index.d.ts"
+    },
+    "./strings": {
+      "import": "./lib/strings/index.js",
+      "types": "./lib/strings/index.d.ts"
+    },
+    "./synchronization": {
+      "import": "./lib/synchronization/index.js",
+      "types": "./lib/synchronization/index.d.ts"
+    },
+    "./types": {
+      "import": "./lib/types/index.js",
+      "types": "./lib/types/index.d.ts"
     }
   },
   "sideEffects": false,
