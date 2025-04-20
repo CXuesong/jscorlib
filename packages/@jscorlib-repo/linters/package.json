@@ -13,6 +13,9 @@
     ".": {
       "import": "./src/index.js",
       "types": "./src/index.d.js"
+    },
+    "./type-shims": {
+      "types": "./src/type-shims.d.ts"
     }
   },
   "bin": {

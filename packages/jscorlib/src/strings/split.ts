@@ -126,9 +126,7 @@ function splitByRegExp(str: string, delimiter: RegExp, limit: number): string[] 
       if (delimiter.lastIndex === match.index) {
         // Empty match. We need to advance 1 Unicode code point.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/@@iterator#manually_hand-rolling_the_iterator
-        if (!strIt) {
-          strIt = str.substring(curIndex)[Symbol.iterator]();
-        }
+        strIt ??= str.substring(curIndex)[Symbol.iterator]();
         const itR = strIt.next();
         if (itR.done) {
           // No more chars. We are already at the end of string.

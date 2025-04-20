@@ -1,3 +1,5 @@
+/// <reference types="@jscorlib-repo/linters/type-shims" />
+
 export * as Arrays from "./arrays";
 export * as Collections from "./collections";
 export * as Containers from "./containers";
