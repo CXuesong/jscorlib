@@ -2,7 +2,8 @@ import * as path from "node:path";
 import * as url from "node:url";
 // import tsdocJson from "typedoc/tsdoc.json" with {type: "jsonc"};
 
-const repoRoot = path.resolve(url.fileURLToPath(import.meta.url), "../../../..");
+// Glob inputs to TypeDoc may not use Windows path separators (\), try replacing with posix path separators (/)
+const repoRoot = path.resolve(url.fileURLToPath(import.meta.url), "../../../..").replaceAll("\\", "/");
 
 /** @type {import("typedoc").TypeDocOptions} */
 export default {
