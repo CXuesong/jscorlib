@@ -7,7 +7,7 @@ import { DelayPromiseHolder } from "./internal";
  * @param delayMs milliseconds of the delay, or `"infinite"` to wait indefinitely.
  * @param signal a signal used to cancel the returned Promise.
  * 
- * @throws {@link !DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
+ * @throws {!DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
  *          the {@link AbortSignal.reason} will be thrown.
  * 
  * @see [tc39/proposal-built-in-modules#35](https://github.com/tc39/proposal-built-in-modules/issues/35)

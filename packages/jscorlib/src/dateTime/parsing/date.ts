@@ -9,7 +9,7 @@ import { DateTimeParsingOptions } from "./typing";
 /**
  * Converts the specified string expression of date and/or time to its equivalent {@link Date} representation.
  * @returns an object equivalent to the date and time contained in `expression`.
- * @throws {@link FormatError}
+ * @throws {FormatError}
  *  * the specified string expression cannot be interpreted as a valid date-time expression.
  *  * `expression` contains time zone ID, but time zone parsing is not supported for {@link Date} parsing.
  *    You need to switch to {@link parseZonedDateTime} or {@link parseInstant} instead.

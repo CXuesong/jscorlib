@@ -1,4 +1,4 @@
-import { InstallPolyfillOptions } from "../polyfill-installer";
+import { InstallPolyfillOptions } from "../polyfillInstaller";
 import { DisposableStack } from "./disposableStack";
 
 export function installPolyfill(options: InstallPolyfillOptions): void {

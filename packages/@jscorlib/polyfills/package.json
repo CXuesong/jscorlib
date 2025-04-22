@@ -12,6 +12,18 @@
     ".": {
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
+    },
+    "./explicit-resource-management": {
+      "import": "./lib/explicit-resource-management/index.js",
+      "types": "./lib/explicit-resource-management/index.d.ts"
+    },
+    "./promises": {
+      "import": "./lib/promises/index.js",
+      "types": "./lib/promises/index.d.ts"
+    },
+    "./polyfillInstaller": {
+      "import": "./lib/polyfillInstaller/index.js",
+      "types": "./lib/polyfillInstaller/index.d.ts"
     }
   },
   "sideEffects": false,

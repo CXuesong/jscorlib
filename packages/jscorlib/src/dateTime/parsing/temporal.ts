@@ -13,7 +13,7 @@ const utcTimeZoneName = "UTC";
 /**
  * Converts the specified string expression of date and/or time to its equivalent {@link !Temporal.ZonedDateTime} representation.
  * @returns an object equivalent to the date and time contained in `expression`.
- * @throws {@link FormatError}
+ * @throws {FormatError}
  *  * the specified string expression cannot be interpreted as a valid date-time expression.
  *  * both time zone ID and time zone offset has been specified in the `expression`, but the time zone offset
  *    does not belong to the specified time zone ID. (e.g., `"+2:00[Asia/Shanghai]"`)
@@ -52,7 +52,7 @@ export function tryParseZonedDateTime(expression: string, options?: DateTimePars
 /**
  * Converts the specified string expression of date and/or time to its equivalent {@link !Temporal.Instant} representation.
  * @returns an object equivalent to the date and time contained in `expression`.
- * @throws {@link FormatError}
+ * @throws {FormatError}
  *  * the specified string expression cannot be interpreted as a valid date-time expression.
  *  * both time zone ID and time zone offset has been specified in the `expression`, but the time zone offset
  *    does not belong to the specified time zone ID. (e.g., `"+2:00[Asia/Shanghai]"`)

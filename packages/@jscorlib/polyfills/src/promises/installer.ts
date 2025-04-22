@@ -1,4 +1,4 @@
-import { InstallPolyfillOptions } from "../polyfill-installer";
+import { InstallPolyfillOptions } from "../polyfillInstaller";
 import { withResolvers } from "./withResolvers";
 
 export function installPolyfill(options: InstallPolyfillOptions): void {

@@ -12,7 +12,7 @@ let nextId = 100;
  * to assign the ID.
  * @returns an immutable ID specific for this object. If the object has already been assigned an
  * ID, this function will return the prior assigned ID.
- * @throws {@link !TypeError} `obj` is not an `object` or `array`, or `obj` is `null` or shared `symbol`.
+ * @throws {TypeError} `obj` is not an `object` or `array`, or `obj` is `null` or shared `symbol`.
  */
 export function getObjectId(obj: ReferenceType): SafeInteger {
   let id = objectIdMap.get(obj);

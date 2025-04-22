@@ -10,7 +10,7 @@ import { DelayPromiseHolder } from "./internal";
  * 
  * @returns a `Promise` that represents the asynchronous wait.
  * @throws `any` the provided `promise` has been rejected.
- * @throws {@link DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
+ * @throws {DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
  *          the {@link AbortSignal.reason} will be thrown.
  */
 export function wait<T>(promise: PromiseLike<T>, signal?: AbortSignal): Promise<T>;
@@ -25,8 +25,8 @@ export function wait<T>(promise: PromiseLike<T>, signal?: AbortSignal): Promise<
  * 
  * @returns a `Promise` that represents the asynchronous wait.
  * @throws `any` the provided `promise` has been rejected.
- * @throws {@link TimeoutError} the specified `timeout` has been reached.
- * @throws {@link DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
+ * @throws {TimeoutError} the specified `timeout` has been reached.
+ * @throws {DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
  *          the {@link AbortSignal.reason} will be thrown.
  */
 export function wait<T>(promise: PromiseLike<T>, timeout?: number, signal?: AbortSignal): Promise<T | undefined>;

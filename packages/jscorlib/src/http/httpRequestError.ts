@@ -63,7 +63,7 @@ function formatHttpRequestErrorMessage(options?: HttpRequestErrorOptions): strin
 
 /**
  * Ensures the given HTTP response has a successful status code.
- * @throws {@link HttpRequestError} `response.ok` is `false`, i.e., `response.status` is outside the range of 200 ~ 299.
+ * @throws {HttpRequestError} `response.ok` is `false`, i.e., `response.status` is outside the range of 200 ~ 299.
  * @see {@link Response.ok}
  */
 export async function ensureResponseOK(response: Response): Promise<void> {

@@ -58,7 +58,7 @@ export class Semaphore {
    * @param timeoutMs maximum time in milliseconds to wait.
    * @param signal a signal used to cancel the wait.
    * @returns `true` if the caller has entered Semaphore successfully; `false` if the specified timeout has been reched.
-   * @throws {@link DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
+   * @throws {DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
    *          the {@link AbortSignal.reason} will be thrown.
    * @remarks
    * If the caller has successfully entered the Sempahore, {@link count} will be decreased by 1.
@@ -71,7 +71,7 @@ export class Semaphore {
    * @param signal a signal used to cancel the wait.
    * @returns always `true`, as the returned {@link Promise} won't fulfill until it enters the Semaphore or has been aborted,
    *          which will result in rejection.
-   * @throws {@link DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
+   * @throws {DOMException} the specified `signal` has been aborted. If the signal has been aborted with explicit reason,
    *          the {@link AbortSignal.reason} will be thrown.
    * @remarks
    * If the caller has successfully entered the Sempahore, {@link count} will be decreased by 1.
@@ -147,7 +147,7 @@ export class Semaphore {
    * Releases the Semaphore a specified number of times.
    * 
    * @param releaseCount The number of times to exit the Semaphore. `undefined` will exit the Semaphore once (1).
-   * @throws {@link InvalidOperationError} Adding the specified count to the Semaphore would cause it to exceed {@link maxCount}.
+   * @throws {InvalidOperationError} Adding the specified count to the Semaphore would cause it to exceed {@link maxCount}.
    * @remarks
    * * A call to this function increments the {@link count} by `releaseCount`. If {@link count} is already `0` before this function
    * is called, the function also allows `releaseCount` {@link Promise}s blocked by {@link waitAsync} to enter the Semaphore.
