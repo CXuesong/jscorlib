@@ -2,6 +2,12 @@ import { EqualityComparer } from "../collections/equalityComparison";
 import { assert } from "../diagnostics";
 import { InvalidOperationError } from "../errors";
 
+/**
+ * A helper class for parsing strings into tokens.
+ * This class provides methods to consume or lookahead for specific pattern, with traceback support.
+ * 
+ * @experimental
+ */
 export class StringTokenParser {
   public position: number = 0;
   private readonly _stateStack: number[] = [];

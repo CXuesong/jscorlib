@@ -1,5 +1,5 @@
-import { StringTokenParser } from "../../../internal/stringTokenParser";
 import { SafeInteger } from "../../../numbers";
+import { StringTokenParser } from "../../../strings/stringTokenParser";
 import { DateTimeParseFormatError } from "./parseResult";
 
 export function consumeTimeZoneOffsetMins(parser: StringTokenParser): SafeInteger | DateTimeParseFormatError | undefined {
