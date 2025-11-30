@@ -17,6 +17,10 @@
       "import": "./lib/arrays/index.js",
       "types": "./lib/arrays/index.d.ts"
     },
+    "./binding": {
+      "import": "./lib/binding/index.js",
+      "types": "./lib/binding/index.d.ts"
+    },
     "./collections": {
       "import": "./lib/collections/index.js",
       "types": "./lib/collections/index.d.ts"

@@ -1,6 +1,7 @@
 /// <reference types="@jscorlib-repo/linters/type-shims" />
 
 export * as Arrays from "./arrays";
+export * as Binding from "./binding";
 export * as Collections from "./collections";
 export * as Containers from "./containers";
 export * as DateTime from "./dateTime";

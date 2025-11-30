@@ -19,7 +19,7 @@ export class SynchronizationContext {
   }
   /**
    * Dispatches an asynchronous message to a synchronization context.
-   * @param callback the callback to excute on the synchronization context.
+   * @param callback the callback to execute on the synchronization context.
    * @virtual
    * The default implementation is to leverage {@link queueMicrotask} to queue the work asynchronously.
    */
