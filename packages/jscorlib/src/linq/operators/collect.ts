@@ -14,7 +14,7 @@ toArray satisfies PipeFunction;
 export function toMap<T, TKey>(keySelector: IndexedSequenceElementSelector<T, TKey>): PipeBody<LinqWrapper<T>, Map<TKey, T>>;
 export function toMap<T, TKey, TValue>(
   keySelector: IndexedSequenceElementSelector<T, TKey>,
-  valueSelector: IndexedSequenceElementSelector<T, TValue>
+  valueSelector: IndexedSequenceElementSelector<T, TValue>,
 ): PipeBody<LinqWrapper<T>, Map<TKey, TValue>>;
 export function toMap<T, TKey, TValue>(
   keySelector: IndexedSequenceElementSelector<T, TKey>,
@@ -43,7 +43,7 @@ toMap satisfies PipeFunction;
 export function toMultiMap<T, TKey, TValue>(keySelector: IndexedSequenceElementSelector<T, TKey>): PipeBody<LinqWrapper<T>, Map<TKey, TValue[]>>;
 export function toMultiMap<T, TKey, TValue>(
   keySelector: IndexedSequenceElementSelector<T, TKey>,
-  valueSelector: IndexedSequenceElementSelector<T, TValue>
+  valueSelector: IndexedSequenceElementSelector<T, TValue>,
 ): PipeBody<LinqWrapper<T>, Map<TKey, TValue[]>>;
 export function toMultiMap<T, TKey, TValue>(
   keySelector: IndexedSequenceElementSelector<T, TKey>,

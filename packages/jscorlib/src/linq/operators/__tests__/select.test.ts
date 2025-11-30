@@ -20,7 +20,7 @@ describe("select", () => {
 
     // Linq$count should be calling [[TryGetCountDirectSymbol]] first
     // @ts-expect-error ts2339 There seems to be issue with spyOn + Symbol as property names.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+     
     vitest.spyOn(linq as BuiltInLinqTraits<string>, TryGetCountDirectSymbol).mockReturnValue(123);
     expect(linq.$(_Count.count())).toBe(123);
   });

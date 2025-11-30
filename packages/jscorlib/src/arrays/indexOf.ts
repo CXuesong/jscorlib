@@ -4,7 +4,7 @@ import { NoMatchIndexNominal } from "./typing";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Returns the index of the first occurrence of a value in an array.
- * @param array the array where the search is perfomed.
+ * @param array the array where the search is performed.
  * @param value the value to locate in the array
  * @param startIndex the array index at which to begin the search. If `startIndex` is omitted, the search starts at index 0.
  * @param count the number of elements in the section to search.
@@ -13,11 +13,11 @@ export function indexOf<TArray extends readonly any[], TValue>(
   array: TArray,
   value: TValue,
   startIndex?: number,
-  count?: number
+  count?: number,
 ): TValue extends TArray[number] ? number : NoMatchIndexNominal;
 /**
  * Returns the index of the first occurrence of a value in an array.
- * @param array the array where the search is perfomed.
+ * @param array the array where the search is performed.
  * @param value the value to locate in the array
  * @param startIndex the array index at which to begin the search. If `startIndex` is omitted, the search starts at index 0.
  * @param count the number of elements in the section to search.
@@ -26,7 +26,7 @@ export function indexOf<TArray extends readonly any[]>(
   array: TArray,
   value: TArray[number],
   startIndex?: number,
-  count?: number
+  count?: number,
 ): number;
 export function indexOf(array: readonly unknown[], value: unknown, startIndex?: number, count?: number): number {
   /* eslint-enable @typescript-eslint/no-explicit-any */
