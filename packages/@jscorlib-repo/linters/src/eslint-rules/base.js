@@ -2,10 +2,11 @@
 import eslint from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
 import jsdoc from "eslint-plugin-jsdoc";
+import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 import { repoRootDir } from "../environment.js";
 
-export const baseConfig = tseslint.config(
+export const baseConfig = defineConfig(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
@@ -48,8 +49,11 @@ export const baseConfig = tseslint.config(
           ignoreProperties: true,
         },
       ],
-      // This rule does not handle `unknown` well
-      "@typescript-eslint/restrict-template-expressions": "warn",
+      "@typescript-eslint/restrict-template-expressions": ["error", {
+        allow: [
+          "unknown",
+        ],
+      }],
       "@typescript-eslint/unbound-method": ["error", { ignoreStatic: true }],
     },
   },
@@ -61,7 +65,7 @@ export const baseConfig = tseslint.config(
       "@stylistic/indent": ["error", 2],
       "@stylistic/quotes": ["error", "double", {
         "avoidEscape": true,
-        "allowTemplateLiterals": true,
+        "allowTemplateLiterals": "always",
       }],
       "@stylistic/semi": "error",
       "@stylistic/comma-dangle": ["error", "always-multiline"],
