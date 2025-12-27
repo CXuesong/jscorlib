@@ -1,6 +1,14 @@
 import { checkArgumentType } from "../errors";
+import type { AsyncLazy } from "./asyncLazy";
+import { LazyLike } from "./typing";
 
-export class Lazy<T> {
+/**
+ * A container that lazily evaluates a value when it is accessed for the first time.
+ * 
+ * @see {@link LazyLike}
+ * @see {@link AsyncLazy}
+*/
+export class Lazy<T> implements LazyLike<T> {
   private _value?: T;
   private _valueFactory?: () => T;
   public constructor(valueFactory: () => T) {

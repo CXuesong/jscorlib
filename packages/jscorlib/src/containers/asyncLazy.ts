@@ -1,4 +1,6 @@
 import { checkArgumentType } from "../errors";
+import type { Lazy } from "./lazy";
+import { AsyncLazyLike } from "./typing";
 
 const enum AsyncLazyState {
   Unresolved = 0,
@@ -27,7 +29,13 @@ type AsyncLazyStateHolder<T> =
   | AsyncLazyResolvedStateHolder<T>
   ;
 
-export class AsyncLazy<T> {
+/**
+ * A container that lazily evaluates a value asynchronously when it is accessed for the first time.
+ * 
+ * @see {@link AsyncLazyLike}
+ * @see {@link Lazy}
+ */
+export class AsyncLazy<T> implements AsyncLazyLike<T> {
   private _stateHolder: AsyncLazyStateHolder<T>;
   public constructor(valueFactory: () => PromiseLike<T>) {
     checkArgumentType(0, "valueFactory", valueFactory, "function");
@@ -53,7 +61,7 @@ export class AsyncLazy<T> {
         return Promise.resolve(this._stateHolder.value);
     }
   }
-  public get tryGetValueImmediate(): T | undefined {
+  public tryGetImmediateValue(): T | undefined {
     return this._stateHolder.state === AsyncLazyState.Resolved ? this._stateHolder.value : undefined;
   }
   private async _resolveValue(stateHolder: AsyncLazyUnresolvedStateHolder<T>): Promise<T> {
