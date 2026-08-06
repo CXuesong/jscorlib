@@ -31,6 +31,18 @@ describe("HashMap", () => {
     expect(map.size).toBe(3);
   });
 
+  it("get or insert", () => {
+    const map = new _Collections.HashMap<string, number | undefined>();
+    map.set("existing", undefined);
+    expect(map.getOrInsert("existing", 1)).toBeUndefined();
+    expect(map.getOrInsert("default", 2)).toBe(2);
+
+    let callbackCalls = 0;
+    expect(map.getOrInsertComputed("default", () => ++callbackCalls)).toBe(2);
+    expect(map.getOrInsertComputed("computed", () => ++callbackCalls)).toBe(1);
+    expect(callbackCalls).toBe(1);
+  });
+
   it("iterate", () => {
     const map = new _Collections.HashMap<string, number>();
     populateMap(map);

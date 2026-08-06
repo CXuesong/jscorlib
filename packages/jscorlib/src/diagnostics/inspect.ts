@@ -1,4 +1,4 @@
-import type { CustomInspectFunction } from "util";
+import type * as NodeUtil from "node:util";
 
 /**
  * Synonym of `util.inspect.custom`.
@@ -28,7 +28,7 @@ export interface CustomInspectableObject {
    * 
    * @see [util#Custom inspection functions on objects](https://nodejs.org/api/util.html#custom-inspection-functions-on-objects)
    */
-  [NodeJSInspectCustomSymbol]?: CustomInspectFunction;
+  [NodeJSInspectCustomSymbol]?: (depth: number, options: NodeUtil.InspectContext, inspect: typeof NodeUtil.inspect) => unknown;
   /**
    * Customizes how the current object is rendered when inspected with `loupe` package.
    * 

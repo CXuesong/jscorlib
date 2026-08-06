@@ -1,6 +1,6 @@
 /**
  * In DEV environment, emits an error message.
- * This is usally used to indicate a critial failure during development process.
+ * This is usually used to indicate a critical failure during development process.
  * 
  * @param message message content.
  * @remarks

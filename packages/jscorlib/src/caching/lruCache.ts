@@ -24,6 +24,7 @@ export class LruCache<TKey, TValue> implements Map<TKey, TValue> {
     const node = this._map.get(key);
     if (!node) return false;
     this._sequence.removeNode(node);
+    assert(this._map.delete(key));
     return true;
   }
   public forEach(callbackfn: (value: TValue, key: TKey, map: LruCache<TKey, TValue>) => void, thisArg?: unknown): void {
@@ -34,12 +35,27 @@ export class LruCache<TKey, TValue> implements Map<TKey, TValue> {
   public get(key: TKey): TValue | undefined {
     const node = this._map.get(key);
     if (!node) return undefined;
-    // Move node to the first of the sequence.
-    if (this._sequence.firstNode !== node) {
-      this._sequence.removeNode(node);
-      this._sequence.addFirstNode(node);
-    }
+    this._moveToFirst(node);
     return node.value[1];
+  }
+  public getOrInsert(key: TKey, defaultValue: TValue): TValue {
+    const node = this._map.get(key);
+    if (node) {
+      this._moveToFirst(node);
+      return node.value[1];
+    }
+    this.set(key, defaultValue);
+    return defaultValue;
+  }
+  public getOrInsertComputed(key: TKey, callback: (key: TKey) => TValue): TValue {
+    const node = this._map.get(key);
+    if (node) {
+      this._moveToFirst(node);
+      return node.value[1];
+    }
+    const value = callback(key);
+    this.set(key, value);
+    return value;
   }
   public has(key: TKey): boolean {
     return this._map.has(key);
@@ -47,22 +63,26 @@ export class LruCache<TKey, TValue> implements Map<TKey, TValue> {
   public set(key: TKey, value: TValue): this {
     let node = this._map.get(key);
     if (node) {
-      // Move node to the first of the sequence.
-      if (this._sequence.firstNode !== node) {
-        this._sequence.removeNode(node);
-        this._sequence.addFirstNode(node);
-      }
+      this._moveToFirst(node);
       node.value[1] = value;
     } else {
       // new node
       while (this._sequence.length >= this.capacity) {
-        this._sequence.removeLast();
+        const lastNode = this._sequence.lastNode;
+        assert(lastNode);
+        this._sequence.removeNode(lastNode);
+        assert(this._map.delete(lastNode.value[0]));
       }
       node = this._sequence.addFirst([key, value]);
       this._map.set(key, node);
       assert(this._sequence.length === this._map.size);
     }
     return this;
+  }
+  private _moveToFirst(node: LinkedListNode<[TKey, TValue]>): void {
+    if (this._sequence.firstNode === node) return;
+    this._sequence.removeNode(node);
+    this._sequence.addFirstNode(node);
   }
   public get size(): number {
     return this._map.size;

@@ -58,6 +58,19 @@ export class HashMap<TKey, TValue> implements Map<TKey, TValue> {
     return undefined;
   }
 
+  public getOrInsert(key: TKey, defaultValue: TValue): TValue {
+    if (this.has(key)) return this.get(key)!;
+    this.set(key, defaultValue);
+    return defaultValue;
+  }
+
+  public getOrInsertComputed(key: TKey, callback: (key: TKey) => TValue): TValue {
+    if (this.has(key)) return this.get(key)!;
+    const value = callback(key);
+    this.set(key, value);
+    return value;
+  }
+
   public has(key: TKey): boolean {
     const keyHash = this.comparer.getHashCode(key);
     const entries = this._buckets.get(keyHash);

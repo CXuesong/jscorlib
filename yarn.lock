@@ -2161,6 +2161,7 @@ __metadata:
     "@jscorlib-repo/test-helpers": "workspace:^"
     "@jscorlib-repo/typedoc-presets": "workspace:^"
     "@jscorlib/polyfills": "workspace:^"
+    "@types/node": "npm:^26.1.2"
     temporal-polyfill: "npm:^1.0.3"
     typescript: "npm:^6.0.3"
   languageName: unknown
