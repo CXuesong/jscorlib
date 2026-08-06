@@ -22,9 +22,9 @@
     "eslint": "./bin/eslint.js"
   },
   "dependencies": {
-    "@stylistic/eslint-plugin": "^5.6.1",
-    "eslint": "^9.39.1",
-    "eslint-plugin-jsdoc": "^61.4.1",
-    "typescript-eslint": "^8.48.0"
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.8.0",
+    "eslint-plugin-jsdoc": "^63.3.3",
+    "typescript-eslint": "^8.66.0"
   }
 }

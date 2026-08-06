@@ -1,4 +1,3 @@
-/// <reference types="temporal-polyfill/global" />
 import { FormatError } from "../../errors";
 import { SafeInteger } from "../../numbers";
 import { tryParseDateTimeInvariant } from "./internal/invariant";
