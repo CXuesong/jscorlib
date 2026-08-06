@@ -1,5 +1,12 @@
 export class DisposableStack implements globalThis.DisposableStack {
   private _stack: Disposable[] | undefined = [];
+  public constructor() {
+    if (!Symbol.dispose) throw new TypeError("Symbol.dispose is undefined.");
+    // This can happen if caller setup the polyfill after this class was declared.
+    this[Symbol.dispose] ??= function () {
+      this.dispose();
+    };
+  }
   public get disposed(): boolean {
     return !this._stack;
   }
