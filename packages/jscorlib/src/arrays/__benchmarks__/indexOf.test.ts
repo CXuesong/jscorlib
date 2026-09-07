@@ -1,4 +1,4 @@
-import { bench, describe, expect } from "vitest";
+import { expect, test } from "vitest";
 import * as _Arrays from "../indexOf";
 
 const haystack: readonly number[] = (() => {
@@ -9,57 +9,63 @@ const haystack: readonly number[] = (() => {
   return h;
 })();
 
-describe("indexOf (needle @ 10%)", () => {
-  bench("Array.indexOf baseline", () => {
-    const needle = haystack[haystack.length / 10];
-    expect(haystack.indexOf(needle)).toBe(haystack.length / 10);
-  });
-  bench("Arrays.indexOf", () => {
-    const needle = haystack[haystack.length / 10];
-    expect(_Arrays.indexOf(haystack, needle)).toBe(haystack.length / 10);
-  });
+test("indexOf (needle @ 10%)", async ({ bench }) => {
+  const expectedIndex = haystack.length / 10;
+  const needle = haystack[expectedIndex];
+  expect(haystack.indexOf(needle)).toBe(expectedIndex);
+  expect(_Arrays.indexOf(haystack, needle)).toBe(expectedIndex);
+
+  await bench.compare(
+    bench("Array.indexOf baseline", () => haystack.indexOf(needle)),
+    bench("Arrays.indexOf", () => _Arrays.indexOf(haystack, needle)),
+  );
 });
 
-describe("indexOf (needle @ 50%)", () => {
-  bench("Array.indexOf baseline", () => {
-    const needle = haystack[haystack.length / 2];
-    expect(haystack.indexOf(needle)).toBe(haystack.length / 2);
-  });
-  bench("Arrays.indexOf", () => {
-    const needle = haystack[haystack.length / 2];
-    expect(_Arrays.indexOf(haystack, needle)).toBe(haystack.length / 2);
-  });
+test("indexOf (needle @ 50%)", async ({ bench }) => {
+  const expectedIndex = haystack.length / 2;
+  const needle = haystack[expectedIndex];
+  expect(haystack.indexOf(needle)).toBe(expectedIndex);
+  expect(_Arrays.indexOf(haystack, needle)).toBe(expectedIndex);
+
+  await bench.compare(
+    bench("Array.indexOf baseline", () => haystack.indexOf(needle)),
+    bench("Arrays.indexOf", () => _Arrays.indexOf(haystack, needle)),
+  );
 });
 
-describe("indexOf (needle === undefined)", () => {
-  bench("Array.indexOf baseline", () => {
-    expect(haystack.indexOf(undefined as never)).toBe(-1);
-  });
-  bench("Arrays.indexOf", () => {
-    expect(_Arrays.indexOf(haystack, undefined)).toBe(-1);
-  });
+test("indexOf (needle === undefined)", async ({ bench }) => {
+  expect(haystack.indexOf(undefined as never)).toBe(-1);
+  expect(_Arrays.indexOf(haystack, undefined)).toBe(-1);
+
+  await bench.compare(
+    bench("Array.indexOf baseline", () => haystack.indexOf(undefined as never)),
+    bench("Arrays.indexOf", () => _Arrays.indexOf(haystack, undefined)),
+  );
 });
 
-describe("indexOf (haystack[..-2], needle @ ~50%)", () => {
+test("indexOf (haystack[..-2], needle @ ~50%)", async ({ bench }) => {
   const sliced = haystack.slice(0, haystack.length - 2);
-  bench("Array.indexOf baseline", () => {
-    const needle = sliced[sliced.length / 2];
-    expect(sliced.indexOf(needle)).toBe(sliced.length / 2);
-  });
-  bench("Arrays.indexOf", () => {
-    // This makes indexOf to use our own implementation, instead of the native one's
-    const needle = haystack[(haystack.length - 2) / 2];
-    expect(_Arrays.indexOf(haystack, needle, 0, haystack.length - 2)).toBe((haystack.length - 2) / 2);
-  });
+  const expectedIndex = sliced.length / 2;
+  const needle = sliced[expectedIndex];
+  expect(sliced.indexOf(needle)).toBe(expectedIndex);
+  expect(_Arrays.indexOf(haystack, needle, 0, sliced.length)).toBe(expectedIndex);
+
+  await bench.compare(
+    bench("Array.indexOf baseline", () => sliced.indexOf(needle)),
+    // Specifying the end index makes indexOf use our implementation instead of the native one.
+    bench("Arrays.indexOf", () => _Arrays.indexOf(haystack, needle, 0, sliced.length)),
+  );
 });
 
-describe("indexOf (haystack[50%..], needle @ 75%)", () => {
-  bench("Array.indexOf baseline", () => {
-    const needle = haystack[haystack.length * 3 / 4];
-    expect(haystack.indexOf(needle, haystack.length / 2)).toBe(haystack.length * 3 / 4);
-  });
-  bench("Arrays.indexOf", () => {
-    const needle = haystack[haystack.length * 3 / 4];
-    expect(_Arrays.indexOf(haystack, needle, haystack.length / 2)).toBe(haystack.length * 3 / 4);
-  });
+test("indexOf (haystack[50%..], needle @ 75%)", async ({ bench }) => {
+  const startIndex = haystack.length / 2;
+  const expectedIndex = haystack.length * 3 / 4;
+  const needle = haystack[expectedIndex];
+  expect(haystack.indexOf(needle, startIndex)).toBe(expectedIndex);
+  expect(_Arrays.indexOf(haystack, needle, startIndex)).toBe(expectedIndex);
+
+  await bench.compare(
+    bench("Array.indexOf baseline", () => haystack.indexOf(needle, startIndex)),
+    bench("Arrays.indexOf", () => _Arrays.indexOf(haystack, needle, startIndex)),
+  );
 });
