@@ -128,8 +128,8 @@
     "@jscorlib-repo/test-helpers": "workspace:^",
     "@jscorlib-repo/typedoc-presets": "workspace:^",
     "@jscorlib/polyfills": "workspace:^",
-    "@types/node": "^26.1.2",
-    "temporal-polyfill": "^1.0.3",
+    "@types/node": "^26.4.1",
+    "temporal-polyfill": "^1.0.4",
     "typescript": "^6.0.3"
   }
 }
