@@ -13,7 +13,6 @@ export type AnyFunction<TArgs extends any[] = any[], TReturnValue = any> = (...a
  * * functions
  * * symbols (including [shared symbols in the global symbol registry](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol#shared_symbols_in_the_global_symbol_registry))
  */
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type ReferenceType = object | any[] | AnyFunction | symbol;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 

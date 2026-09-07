@@ -105,7 +105,7 @@ export class ReferenceTypeEqualityComparer implements HashableEqualityComparer<R
 export class AnyValueEqualityComparer implements HashableEqualityComparer<unknown> {
   public static readonly instance = new AnyValueEqualityComparer();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public isSupported(value: unknown): value is any {
+  public isSupported(_value: unknown): _value is any {
     return true;
   }
   public equals(x: unknown, y: unknown): boolean {

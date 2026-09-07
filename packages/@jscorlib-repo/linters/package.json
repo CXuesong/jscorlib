@@ -22,6 +22,7 @@
     "eslint": "./bin/eslint.js"
   },
   "dependencies": {
+    "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "eslint": "^10.8.0",
     "eslint-plugin-jsdoc": "^63.3.3",

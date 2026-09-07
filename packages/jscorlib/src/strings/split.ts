@@ -130,7 +130,7 @@ function splitByRegExp(str: string, delimiter: RegExp, limit: number): string[] 
         const itR = strIt.next();
         if (itR.done) {
           // No more chars. We are already at the end of string.
-          strIt = undefined;
+          // strIt = undefined;
           // There is nothing left in the string so just return without appending "rest" part.
           return result;
         }
@@ -151,7 +151,7 @@ function splitByRegExp(str: string, delimiter: RegExp, limit: number): string[] 
     }
     if (strIt) {
       strIt.return?.();
-      strIt = undefined;
+      // strIt = undefined;
     }
   } else {
     // Advance 1 UTF-16 code point upon empty match.
